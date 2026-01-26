@@ -1,4 +1,4 @@
-# G08: Fix it with GiG
+# GiG Vision Statement
 
 GiG is a platform for contractors and businesses to easily find jobs, and for customers to quickly connect with people who can complete tasks for them.
 
@@ -17,11 +17,11 @@ The system is envisioned to be an Android application, and users will be able to
 
 GiG aims to achieve the following measurable goals:
 
-- Average user satisfaction is **7 out of 10 or higher** (10 being best), measured through a survey after users complete a given task.
-- Posting a listing for a job or task as a customer user can be done in **under 2 minutes on average**.
-- Finding a specific job or task and bidding on it as a business user can be done in **under 3 minutes on average**.
-- It requires **fewer than 5 clicks** to navigate to any page in the app when starting from the login screen.
-- The application has an **average response time of less than 2 seconds**.
+- Average user satisfaction is 7 out of 10 or higher (10 being best), measured through a survey after users complete a given task.
+- Posting a listing for a job or task as a customer user can be done in under 2 minutes on average.
+- Finding a specific job or task and bidding on it as a business user can be done in under 3 minutes on average.
+- It requires fewer than 5 clicks to navigate to any page in the app when starting from the login screen.
+- The application has an average response time of less than 2 seconds.
 
 If these goals are acheived, our project will be considered successful.
 
