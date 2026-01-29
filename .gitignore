@@ -1,0 +1,29 @@
+# ===== Android / Gradle =====
+.gradle/
+build/
+*/build/
+
+# Local SDK / machine-specific
+local.properties
+
+# ===== Android Studio / IntelliJ =====
+.idea/
+*.iml
+
+# User-specific IDE files
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/caches/
+.idea/shelf/
+
+# ===== OS files =====
+.DS_Store
+Thumbs.db
+
+# ===== Logs =====
+*.log
+
+# ===== Temporary files =====
+*.swp
+*.swo
