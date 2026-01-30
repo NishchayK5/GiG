@@ -28,3 +28,4 @@ If these goals are acheived, our project will be considered successful.
 ## Links
 
 [Working Agreement](Documents/work-agreement.docx)
+[ARCHITECTURE.md](Documents/ARCHITECTURE.md)
