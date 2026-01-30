@@ -1,11 +1,11 @@
-## ARCHITECTURE - Iteration 1
+# ARCHITECTURE - Iteration 1
 
-# Packages and Components
+## Packages and Components
 
-# Responsibilities Between Layers
+## Responsibilities Between Layers
 
-# High Level Overview
+## High Level Overview
 
-# Architecture Diagram
+## Architecture Diagram
 
 Pdf: [Architecture Diagram](Architecture_Model_GiG.pdf)
