@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.g08.gig.business.services.ClientUserService;
 import com.g08.gig.business.services.ClientUserServiceImpl;
-import com.g08.gig.business.services.CustomerUserServiceImpl;
 import com.g08.gig.persistence.ClientRepository;
 import com.g08.gig.persistence.UserRepository;
 import com.g08.gig.persistence.real.AppDbHelper;
