@@ -15,7 +15,7 @@ public final class ClientTable implements TableSchema{
     public String getCreateSql() {
         return "CREATE TABLE " + TABLE_CLIENT + " (" +
                 COL_CLIENT_ID + " INTEGER PRIMARY KEY, " +
-                COL_ADDRESS + "TEXT NOT NULL, " +
+                COL_ADDRESS + " TEXT NOT NULL, " +
                 "FOREIGN KEY ("+ COL_CLIENT_ID + ") REFERENCES users(id) ON DELETE CASCADE);";
     }
 }
