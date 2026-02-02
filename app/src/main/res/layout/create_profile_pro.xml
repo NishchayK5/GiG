@@ -121,9 +121,9 @@
             android:layout_marginTop="45dp"
             android:maxWidth="320dp"
             android:text="@string/button_add_user"
-            android:textColorLink="@color/main_red"
+            android:textColorLink="@color/main_color"
             android:textSize="14sp"
-            app:backgroundTint="@color/main_red" />
+            app:backgroundTint="@color/main_color" />
 
     </LinearLayout>
 
