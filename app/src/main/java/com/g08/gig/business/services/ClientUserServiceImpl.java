@@ -23,7 +23,7 @@ public class ClientUserServiceImpl implements ClientUserService{
     @Override
     public Client addClient(String firstName, String lastName, String email, String password, String phone, String address) {
         validator.validate(firstName, lastName, email);
-
+        //TODO: Add phone number
         Client toCreate = new Client(0, safeTrim(email), firstName.trim(), lastName.trim(), address.trim(), password.trim());
 
         return repo.add(toCreate);

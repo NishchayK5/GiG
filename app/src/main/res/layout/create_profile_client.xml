@@ -19,7 +19,7 @@
             android:layout_height="27dp"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            android:text="Create Customer Account"
+            android:text="Create Client Account"
             android:textSize="18sp" />
 
         <TextView
@@ -91,7 +91,7 @@
             android:textSize="16sp" />
 
         <EditText
-            android:id="@+id/addressInput"
+            android:id="@+id/qualificationsInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/user_address"

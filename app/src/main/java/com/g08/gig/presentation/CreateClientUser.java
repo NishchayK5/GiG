@@ -27,7 +27,7 @@ public class CreateClientUser extends AppCompatActivity {
         lastNameInput = findViewById(R.id.lastNameInput);
         emailInput = findViewById(R.id.emailInput);
         passwordInput = findViewById(R.id.passwordInput);
-        addressInput = findViewById(R.id.addressInput);
+        addressInput = findViewById(R.id.qualificationsInput);
         phoneInput = findViewById(R.id.phoneInput);
 
         clientUserService = ((GiGApp) getApplication()).getClientUserService();

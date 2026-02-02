@@ -14,6 +14,8 @@ public class CreateProUser extends AppCompatActivity {
     private EditText passwordInput;
     private EditText phoneInput;
 
+    private EditText qualificationsInput;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +26,7 @@ public class CreateProUser extends AppCompatActivity {
         emailInput = findViewById(R.id.emailInput);
         passwordInput = findViewById(R.id.passwordInput);
         phoneInput = findViewById(R.id.phoneInput);
+        qualificationsInput = findViewById(R.id.qualificationsInput);
 
         Button addUserButton = findViewById(R.id.addProUserButton);
     }
