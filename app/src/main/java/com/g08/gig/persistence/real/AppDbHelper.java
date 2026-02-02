@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.g08.gig.persistence.real.Client.ClientTable;
+import com.g08.gig.persistence.real.Pro.ProTable;
 import com.g08.gig.persistence.real.user.UserTable;
 
 public class AppDbHelper extends SQLiteOpenHelper {
@@ -12,7 +14,7 @@ public class AppDbHelper extends SQLiteOpenHelper {
     public static final int DB_VERSION = 1;
 
     private static final TableSchema[] SCHEMA_TABLES = {
-        new UserTable()
+        new UserTable(), new ClientTable()
     };
 
     public AppDbHelper(Context context) {
