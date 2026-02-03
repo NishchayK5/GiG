@@ -24,7 +24,7 @@ public class SqlUserRepository implements UserRepository {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.query(
                 UserTable.TABLE_USER,
-                new String[]{UserTable.COL_USER_ID, UserTable.COL_USER_EMAIL, UserTable.COL_USER_FIRST_NAME, UserTable.COL_USER_LAST_NAME, UserTable.COL_USER_PASSWORD},
+                new String[]{UserTable.COL_USER_ID, UserTable.COL_USER_EMAIL, UserTable.COL_USER_FIRST_NAME, UserTable.COL_USER_LAST_NAME, UserTable.COL_USER_PHONE, UserTable.COL_USER_PASSWORD},
                 null, null, null, null,
                 UserTable.COL_USER_ID + " DESC"
         );
@@ -45,7 +45,7 @@ public class SqlUserRepository implements UserRepository {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.query(
                 UserTable.TABLE_USER,
-                new String[]{UserTable.COL_USER_ID, UserTable.COL_USER_EMAIL, UserTable.COL_USER_FIRST_NAME, UserTable.COL_USER_LAST_NAME, UserTable.COL_USER_PASSWORD},
+                new String[]{UserTable.COL_USER_ID, UserTable.COL_USER_EMAIL, UserTable.COL_USER_FIRST_NAME, UserTable.COL_USER_LAST_NAME, UserTable.COL_USER_PHONE, UserTable.COL_USER_PASSWORD},
                 UserTable.COL_USER_ID + "=?",
                 new String[]{String.valueOf(id)},
                 null, null, null
@@ -70,6 +70,7 @@ public class SqlUserRepository implements UserRepository {
             values.put(UserTable.COL_USER_EMAIL, user.getEmail());
             values.put(UserTable.COL_USER_FIRST_NAME, user.getFirstName());
             values.put(UserTable.COL_USER_LAST_NAME, user.getLastName());
+            values.put(UserTable.COL_USER_PHONE, user.getPhoneNumber());
             values.put(UserTable.COL_USER_PASSWORD, user.getPassword());
 
             long newId = db.insert(UserTable.TABLE_USER, null, values);
@@ -95,6 +96,7 @@ public class SqlUserRepository implements UserRepository {
             values.put(UserTable.COL_USER_EMAIL, user.getEmail());
             values.put(UserTable.COL_USER_FIRST_NAME, user.getFirstName());
             values.put(UserTable.COL_USER_LAST_NAME, user.getLastName());
+            values.put(UserTable.COL_USER_PHONE, user.getPhoneNumber());
             values.put(UserTable.COL_USER_PASSWORD, user.getPassword());
 
             int rows = db.update(
@@ -129,6 +131,7 @@ public class SqlUserRepository implements UserRepository {
         String email = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_EMAIL));
         String firstName = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_FIRST_NAME));
         String lastName = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_LAST_NAME));
+        String phoneNumber = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_PHONE));
         String password = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_PASSWORD));
         return new User(id, email, firstName, lastName, password);
     }

@@ -26,9 +26,10 @@ public class SqlClientRepository implements ClientRepository {
                 "users." + UserTable.COL_USER_EMAIL + ", "+
                 "users." + UserTable.COL_USER_FIRST_NAME + ", "+
                 "users." + UserTable.COL_USER_LAST_NAME + ", "+
+                "users." + UserTable.COL_USER_PHONE + ", "+
                 "clients." + ClientTable.COL_ADDRESS + ", " +
                 "users." + UserTable.COL_USER_PASSWORD +  " FROM "
-                + UserTable.TABLE_USER + " JOIN "+ ClientTable.TABLE_CLIENT+
+                + UserTable.TABLE_USER + " JOIN "+ ClientTable.TABLE_CLIENT +
                 " ON clients." + ClientTable.COL_CLIENT_ID + " = users." + UserTable.COL_USER_ID + ";";
         Cursor c = db.rawQuery(SQL_statement,null);
         List<Client> result = new ArrayList<>();
@@ -48,9 +49,10 @@ public class SqlClientRepository implements ClientRepository {
         String email = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_EMAIL));
         String firstName = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_FIRST_NAME));
         String lastName = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_LAST_NAME));
+        String phoneNumber = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_PHONE));
         String password = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_PASSWORD));
         String address = c.getString(c.getColumnIndexOrThrow(ClientTable.COL_ADDRESS));
-        return new Client(id, email, firstName, lastName, password, address);
+        return new Client(id, email, firstName, lastName, phoneNumber, password, address);
     }
     @Override
     public Client getById(int id){
@@ -59,6 +61,7 @@ public class SqlClientRepository implements ClientRepository {
                 "users." + UserTable.COL_USER_EMAIL + ", "+
                 "users." + UserTable.COL_USER_FIRST_NAME + ", "+
                 "users." + UserTable.COL_USER_LAST_NAME + ", "+
+                "users." + UserTable.COL_USER_PHONE + ", " +
                 "clients." + ClientTable.COL_ADDRESS + ", " +
                 "users." + UserTable.COL_USER_PASSWORD +  " FROM "
                 + UserTable.TABLE_USER + " JOIN "+ ClientTable.TABLE_CLIENT+
@@ -84,6 +87,7 @@ public class SqlClientRepository implements ClientRepository {
             values.put(UserTable.COL_USER_EMAIL, client.getEmail());
             values.put(UserTable.COL_USER_FIRST_NAME, client.getFirstName());
             values.put(UserTable.COL_USER_LAST_NAME, client.getLastName());
+            values.put(UserTable.COL_USER_PHONE, client.getPhoneNumber());
             values.put(UserTable.COL_USER_PASSWORD, client.getPassword());
 
             long insertResult = db.insert(UserTable.TABLE_USER, null, values);
@@ -113,6 +117,7 @@ public class SqlClientRepository implements ClientRepository {
             userValues.put(UserTable.COL_USER_EMAIL, client.getEmail());
             userValues.put(UserTable.COL_USER_FIRST_NAME, client.getFirstName());
             userValues.put(UserTable.COL_USER_LAST_NAME, client.getLastName());
+            userValues.put(UserTable.COL_USER_PHONE, client.getPhoneNumber());
             userValues.put(UserTable.COL_USER_PASSWORD, client.getPassword());
 
             int rows = db.update(UserTable.TABLE_USER, userValues, UserTable.COL_USER_ID + "?", new String[]{String.valueOf(client.getId())});

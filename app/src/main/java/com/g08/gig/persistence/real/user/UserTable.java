@@ -12,6 +12,7 @@ public final class UserTable implements TableSchema {
     public static final String COL_USER_FIRST_NAME = "first_name";
     public static final String COL_USER_LAST_NAME = "last_name";
     public static final String COL_USER_EMAIL = "email";
+    public static final String COL_USER_PHONE = "phoneNumber";
     public static final String COL_USER_PASSWORD = "password";
 
     @Override
@@ -26,6 +27,7 @@ public final class UserTable implements TableSchema {
                 COL_USER_FIRST_NAME + " TEXT NOT NULL, " +
                 COL_USER_LAST_NAME + " TEXT NOT NULL, " +
                 COL_USER_EMAIL + " TEXT NOT NULL, " +
+                COL_USER_PHONE + " TEXT NOT NULL, " +
                 COL_USER_PASSWORD + " TEXT" +
                 ");";
     }
