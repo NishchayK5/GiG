@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/user_password"
             android:importantForAutofill="no"
-            android:inputType="textPersonName"
+            android:inputType="textPassword"
             android:maxWidth="320dp"
             android:minHeight="48dp"
             android:textColorHint="#666666"
@@ -103,13 +103,25 @@
             android:textSize="16sp" />
 
         <EditText
+            android:id="@+id/cityInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/user_city"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:maxWidth="320dp"
+            android:minHeight="48dp"
+            android:textColorHint="#666666"
+            android:textSize="16sp" />
+
+        <EditText
             android:id="@+id/qualificationsInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:hint="@string/user_qualifications"
             android:importantForAutofill="no"
-            android:inputType="textPersonName"
+            android:inputType="text"
             android:maxWidth="320dp"
             android:minHeight="48dp"
             android:textColorHint="#666666"

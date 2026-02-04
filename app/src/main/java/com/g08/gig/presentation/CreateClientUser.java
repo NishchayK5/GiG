@@ -27,7 +27,7 @@ public class CreateClientUser extends AppCompatActivity {
         lastNameInput = findViewById(R.id.lastNameInput);
         emailInput = findViewById(R.id.emailInput);
         passwordInput = findViewById(R.id.passwordInput);
-        addressInput = findViewById(R.id.qualificationsInput);
+        addressInput = findViewById(R.id.addressInput);
         phoneInput = findViewById(R.id.phoneInput);
 
         clientUserService = ((GiGApp) getApplication()).getClientUserService();
@@ -45,10 +45,20 @@ public class CreateClientUser extends AppCompatActivity {
                         addressInput.getText().toString()
                 );
 
+                clearInputs();
+
             } catch (com.g08.gig.business.validation.ValidationException ex) {
                 emailInput.setError(ex.getMessage());
                 emailInput.requestFocus();
             }
         });
+    }
+    private void clearInputs() {
+        firstNameInput.setText("");
+        lastNameInput.setText("");
+        emailInput.setText("");
+        phoneInput.setText("");
+        addressInput.setText("");
+        passwordInput.setText("");
     }
 }

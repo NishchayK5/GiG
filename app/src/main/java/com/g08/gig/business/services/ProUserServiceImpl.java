@@ -1,59 +1,53 @@
-//package com.g08.gig.business.services;
-//
-//import com.g08.gig.business.validation.UserValidator;
-//import com.g08.gig.models.User;
-//import com.g08.gig.persistence.UserRepository;
-//
-//import java.util.List;
-//
-//public class ProUserServiceImpl implements CustomerUserService {
-//
-//    private final UserRepository repo;
-//    private final UserValidator validator;
-//
-//    public ProUserServiceImpl(UserRepository repo) {
-//        this(repo, new UserValidator());
-//    }
-//
-//    public ProUserServiceImpl(UserRepository repo, UserValidator validator) {
-//        this.repo = repo;
-//        this.validator = validator;
-//    }
-//
-//    @Override
-//    public List<User> getAllUsers() {
-//        return repo.getAll();
-//    }
-//
-//    @Override
-//    public User addUser(String firstName, String lastName, String email) {
-//        validator.validate(firstName, lastName, email);
-//
-//        User toCreate = new User(0, safeTrim(email), firstName.trim(), lastName.trim(), null);
-//
-//        return repo.add(toCreate);
-//    }
-//
-//    @Override
-//    public boolean updateUser(int id, String firstName, String lastName, String email) {
-//        validator.validate(firstName, lastName, email);
-//
-//        User existing = repo.getById(id);
-//        if (existing == null) return false;
-//
-//        User updated = new User(id, safeTrim(email), firstName.trim(), lastName.trim(), existing.getPassword());
-//
-//        return repo.update(updated);
-//    }
-//
-//    @Override
-//    public boolean deleteUser(int id) {
-//        return repo.delete(id);
-//    }
-//
-//    private String safeTrim(String s) {
-//        if (s == null) return null;
-//        String trimmed = s.trim();
-//        return trimmed.isEmpty() ? null : trimmed;
-//    }
-//}
+package com.g08.gig.business.services;
+
+import com.g08.gig.business.validation.UserValidator;
+import com.g08.gig.models.Pro;
+import com.g08.gig.persistence.ProRepository;
+
+
+public class ProUserServiceImpl implements ProUserService {
+
+    private final ProRepository repo;
+    private final UserValidator validator;
+
+    public ProUserServiceImpl(ProRepository repo) {
+        this(repo, new UserValidator());
+    }
+
+    public ProUserServiceImpl(ProRepository repo, UserValidator validator) {
+        this.repo = repo;
+        this.validator = validator;
+    }
+
+    @Override
+    public Pro addPro(String email, String firstName, String lastName, String phoneNumber, String password, String[] skillSet, String cityOfOperation) {
+        validator.validate(firstName, lastName, email);
+
+        Pro toCreate = new Pro(0, safeTrim(email), firstName.trim(), lastName.trim(), phoneNumber.trim(), password.trim(), skillSet, cityOfOperation.trim());
+
+        return repo.add(toCreate);
+    }
+
+    @Override
+    public boolean updatePro(int id, String email, String firstName, String lastName, String phoneNumber, String[] skillSet, String cityOfOperation) {
+        validator.validate(firstName, lastName, email);
+
+        Pro existing = repo.getById(id);
+        if (existing == null) return false;
+
+        Pro updated = new Pro(id, safeTrim(email), firstName.trim(), lastName.trim(), phoneNumber.trim(), existing.getPassword(), skillSet, cityOfOperation.trim());
+
+        return repo.update(updated);
+    }
+
+    @Override
+    public boolean deletePro(int id) {
+        return repo.delete(id);
+    }
+
+    private String safeTrim(String s) {
+        if (s == null) return null;
+        String trimmed = s.trim();
+        return trimmed.isEmpty() ? null : trimmed;
+    }
+}

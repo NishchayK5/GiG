@@ -1,12 +1,9 @@
 package com.g08.gig.business.services;
 
-import com.g08.gig.models.User;
+import com.g08.gig.models.Pro;
 
-import java.util.List;
-
-//public interface ProUserService {
-//    List<User> getAllUsers();
-//    User addUser(String firstName, String lastName, String email);
-//    boolean updateUser(int id, String firstName, String lastName, String email);
-//    boolean deleteUser(int id);
-//}
+public interface ProUserService {
+    Pro addPro(String email, String firstName, String lastName, String phoneNumber, String password, String[] skillSet, String cityOfOperation);
+    boolean updatePro(int id, String email, String firstName, String lastName, String phoneNumber, String[] skillSet, String cityOfOperation);
+    boolean deletePro(int id);
+}

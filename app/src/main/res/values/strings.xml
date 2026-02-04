@@ -57,5 +57,6 @@
     <string name="user_address">Address</string>
     <string name="button_add_user">Create Account</string>
     <string name="user_qualifications">Qualifications (comma-separated)</string>
+    <string name="user_city">City of Operation</string>
 
 </resources>

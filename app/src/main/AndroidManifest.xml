@@ -14,7 +14,7 @@
         android:theme="@style/Theme.Sample_project">
 
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".presentation.CreateProUser"
             android:exported="true"
             android:theme="@style/Theme.Sample_project">
 

@@ -24,7 +24,7 @@ public class ClientUserServiceImpl implements ClientUserService{
     public Client addClient(String firstName, String lastName, String email, String password, String phone, String address) {
         validator.validate(firstName, lastName, email);
         //TODO: Add phone number
-        Client toCreate = new Client(0, safeTrim(email), firstName.trim(), lastName.trim(), address.trim(), password.trim());
+        Client toCreate = new Client(0, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), address.trim(), password.trim());
 
         return repo.add(toCreate);
     }
@@ -36,7 +36,7 @@ public class ClientUserServiceImpl implements ClientUserService{
         Client existing = repo.getById(id);
         if (existing == null) return false;
 
-        Client updated = new Client(id, safeTrim(email), firstName.trim(), lastName.trim(), address.trim(), existing.getPassword());
+        Client updated = new Client(id, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), address.trim(), existing.getPassword());
 
         return repo.update(updated);
     }
