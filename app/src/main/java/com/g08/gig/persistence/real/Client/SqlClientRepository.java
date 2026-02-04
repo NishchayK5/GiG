@@ -94,7 +94,7 @@ public class SqlClientRepository implements ClientRepository {
             if (insertResult == -1) return null;
             int userID = (int) insertResult;
             ContentValues clientValues = new ContentValues();
-            clientValues.put(ClientTable.COL_CLIENT_ID, client.getId());
+            clientValues.put(ClientTable.COL_CLIENT_ID, userID);
             clientValues.put(ClientTable.COL_ADDRESS, client.getAddress());
             long result = db.insert(ClientTable.TABLE_CLIENT, null, clientValues);
             if(result == -1) return null;

@@ -60,10 +60,11 @@ public class SqlProRepository implements ProRepository{
                 "users." + UserTable.COL_USER_FIRST_NAME + ", "+
                 "users." + UserTable.COL_USER_LAST_NAME + ", "+
                 "users." + UserTable.COL_USER_PHONE + ", "+
-                "pro." + ProTable.COL_PRO_CITY_LOCATION+", "+
+                "pros." + ProTable.COL_PRO_CITY_LOCATION+", "+
                 "users." + UserTable.COL_USER_PASSWORD +  " FROM "
                 + UserTable.TABLE_USER + " JOIN "+ ProTable.TABLE_PRO +
-                " ON clients." + ClientTable.COL_CLIENT_ID + " = users." + UserTable.COL_USER_ID + ";";
+                " ON pros." + ProTable.COL_PRO_ID + " = users." + UserTable.COL_USER_ID +
+                " WHERE users." + UserTable.COL_USER_ID + " =?;";
         String[] selectionArgs = {String.valueOf(id)};
         Cursor c = db.rawQuery(SQL_statement, selectionArgs);
         try {
@@ -93,7 +94,7 @@ public class SqlProRepository implements ProRepository{
             int userID = (int) insertResult;
 
             ContentValues proValues = new ContentValues();
-            proValues.put(ProTable.COL_PRO_ID, pro.getId());
+            proValues.put(ProTable.COL_PRO_ID, userID);
             proValues.put(ProTable.COL_PRO_CITY_LOCATION, pro.getCityOfOperation());
             long result = db.insert(ProTable.TABLE_PRO,null, proValues);
             if(result==-1) return null;
