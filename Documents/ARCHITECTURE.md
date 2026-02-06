@@ -8,4 +8,4 @@
 
 ## Architecture Diagram
 
-Pdf: [Architecture Diagram](Architecture_Model_GiG.pdf)
+![Architecture Diagram](Architecture_Model_GiG.jpg)
