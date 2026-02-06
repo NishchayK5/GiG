@@ -21,8 +21,8 @@ public class ClientUserServiceImpl implements ClientUserService{
     }
 
     @Override
-    public Client addClient(String firstName, String lastName, String email, String password, String phone, String address) {
-        validator.validate(firstName, lastName, email);
+    public Client addClient(String firstName, String lastName, String email, String password, String confirmPassword, String phone, String address) {
+        validator.validate(firstName, lastName, email, phone, password, confirmPassword);
         //TODO: Add phone number
         Client toCreate = new Client(0, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), address.trim(), password.trim());
 
@@ -31,7 +31,7 @@ public class ClientUserServiceImpl implements ClientUserService{
 
     @Override
     public boolean updateClient(int id, String firstName, String lastName, String email, String password, String phone, String address) {
-        validator.validate(firstName, lastName, email);
+        validator.validate(firstName, lastName, email, phone);
 
         Client existing = repo.getById(id);
         if (existing == null) return false;

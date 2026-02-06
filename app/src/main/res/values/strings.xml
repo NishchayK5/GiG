@@ -54,6 +54,7 @@
     <string name="user_phone_number">Phone Number</string>
     <string name="user_username">Username</string>
     <string name="user_password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
     <string name="user_address">Address</string>
     <string name="button_add_user">Create Account</string>
     <string name="user_qualifications">Qualifications (comma-separated)</string>

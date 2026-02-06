@@ -1,5 +1,6 @@
 package com.g08.gig.presentation;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Button;
@@ -14,6 +15,7 @@ public class CreateProUser extends AppCompatActivity {
     private EditText lastNameInput;
     private EditText emailInput;
     private EditText passwordInput;
+    private EditText confirmPassword;
     private EditText phoneInput;
     private EditText cityInput;
     private EditText qualificationsInput;
@@ -31,7 +33,10 @@ public class CreateProUser extends AppCompatActivity {
         firstNameInput = findViewById(R.id.firstNameInput);
         lastNameInput = findViewById(R.id.lastNameInput);
         emailInput = findViewById(R.id.emailInput);
+
+        //TODO: Add confirm password
         passwordInput = findViewById(R.id.passwordInput);
+        confirmPassword = findViewById(R.id.confirmPassword);
         phoneInput = findViewById(R.id.phoneInput);
         cityInput = findViewById(R.id.cityInput);
         qualificationsInput = findViewById(R.id.qualificationsInput);
@@ -48,10 +53,13 @@ public class CreateProUser extends AppCompatActivity {
                         lastNameInput.getText().toString(),
                         phoneInput.getText().toString(),
                         passwordInput.getText().toString(),
+                        confirmPassword.getText().toString(),
                         qualifications,
                         cityInput.getText().toString()
                 );
                 clearInputs();
+                startActivity(new Intent(CreateProUser.this, StartUp.class));
+
 
             } catch (com.g08.gig.business.validation.ValidationException ex) {
                 emailInput.setError(ex.getMessage());
@@ -67,5 +75,6 @@ public class CreateProUser extends AppCompatActivity {
         cityInput.setText("");
         qualificationsInput.setText("");
         passwordInput.setText("");
+        confirmPassword.setText("");
     }
 }

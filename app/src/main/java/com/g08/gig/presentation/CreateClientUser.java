@@ -1,5 +1,6 @@
 package com.g08.gig.presentation;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Button;
@@ -14,6 +15,7 @@ public class CreateClientUser extends AppCompatActivity {
     private EditText lastNameInput;
     private EditText emailInput;
     private EditText passwordInput;
+    private EditText confirmPassword;
     private EditText addressInput;
     private EditText phoneInput;
     private ClientUserService clientUserService;
@@ -26,7 +28,10 @@ public class CreateClientUser extends AppCompatActivity {
         firstNameInput = findViewById(R.id.firstNameInput);
         lastNameInput = findViewById(R.id.lastNameInput);
         emailInput = findViewById(R.id.emailInput);
+
+        //TODO: Add confirm password
         passwordInput = findViewById(R.id.passwordInput);
+        confirmPassword = findViewById(R.id.confirmPassword);
         addressInput = findViewById(R.id.addressInput);
         phoneInput = findViewById(R.id.phoneInput);
 
@@ -41,11 +46,15 @@ public class CreateClientUser extends AppCompatActivity {
                         lastNameInput.getText().toString(),
                         emailInput.getText().toString(),
                         passwordInput.getText().toString(),
+                        confirmPassword.getText().toString(),
                         phoneInput.getText().toString(),
                         addressInput.getText().toString()
+
                 );
 
                 clearInputs();
+                startActivity(new Intent(CreateClientUser.this, StartUp.class));
+
 
             } catch (com.g08.gig.business.validation.ValidationException ex) {
                 emailInput.setError(ex.getMessage());
@@ -60,5 +69,6 @@ public class CreateClientUser extends AppCompatActivity {
         phoneInput.setText("");
         addressInput.setText("");
         passwordInput.setText("");
+        confirmPassword.setText("");
     }
 }

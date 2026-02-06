@@ -20,22 +20,22 @@ public class ProUserServiceImpl implements ProUserService {
     }
 
     @Override
-    public Pro addPro(String email, String firstName, String lastName, String phoneNumber, String password, String[] skillSet, String cityOfOperation) {
-        validator.validate(firstName, lastName, email);
+    public Pro addPro(String email, String firstName, String lastName, String phone, String password, String confirmPassowrd, String[] skillSet, String cityOfOperation) {
+        validator.validate(firstName, lastName, email, phone, password, confirmPassowrd);
 
-        Pro toCreate = new Pro(0, safeTrim(email), firstName.trim(), lastName.trim(), phoneNumber.trim(), password.trim(), skillSet, cityOfOperation.trim());
+        Pro toCreate = new Pro(0, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), password.trim(), skillSet, cityOfOperation.trim());
 
         return repo.add(toCreate);
     }
 
     @Override
-    public boolean updatePro(int id, String email, String firstName, String lastName, String phoneNumber, String[] skillSet, String cityOfOperation) {
-        validator.validate(firstName, lastName, email);
+    public boolean updatePro(int id, String email, String firstName, String lastName, String phone, String[] skillSet, String cityOfOperation) {
+        validator.validate(firstName, lastName, email, phone);
 
         Pro existing = repo.getById(id);
         if (existing == null) return false;
 
-        Pro updated = new Pro(id, safeTrim(email), firstName.trim(), lastName.trim(), phoneNumber.trim(), existing.getPassword(), skillSet, cityOfOperation.trim());
+        Pro updated = new Pro(id, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), existing.getPassword(), skillSet, cityOfOperation.trim());
 
         return repo.update(updated);
     }
