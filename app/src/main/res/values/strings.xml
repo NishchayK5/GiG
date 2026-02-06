@@ -59,4 +59,16 @@
     <string name="user_qualifications">Qualifications (comma-separated)</string>
     <string name="user_city">City of Operation</string>
 
+    <!-- Strings used for universal_home_page -->
+    <string name="home_login_button">Login</string>
+    <string name="home_client_button">Create Client Account</string>
+    <string name="home_pro_button">Create PRO Account</string>
+
+    <!-- Strings used for home_client -->
+    <string name="home_client_text">Client Home</string>
+
+    <!-- Strings used for pro_client -->
+    <string name="home_pro_text">PRO Home</string>
+
+
 </resources>
