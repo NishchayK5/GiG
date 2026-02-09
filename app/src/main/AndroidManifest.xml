@@ -14,7 +14,7 @@
         android:theme="@style/Theme.Sample_project">
 
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".presentation.StartUp"
             android:exported="true"
             android:theme="@style/Theme.Sample_project">
 
@@ -24,6 +24,12 @@
             </intent-filter>
 
         </activity>
+        <activity android:name=".presentation.CreateClientUser" />
+        <activity android:name=".presentation.CreateProUser" />
+        <activity android:name=".presentation.Login" />
+        <activity android:name=".presentation.ClientHome" />
+        <activity android:name=".presentation.ProHome" />
+
 
     </application>
 

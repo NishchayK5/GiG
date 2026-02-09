@@ -2,7 +2,8 @@ package com.g08.gig.business.validation;
 
 public class UserValidator {
 
-    public void validate(String firstName, String lastName, String email) {
+    public void validate(String firstName, String lastName, String email, String phone)
+    {
         if (firstName == null || firstName.trim().isEmpty()) {
             throw new ValidationException("First name is required.");
         }
@@ -24,6 +25,19 @@ public class UserValidator {
         // Basic email format check
         if (!email.trim().contains("@")) {
             throw new ValidationException("Email must be a valid format.");
+        }
+
+        if (phone.trim().length() != 10) {
+            throw new ValidationException("Phone number must be exactly 10 digits long.");
+        }
+    }
+
+
+    public void validate(String firstName, String lastName, String email, String phone, String password, String confirmPassword) {
+        validate(firstName, lastName, email, phone);
+
+        if (!password.trim().equals(confirmPassword.trim())) {
+            throw new ValidationException("Passwords must match.");
         }
     }
 }

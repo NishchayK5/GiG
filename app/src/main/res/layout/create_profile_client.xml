@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:id="@+id/rootLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="27dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="Create Client Account"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:gravity="left"
+            android:text="Login Information"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/emailInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:hint="@string/user_email"
+            android:importantForAutofill="no"
+            android:inputType="textEmailAddress"
+            android:maxWidth="320dp"
+            android:minHeight="48dp"
+            android:textColorHint="#666666"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/passwordInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/user_password"
+            android:importantForAutofill="no"
+            android:inputType="textPassword"
+            android:maxWidth="320dp"
+            android:minHeight="48dp"
+            android:textColorHint="#666666"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/confirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/confirm_password"
+            android:importantForAutofill="no"
+            android:inputType="textPassword"
+            android:maxWidth="320dp"
+            android:minHeight="48dp"
+            android:textColorHint="#666666"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:gravity="left"
+            android:text="Personal Information"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/firstNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:hint="@string/user_first_name"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName"
+            android:maxWidth="320dp"
+            android:minHeight="48dp"
+            android:textColorHint="#666666"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/lastNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/user_last_name"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName"
+            android:maxWidth="320dp"
+            android:minHeight="48dp"
+            android:textColorHint="#666666"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/addressInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/user_address"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName"
+            android:maxWidth="320dp"
+            android:minHeight="48dp"
+            android:textColorHint="#666666"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/phoneInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/user_phone_number"
+            android:importantForAutofill="no"
+            android:inputType="phone"
+            android:maxWidth="320dp"
+            android:minHeight="48dp"
+            android:textColorHint="#666666"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/addCustomerUserButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            android:maxWidth="320dp"
+            android:text="@string/button_add_user"
+            android:textColorLink="@color/main_cust_color"
+            android:textSize="14sp"
+            app:backgroundTint="@color/main_cust_color" />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

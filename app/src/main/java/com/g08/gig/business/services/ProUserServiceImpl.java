@@ -1,0 +1,53 @@
+package com.g08.gig.business.services;
+
+import com.g08.gig.business.validation.UserValidator;
+import com.g08.gig.models.Pro;
+import com.g08.gig.persistence.ProRepository;
+
+
+public class ProUserServiceImpl implements ProUserService {
+
+    private final ProRepository repo;
+    private final UserValidator validator;
+
+    public ProUserServiceImpl(ProRepository repo) {
+        this(repo, new UserValidator());
+    }
+
+    public ProUserServiceImpl(ProRepository repo, UserValidator validator) {
+        this.repo = repo;
+        this.validator = validator;
+    }
+
+    @Override
+    public Pro addPro(String email, String firstName, String lastName, String phone, String password, String confirmPassowrd, String[] skillSet, String cityOfOperation) {
+        validator.validate(firstName, lastName, email, phone, password, confirmPassowrd);
+
+        Pro toCreate = new Pro(0, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), password.trim(), skillSet, cityOfOperation.trim());
+
+        return repo.add(toCreate);
+    }
+
+    @Override
+    public boolean updatePro(int id, String email, String firstName, String lastName, String phone, String[] skillSet, String cityOfOperation) {
+        validator.validate(firstName, lastName, email, phone);
+
+        Pro existing = repo.getById(id);
+        if (existing == null) return false;
+
+        Pro updated = new Pro(id, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), existing.getPassword(), skillSet, cityOfOperation.trim());
+
+        return repo.update(updated);
+    }
+
+    @Override
+    public boolean deletePro(int id) {
+        return repo.delete(id);
+    }
+
+    private String safeTrim(String s) {
+        if (s == null) return null;
+        String trimmed = s.trim();
+        return trimmed.isEmpty() ? null : trimmed;
+    }
+}
