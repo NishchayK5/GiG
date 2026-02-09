@@ -60,6 +60,25 @@ public class SqlUserRepository implements UserRepository {
     }
 
     @Override
+    public User getByEmail(String email) {
+        if (email == null || email.trim().isEmpty()) return null;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.query(
+                UserTable.TABLE_USER,
+                new String[]{UserTable.COL_USER_ID, UserTable.COL_USER_EMAIL, UserTable.COL_USER_FIRST_NAME, UserTable.COL_USER_LAST_NAME, UserTable.COL_USER_PHONE, UserTable.COL_USER_PASSWORD},
+                UserTable.COL_USER_EMAIL + "=?",
+                new String[]{email.trim()},
+                null, null, null
+        );
+        try {
+            if (!c.moveToFirst()) return null;
+            return cursorToUser(c);
+        } finally {
+            c.close();
+        }
+    }
+
+    @Override
     public User add(User user) {
         if (user == null) return null;
 
@@ -133,6 +152,6 @@ public class SqlUserRepository implements UserRepository {
         String lastName = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_LAST_NAME));
         String phoneNumber = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_PHONE));
         String password = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_PASSWORD));
-        return new User(id, email, firstName, lastName, password);
+        return new User(id, email, firstName, lastName, phoneNumber, password);
     }
 }

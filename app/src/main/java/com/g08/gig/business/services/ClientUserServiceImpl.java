@@ -4,9 +4,13 @@ import com.g08.gig.business.validation.UserValidator;
 import com.g08.gig.models.Client;
 import com.g08.gig.persistence.ClientRepository;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
+
 import java.util.List;
 
 public class ClientUserServiceImpl implements ClientUserService{
+
+    private static final int BCRYPT_COST = 12;
 
     private final ClientRepository repo;
     private final UserValidator validator;
@@ -23,8 +27,8 @@ public class ClientUserServiceImpl implements ClientUserService{
     @Override
     public Client addClient(String firstName, String lastName, String email, String password, String confirmPassword, String phone, String address) {
         validator.validate(firstName, lastName, email, phone, password, confirmPassword);
-        //TODO: Add phone number
-        Client toCreate = new Client(0, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), address.trim(), password.trim());
+        String hashedPassword = BCrypt.withDefaults().hashToString(BCRYPT_COST, password.trim().toCharArray());
+        Client toCreate = new Client(0, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), address.trim(), hashedPassword);
 
         return repo.add(toCreate);
     }

@@ -55,7 +55,9 @@ public class CreateClientUser extends AppCompatActivity {
                         addressInput.getText().toString()
                 );
                 clearInputs();
-                startActivity(new Intent(CreateClientUser.this, StartUp.class));
+                Intent intent = new Intent(CreateClientUser.this, Login.class);
+                startActivity(intent);
+                finish();
             } catch (com.g08.gig.business.validation.ValidationException ex) {
                 EditText errorField = getErrorFieldForMessage(ex.getMessage());
                 if (errorField != null) {

@@ -1,13 +1,18 @@
 package com.g08.gig.presentation;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.g08.gig.R;
+import com.g08.gig.application.GiGApp;
+import com.g08.gig.business.services.AuthService;
+import com.g08.gig.business.services.LoginResult;
 
 public class Login extends AppCompatActivity {
 
@@ -22,6 +27,8 @@ public class Login extends AppCompatActivity {
         EditText emailInput = findViewById(R.id.emailInput);
         EditText passwordInput = findViewById(R.id.passwordInput);
         Button loginButton = findViewById(R.id.loginbutton);
+
+        AuthService authService = ((GiGApp) getApplication()).getAuthService();
 
         loginButton.setOnClickListener(v -> {
             String email = emailInput.getText() != null ? emailInput.getText().toString().trim() : "";
@@ -50,7 +57,18 @@ public class Login extends AppCompatActivity {
                 }
                 return;
             }
-            // TODO: proceed with login
+
+            LoginResult result = authService.login(email, password);
+            if (result.isSuccess()) {
+                Intent intent = result.isClient()
+                        ? new Intent(Login.this, ClientHome.class)
+                        : new Intent(Login.this, ProHome.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(this, getString(R.string.login_error_invalid_credentials), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }

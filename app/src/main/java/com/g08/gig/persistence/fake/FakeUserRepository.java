@@ -55,6 +55,15 @@ public class FakeUserRepository implements UserRepository {
         return false;
     }
 
+
+    @Override
+    public User getByEmail(String email) {
+        for (User user : users) {
+            if (user.getEmail().equals(email)) return user;
+        }
+        return null;
+    }
+
     @Override
     public boolean delete(int id) {
         for (int i = 0; i < users.size(); i++) {

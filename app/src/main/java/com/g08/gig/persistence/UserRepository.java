@@ -8,6 +8,8 @@ public interface UserRepository {
 
     User getById(int id);
 
+    User getByEmail(String email);
+
     User add(User user);
 
     boolean update(User user);

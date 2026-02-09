@@ -4,8 +4,12 @@ import com.g08.gig.business.validation.UserValidator;
 import com.g08.gig.models.Pro;
 import com.g08.gig.persistence.ProRepository;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
+
 
 public class ProUserServiceImpl implements ProUserService {
+
+    private static final int BCRYPT_COST = 12;
 
     private final ProRepository repo;
     private final UserValidator validator;
@@ -23,7 +27,8 @@ public class ProUserServiceImpl implements ProUserService {
     public Pro addPro(String email, String firstName, String lastName, String phone, String password, String confirmPassowrd, String[] skillSet, String cityOfOperation) {
         validator.validate(firstName, lastName, email, phone, password, confirmPassowrd);
 
-        Pro toCreate = new Pro(0, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), password.trim(), skillSet, cityOfOperation.trim());
+        String hashedPassword = BCrypt.withDefaults().hashToString(BCRYPT_COST, password.trim().toCharArray());
+        Pro toCreate = new Pro(0, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), hashedPassword, skillSet, cityOfOperation.trim());
 
         return repo.add(toCreate);
     }

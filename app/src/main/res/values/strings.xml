@@ -75,6 +75,7 @@
     <string name="login_error_email_required">Email is required.</string>
     <string name="login_error_email_invalid">Please enter a valid email address.</string>
     <string name="login_error_password_required">Password is required.</string>
+    <string name="login_error_invalid_credentials">Invalid email or password.</string>
     <string name="login_forgot_password_message">Did you forget your password? That\'s not a problem.</string>
     <string name="login_forgot_password_button">Forgot password</string>
     <string name="home_login_button">Login</string>

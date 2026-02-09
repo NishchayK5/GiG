@@ -62,7 +62,9 @@ public class CreateProUser extends AppCompatActivity {
                         cityInput.getText().toString()
                 );
                 clearInputs();
-                startActivity(new Intent(CreateProUser.this, StartUp.class));
+                Intent intent = new Intent(CreateProUser.this, Login.class);
+                startActivity(intent);
+                finish();
             } catch (com.g08.gig.business.validation.ValidationException ex) {
                 EditText errorField = getErrorFieldForMessage(ex.getMessage());
                 if (errorField != null) {
