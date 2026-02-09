@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">sample_project</string>
+    <string name="app_name">g08</string>
+    <string name="splash_logo_content_description">App logo</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -56,14 +57,31 @@
     <string name="user_password">Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="user_address">Address</string>
-    <string name="button_add_user">Create Account</string>
+    <string name="client_create_title">Register as a GIG Client</string>
+    <string name="client_create_subtitle">Sign up to book mechanics and manage your repairs.</string>
+    <string name="button_add_user">Register</string>
     <string name="user_qualifications">Qualifications (comma-separated)</string>
     <string name="user_city">City of Operation</string>
+    <string name="pro_create_title">Register as a GIG Professional</string>
+    <string name="pro_create_subtitle">Sign up to offer your services and connect with clients.</string>
+    <string name="pro_section_professional">Professional Information</string>
 
     <!-- Strings used for universal_home_page -->
+    <string name="home_tagline_line1">Get Back on the Road Faster</string>
+    <string name="home_tagline_line2">Log in to book trusted mechanics, track repairs in real time, and enjoy fair, transparent pricing all in one place.</string>
+    <string name="back">Back</string>
+    <string name="login_title">Login</string>
+    <string name="login_subtitle">Welcome back. Sign in to pick up where you left off.</string>
+    <string name="login_error_email_required">Email is required.</string>
+    <string name="login_error_email_invalid">Please enter a valid email address.</string>
+    <string name="login_error_password_required">Password is required.</string>
+    <string name="login_forgot_password_message">Did you forget your password? That\'s not a problem.</string>
+    <string name="login_forgot_password_button">Forgot password</string>
     <string name="home_login_button">Login</string>
-    <string name="home_client_button">Create Client Account</string>
-    <string name="home_pro_button">Create PRO Account</string>
+    <string name="home_client_button">GIG Client</string>
+    <string name="home_pro_button">GIG Pro</string>
+    <string name="home_register_as">Register as a...</string>
+
 
     <!-- Strings used for home_client -->
     <string name="home_client_text">Client Home</string>

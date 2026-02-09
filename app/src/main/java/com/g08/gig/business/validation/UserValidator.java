@@ -27,6 +27,9 @@ public class UserValidator {
             throw new ValidationException("Email must be a valid format.");
         }
 
+        if (phone == null || phone.trim().isEmpty()) {
+            throw new ValidationException("Phone number is required.");
+        }
         if (phone.trim().length() != 10) {
             throw new ValidationException("Phone number must be exactly 10 digits long.");
         }
@@ -36,6 +39,12 @@ public class UserValidator {
     public void validate(String firstName, String lastName, String email, String phone, String password, String confirmPassword) {
         validate(firstName, lastName, email, phone);
 
+        if (password == null || password.trim().isEmpty()) {
+            throw new ValidationException("Password is required.");
+        }
+        if (confirmPassword == null || confirmPassword.trim().isEmpty()) {
+            throw new ValidationException("Confirm password is required.");
+        }
         if (!password.trim().equals(confirmPassword.trim())) {
             throw new ValidationException("Passwords must match.");
         }

@@ -15,35 +15,41 @@
         android:id="@+id/firstNameInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorHint="#666666"
+        android:background="@drawable/edittext_bordered"
         android:hint="@string/user_first_name"
         android:importantForAutofill="no"
+        android:inputType="textPersonName"
         android:maxWidth="320dp"
         android:minHeight="48dp"
-        android:inputType="textPersonName"
+        android:padding="12dp"
+        android:textColorHint="#666666"
         android:textSize="16sp" />
 
     <EditText
         android:id="@+id/lastNameInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorHint="#666666"
+        android:background="@drawable/edittext_bordered"
         android:hint="@string/user_last_name"
         android:importantForAutofill="no"
+        android:inputType="textPersonName"
         android:maxWidth="320dp"
         android:minHeight="48dp"
-        android:inputType="textPersonName"
+        android:padding="12dp"
+        android:textColorHint="#666666"
         android:textSize="16sp" />
 
     <EditText
         android:id="@+id/emailInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorHint="#666666"
+        android:background="@drawable/edittext_bordered"
         android:hint="@string/user_email"
         android:importantForAutofill="no"
-        android:minHeight="48dp"
         android:inputType="textEmailAddress"
+        android:minHeight="48dp"
+        android:padding="12dp"
+        android:textColorHint="#666666"
         android:textSize="16sp" />
 
     <View
