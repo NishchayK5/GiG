@@ -112,51 +112,60 @@
             android:padding="12dp"
             android:textColorHint="#666666"
             android:textSize="16sp" />
+        <EditText
+            android:id="@+id/phoneInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_bordered"
+            android:hint="@string/user_phone_number"
+            android:importantForAutofill="no"
+            android:inputType="phone"
+            android:layout_marginVertical="@dimen/button_vertical_margin"
+            android:maxWidth="320dp"
+            android:minHeight="48dp"
+            android:padding="12dp"
+            android:textColorHint="#666666"
+            android:textSize="16sp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:endIconMode="password_toggle">
             <EditText
-                android:id="@+id/phoneInput"
+                android:id="@+id/passwordInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_bordered"
-                android:hint="@string/user_phone_number"
+                android:hint="@string/user_password"
                 android:importantForAutofill="no"
-                android:inputType="phone"
+                android:inputType="textPassword"
                 android:layout_marginVertical="@dimen/button_vertical_margin"
                 android:maxWidth="320dp"
                 android:minHeight="48dp"
                 android:padding="12dp"
                 android:textColorHint="#666666"
                 android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:endIconMode="password_toggle">
             <EditText
-            android:id="@+id/passwordInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_bordered"
-            android:hint="@string/user_password"
-            android:importantForAutofill="no"
-            android:inputType="textPassword"
-            android:layout_marginVertical="@dimen/button_vertical_margin"
-            android:maxWidth="320dp"
-            android:minHeight="48dp"
-            android:padding="12dp"
-            android:textColorHint="#666666"
-            android:textSize="16sp" />
-
-        <EditText
-            android:id="@+id/confirmPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_bordered"
-            android:hint="@string/confirm_password"
-            android:importantForAutofill="no"
-            android:inputType="textPassword"
-            android:layout_marginVertical="@dimen/button_vertical_margin"
-            android:maxWidth="320dp"
-            android:minHeight="48dp"
-            android:padding="12dp"
-            android:textColorHint="#666666"
-            android:textSize="16sp" />
+                android:id="@+id/confirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_bordered"
+                android:hint="@string/confirm_password"
+                android:importantForAutofill="no"
+                android:inputType="textPassword"
+                android:layout_marginVertical="@dimen/button_vertical_margin"
+                android:maxWidth="320dp"
+                android:minHeight="48dp"
+                android:padding="12dp"
+                android:textColorHint="#666666"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
             android:id="@+id/sectionProfessional"
