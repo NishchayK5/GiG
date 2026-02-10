@@ -5,13 +5,13 @@ public class Pro extends User{
     public final String[] skillSet;
     public final String cityOfOperation;
     public Pro(int id, String email, String firstName, String lastName, String phoneNumber, String[] skillSet, String cityOfOperation){
-        super(id, email, firstName, lastName, phoneNumber);
+        super(id, email, firstName, lastName, phoneNumber, "PRO");
         this.skillSet = skillSet;
         this.cityOfOperation = cityOfOperation;
     }
     public Pro(int id, String email, String firstName, String lastName, String phoneNumber, String password, String[] skillSet, String cityOfOperation)
     {
-        super(id, email, firstName, lastName, phoneNumber, password);
+        super(id, email, firstName, lastName, phoneNumber, password, "PRO");
         this.skillSet = skillSet;
         this.cityOfOperation = cityOfOperation;
     }
