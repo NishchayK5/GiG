@@ -9,8 +9,12 @@ import java.util.List;
 
 public class FakeUserRepository implements UserRepository {
 
-    private final List<User> users = new ArrayList<>();
-    private int nextId = 1;
+    private final List<User> users;
+    private int nextId;
+    public FakeUserRepository(){
+        users = new ArrayList<>();
+        nextId = 1;
+    }
 
     @Override
     public List<User> getAll() {
@@ -36,7 +40,7 @@ public class FakeUserRepository implements UserRepository {
             return null;
         }
 
-        User stored = new User(id, user.getEmail(), user.getFirstName(), user.getLastName(), user.getPassword());
+        User stored = new User(id, user.getEmail(), user.getFirstName(), user.getLastName(), user.getPassword(), null);
         users.add(stored);
         return stored;
     }
@@ -47,7 +51,7 @@ public class FakeUserRepository implements UserRepository {
 
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).getId() == user.getId()) {
-                User updated = new User(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPassword());
+                User updated = new User(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPassword(), user.getRole());
                 users.set(i, updated);
                 return true;
             }
