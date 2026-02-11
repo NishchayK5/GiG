@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
             return LoginResult.failure();
         }
 
-        BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), storedHash);
+        BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), storedHash.toCharArray());
         if (!result.verified) {
             return LoginResult.failure();
         }

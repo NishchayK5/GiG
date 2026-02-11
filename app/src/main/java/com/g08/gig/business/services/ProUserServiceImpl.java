@@ -2,6 +2,7 @@ package com.g08.gig.business.services;
 
 import com.g08.gig.business.validation.UserValidator;
 import com.g08.gig.models.Pro;
+import com.g08.gig.models.User;
 import com.g08.gig.persistence.ProRepository;
 import com.g08.gig.persistence.UserRepository;
 
@@ -30,9 +31,11 @@ public class ProUserServiceImpl implements ProUserService {
         validator.validate(firstName, lastName, email, phone, password, confirmPassowrd);
 
         String hashedPassword = BCrypt.withDefaults().hashToString(BCRYPT_COST, password.trim().toCharArray());
-        Pro toCreate = new Pro(0, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), hashedPassword, skillSet, cityOfOperation.trim());
+        User toCreate = new User(0, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), hashedPassword, "PRO");
+        User userToAdd = userRepo.add(toCreate);
+        Pro proToAdd = new Pro(userToAdd.getId(), userToAdd.getEmail(), userToAdd.getFirstName(), userToAdd.getLastName(), userToAdd.getPhoneNumber(), userToAdd.getPassword(), skillSet, cityOfOperation.trim());
         userRepo.add(toCreate);
-        return repo.add(toCreate);
+        return repo.add(proToAdd);
     }
 
     @Override
@@ -44,7 +47,7 @@ public class ProUserServiceImpl implements ProUserService {
 
         Pro updated = new Pro(id, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), existing.getPassword(), skillSet, cityOfOperation.trim());
 
-        return repo.update(updated);
+        return repo.update(updated)&& userRepo.update(updated);
     }
 
     @Override
