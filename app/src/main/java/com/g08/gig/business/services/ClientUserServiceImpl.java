@@ -2,6 +2,7 @@ package com.g08.gig.business.services;
 
 import com.g08.gig.business.validation.UserValidator;
 import com.g08.gig.models.Client;
+import com.g08.gig.models.User;
 import com.g08.gig.persistence.ClientRepository;
 import com.g08.gig.persistence.UserRepository;
 
@@ -33,21 +34,21 @@ public class ClientUserServiceImpl implements ClientUserService{
     public Client addClient(String firstName, String lastName, String email, String password, String confirmPassword, String phone, String address) {
         validator.validate(firstName, lastName, email, phone, password, confirmPassword);
         String hashedPassword = BCrypt.withDefaults().hashToString(BCRYPT_COST, password.trim().toCharArray());
-        Client toCreate = new Client(0, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), address.trim(), hashedPassword);
-        userRepo.add(toCreate);
-        return repo.add(toCreate);
+        User toCreate = new User(0, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), hashedPassword, "CLIENT");
+        User userToAdd = userRepo.add(toCreate);
+        Client clientToAdd = new Client(userToAdd.getId(), userToAdd.getEmail(), userToAdd.getFirstName(), userToAdd.getLastName(), userToAdd.getPhoneNumber(), address.trim(), userToAdd.getPassword());
+        return repo.add(clientToAdd);
     }
 
     @Override
     public boolean updateClient(int id, String firstName, String lastName, String email, String password, String phone, String address) {
         validator.validate(firstName, lastName, email, phone);
-
         Client existing = repo.getById(id);
         if (existing == null) return false;
 
         Client updated = new Client(id, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), address.trim(), existing.getPassword());
 
-        return repo.update(updated);
+        return repo.update(updated)&& userRepo.update(updated);
     }
 
     @Override

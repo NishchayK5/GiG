@@ -42,7 +42,7 @@ public class FakeUserRepository implements UserRepository {
             return null;
         }
 
-        User stored = new User(id, user.getEmail(), user.getFirstName(), user.getLastName(), user.getPassword(), null);
+        User stored = new User(id, user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(), user.getPassword(), null);
         users.add(stored);
         Log.d("STUB_DB", "Total users: " + users.size());
         return stored;
