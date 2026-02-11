@@ -52,9 +52,9 @@ public class CreateProUser extends AppCompatActivity {
                 String[] qualifications = qualificationsText.isEmpty() ? new String[0] : qualificationsText.split(",");
 
                 proUserService.addPro(
-                        emailInput.getText().toString(),
                         firstNameInput.getText().toString(),
                         lastNameInput.getText().toString(),
+                        emailInput.getText().toString(),
                         phoneInput.getText().toString(),
                         passwordInput.getText().toString(),
                         confirmPassword.getText().toString(),

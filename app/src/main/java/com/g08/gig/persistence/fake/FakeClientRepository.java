@@ -43,6 +43,7 @@ public class FakeClientRepository implements ClientRepository {
 
         Client stored = new Client(id, client.getEmail(), client.getFirstName(), client.getLastName(), client.getPhoneNumber(), client.getAddress(), client.getPassword());
         clients.add(stored);
+        nextId++;
         Log.d("STUB_DB", "Added client: " + client);
         Log.d("STUB_DB", "Total Clients: " + clients.size());
 

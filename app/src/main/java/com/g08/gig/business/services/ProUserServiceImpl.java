@@ -27,14 +27,13 @@ public class ProUserServiceImpl implements ProUserService {
     }
 
     @Override
-    public Pro addPro(String email, String firstName, String lastName, String phone, String password, String confirmPassowrd, String[] skillSet, String cityOfOperation) {
+    public Pro addPro(String firstName, String lastName, String email, String phone, String password, String confirmPassowrd, String[] skillSet, String cityOfOperation) {
         validator.validate(firstName, lastName, email, phone, password, confirmPassowrd);
 
         String hashedPassword = BCrypt.withDefaults().hashToString(BCRYPT_COST, password.trim().toCharArray());
         User toCreate = new User(0, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), hashedPassword, "PRO");
         User userToAdd = userRepo.add(toCreate);
         Pro proToAdd = new Pro(userToAdd.getId(), userToAdd.getEmail(), userToAdd.getFirstName(), userToAdd.getLastName(), userToAdd.getPhoneNumber(), userToAdd.getPassword(), skillSet, cityOfOperation.trim());
-        userRepo.add(toCreate);
         return repo.add(proToAdd);
     }
 
