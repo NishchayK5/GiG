@@ -1,5 +1,7 @@
 package com.g08.gig.persistence.fake;
 
+import android.util.Log;
+
 import com.g08.gig.persistence.UserRepository;
 import com.g08.gig.models.User;
 
@@ -42,6 +44,7 @@ public class FakeUserRepository implements UserRepository {
 
         User stored = new User(id, user.getEmail(), user.getFirstName(), user.getLastName(), user.getPassword(), null);
         users.add(stored);
+        Log.d("STUB_DB", "Total users: " + users.size());
         return stored;
     }
 
