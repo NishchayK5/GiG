@@ -3,6 +3,7 @@ package com.g08.gig.business.services;
 import com.g08.gig.business.validation.UserValidator;
 import com.g08.gig.models.Pro;
 import com.g08.gig.persistence.ProRepository;
+import com.g08.gig.persistence.UserRepository;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
@@ -10,17 +11,18 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 public class ProUserServiceImpl implements ProUserService {
 
     private static final int BCRYPT_COST = 12;
-
+    public UserRepository userRepo;
     private final ProRepository repo;
     private final UserValidator validator;
 
-    public ProUserServiceImpl(ProRepository repo) {
-        this(repo, new UserValidator());
+    public ProUserServiceImpl(ProRepository repo, UserRepository userRepo) {
+        this(repo, userRepo, new UserValidator());
     }
 
-    public ProUserServiceImpl(ProRepository repo, UserValidator validator) {
+    public ProUserServiceImpl(ProRepository repo, UserRepository userRepo, UserValidator validator) {
         this.repo = repo;
         this.validator = validator;
+        this.userRepo = userRepo;
     }
 
     @Override
@@ -29,7 +31,7 @@ public class ProUserServiceImpl implements ProUserService {
 
         String hashedPassword = BCrypt.withDefaults().hashToString(BCRYPT_COST, password.trim().toCharArray());
         Pro toCreate = new Pro(0, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), hashedPassword, skillSet, cityOfOperation.trim());
-
+        userRepo.add(toCreate);
         return repo.add(toCreate);
     }
 
