@@ -1,3 +1,8 @@
+# Changes from Iteration 0 Feedback
+- Edited vision statement
+- Changed features + user stories
+- Fixed one-to-one user story issue
+
 # GiG Vision Statement
 
 GiG is a platform for contractors and businesses to easily find jobs, and for clients to quickly connect with professionals who can bid to complete tasks for them.
