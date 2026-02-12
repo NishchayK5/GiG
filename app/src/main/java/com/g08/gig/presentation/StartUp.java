@@ -13,9 +13,6 @@ import com.g08.gig.business.services.ProUserService;
 
 public class StartUp extends AppCompatActivity {
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
