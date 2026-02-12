@@ -13,7 +13,7 @@ The audience will contain two main groups of users. These are referred to as "cl
 
 The first user group is the clients, which encompasses all people who need something fixed, a task done, or general help with something they are unable to complete themselves. It will be beneficial for the client user group due to the flexibility and bid system. Since businesses have to bid against each other to give the customer the lowest price, the customer will always receive the benefit of industry competitiveness.
 
-The second user group is the professionals. These are people looking for side jobs, general contractors, or those involved in businesses. GiG is valuable for the business user group as they will have quick access to local side jobs, see what is most needed in the customer market, and possibly make lasting customer connections for future jobs. GiG will provide a wealth of opportunity to this user group, and 
+The second user group is the professionals. These are people looking for side jobs, general contractors, or those involved in businesses. GiG is valuable for the professionals user group as they will have quick access to local side jobs, see what is most needed in the customer market, and possibly make lasting customer connections for future jobs.
 
 GiG will be an improvement over current 'marketplace' applications as it is specifically for finding jobs/task doers, whereas other applications may only have that as a side feature. This means GiG will be able to contain a much deeper and more fleshed out service for that specific need. The goal is to create trust, long-term reliability and accountability between clients and professionals within communities.
 
