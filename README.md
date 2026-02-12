@@ -23,7 +23,7 @@ GiG aims to achieve the following measurable goals:
 - 75% of clients who make job postings get bids on their offer from professionals within 2 days of the post.
 - 95% of professionals who make a successful bid on a job posting actually complete the job in real life and are awarded the agreed on amount.
 
-If these goals are acheived, our project will be considered successful.
+If these goals are achieved, our project will be considered successful.
 
 ## Links
 
