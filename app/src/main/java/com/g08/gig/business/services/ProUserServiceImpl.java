@@ -17,7 +17,7 @@ public class ProUserServiceImpl implements ProUserService {
     private final UserValidator validator;
 
     public ProUserServiceImpl(ProRepository repo, UserRepository userRepo) {
-        this(repo, userRepo, new UserValidator());
+        this(repo, userRepo, new UserValidator(userRepo));
     }
 
     public ProUserServiceImpl(ProRepository repo, UserRepository userRepo, UserValidator validator) {

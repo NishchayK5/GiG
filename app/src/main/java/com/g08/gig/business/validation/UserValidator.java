@@ -1,7 +1,16 @@
 package com.g08.gig.business.validation;
 
+import com.g08.gig.models.User;
+import com.g08.gig.persistence.UserRepository;
+
 public class UserValidator {
 
+    UserRepository repo;
+
+    public UserValidator(UserRepository repo)
+    {
+        this.repo = repo;
+    }
     public void validate(String firstName, String lastName, String email, String phone)
     {
         if (firstName == null || firstName.trim().isEmpty()) {
@@ -25,6 +34,9 @@ public class UserValidator {
         // Basic email format check
         if (!email.trim().contains("@")) {
             throw new ValidationException("Email must be a valid format.");
+        }
+        if (repo.getByEmail(email.trim()) != null) {
+            throw new ValidationException("Email already exists. Please use a different one.");
         }
 
         if (phone == null || phone.trim().isEmpty()) {

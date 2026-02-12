@@ -21,7 +21,7 @@ public class ClientUserServiceImpl implements ClientUserService{
 
     public ClientUserServiceImpl(ClientRepository repo, UserRepository userRepo) {
 
-        this(repo, userRepo, new UserValidator());
+        this(repo, userRepo, new UserValidator(userRepo));
     }
 
     public ClientUserServiceImpl(ClientRepository repo, UserRepository userRepo, UserValidator validator) {
