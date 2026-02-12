@@ -38,7 +38,7 @@ The persistence layer has repository interfaces which are implemented by either 
 
 ## Architecture Diagram
 
-![Architecture Diagram](../../../Downloads/Architecture_Model_GiG.jpg)
+![Architecture Diagram](Architecture_Model_GiG.jpg)
 
 
 
