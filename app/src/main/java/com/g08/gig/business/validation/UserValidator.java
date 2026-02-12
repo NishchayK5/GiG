@@ -1,6 +1,5 @@
 package com.g08.gig.business.validation;
 
-import com.g08.gig.models.User;
 import com.g08.gig.persistence.UserRepository;
 
 public class UserValidator {
