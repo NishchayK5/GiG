@@ -197,7 +197,6 @@
                 android:textSize="16sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-
         <Button
             android:id="@+id/addCustomerUserButton"
             android:layout_width="match_parent"
