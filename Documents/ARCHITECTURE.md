@@ -4,8 +4,8 @@
 
 Our source code is in ``go8-project\app\src\main\java\com\g08\gig`` and is split into 5 packages:
 - Application - Main project files that run on startup
-- Business - Validation model and logic services
-- Models - Objects (such as User, Pro and Client)
+- Business - Validation logic and logic services
+- Models - Domain Objects (User, Pro, Client, Appointment, Bid, Request, Review)
 - Persistence - SQLite database/interface and fake stub database/interface
 - Presentation - UI and Android Activities
 
