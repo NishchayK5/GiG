@@ -1,6 +1,7 @@
 package com.g08.gig.business.services;
 
 import com.g08.gig.business.validation.UserValidator;
+import com.g08.gig.business.validation.ValidationException;
 import com.g08.gig.models.Client;
 import com.g08.gig.models.User;
 import com.g08.gig.persistence.ClientRepository;
@@ -16,8 +17,7 @@ public class ClientUserServiceImpl implements ClientUserService{
     private final UserValidator validator;
 
     public ClientUserServiceImpl(ClientRepository repo, UserRepository userRepo) {
-
-        this(repo, userRepo, new UserValidator(userRepo));
+        this(repo, userRepo, new UserValidator());
     }
 
     public ClientUserServiceImpl(ClientRepository repo, UserRepository userRepo, UserValidator validator) {
@@ -28,6 +28,10 @@ public class ClientUserServiceImpl implements ClientUserService{
 
     @Override
     public Client addClient(String firstName, String lastName, String email, String password, String confirmPassword, String phone, String address) {
+        String trimmedEmail = safeTrim(email);
+        if (trimmedEmail != null && userRepo.getByEmail(trimmedEmail) != null) {
+            throw new ValidationException("Email already exists. Please use a different one.");
+        }
         validator.validate(firstName, lastName, email, phone, password, confirmPassword);
 
         //encrypts the password using BCrypt before adding it to repository
@@ -39,7 +43,7 @@ public class ClientUserServiceImpl implements ClientUserService{
     }
 
     @Override
-    public boolean updateClient(int id, String firstName, String lastName, String email, String password, String phone, String address) {
+    public boolean updateClient(int id, String firstName, String lastName, String email, String phone, String address) {
         validator.validate(firstName, lastName, email, phone);
         Client existing = repo.getById(id);
         if (existing == null) return false;
