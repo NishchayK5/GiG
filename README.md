@@ -30,3 +30,5 @@ If these goals are achieved, our project will be considered successful.
 [Working Agreement](Documents/work-agreement.docx)
 
 [ARCHITECTURE.md](Documents/ARCHITECTURE.md)
+
+[Release Notes](APK/ReleaseNotes.md)
