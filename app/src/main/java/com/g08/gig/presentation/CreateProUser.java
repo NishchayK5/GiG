@@ -35,8 +35,6 @@ public class CreateProUser extends AppCompatActivity {
         firstNameInput = findViewById(R.id.firstNameInput);
         lastNameInput = findViewById(R.id.lastNameInput);
         emailInput = findViewById(R.id.emailInput);
-
-        //TODO: Add confirm password
         passwordInput = findViewById(R.id.passwordInput);
         confirmPassword = findViewById(R.id.confirmPassword);
         phoneInput = findViewById(R.id.phoneInput);

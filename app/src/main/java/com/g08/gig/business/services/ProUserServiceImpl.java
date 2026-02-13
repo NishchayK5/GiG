@@ -30,6 +30,7 @@ public class ProUserServiceImpl implements ProUserService {
     public Pro addPro(String firstName, String lastName, String email, String phone, String password, String confirmPassowrd, String[] skillSet, String cityOfOperation) {
         validator.validate(firstName, lastName, email, phone, password, confirmPassowrd);
 
+        //encrypts the password using BCrypt before adding it to repository
         String hashedPassword = BCrypt.withDefaults().hashToString(BCRYPT_COST, password.trim().toCharArray());
         User toCreate = new User(0, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), hashedPassword, "PRO");
         User userToAdd = userRepo.add(toCreate);

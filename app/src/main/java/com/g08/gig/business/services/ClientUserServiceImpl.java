@@ -8,14 +8,10 @@ import com.g08.gig.persistence.UserRepository;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
-import java.util.List;
-
 public class ClientUserServiceImpl implements ClientUserService{
 
     private static final int BCRYPT_COST = 12;
-
     private final ClientRepository repo;
-
     public UserRepository userRepo;
     private final UserValidator validator;
 
@@ -33,6 +29,8 @@ public class ClientUserServiceImpl implements ClientUserService{
     @Override
     public Client addClient(String firstName, String lastName, String email, String password, String confirmPassword, String phone, String address) {
         validator.validate(firstName, lastName, email, phone, password, confirmPassword);
+
+        //encrypts the password using BCrypt before adding it to repository
         String hashedPassword = BCrypt.withDefaults().hashToString(BCRYPT_COST, password.trim().toCharArray());
         User toCreate = new User(0, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), hashedPassword, "CLIENT");
         User userToAdd = userRepo.add(toCreate);

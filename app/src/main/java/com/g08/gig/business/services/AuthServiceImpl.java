@@ -29,16 +29,19 @@ public class AuthServiceImpl implements AuthService {
             return LoginResult.failure();
         }
 
+        //checks if user email exists in system
         User user = userRepository.getByEmail(email.trim());
         if (user == null) {
             return LoginResult.failure();
         }
 
+        //checks if password is stored in system
         String storedHash = user.getPassword();
         if (storedHash == null || storedHash.isEmpty()) {
             return LoginResult.failure();
         }
 
+        //verifies that the entered password is correct, uses BCrypt to check the encrypted password in our database
         BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), storedHash.toCharArray());
         if (!result.verified) {
             return LoginResult.failure();

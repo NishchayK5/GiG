@@ -39,13 +39,11 @@ public class User {
     public String getLastName() {
         return lastName;
     }
-
     public String getPhoneNumber(){return phoneNumber;}
 
     public String getPassword() {
         return password;
     }
-
     public String getRole(){
         return role;
     }

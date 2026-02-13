@@ -85,33 +85,6 @@
             android:textColorHint="#666666"
             android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/forgotPasswordMessage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="@string/login_forgot_password_message"
-            android:textAlignment="textEnd"
-            android:textColor="@color/grey"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/forgotPasswordButton"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:minHeight="40dp"
-            android:minWidth="0dp"
-            android:paddingStart="0dp"
-            android:paddingEnd="0dp"
-            android:text="@string/login_forgot_password_button"
-            android:textColor="@color/brown"
-            android:textSize="14sp"
-            app:icon="@drawable/ic_key"
-            app:iconGravity="textStart"
-            app:iconSize="20dp"
-            app:iconTint="@color/brown" />
 
         <Button
             android:id="@+id/loginbutton"
