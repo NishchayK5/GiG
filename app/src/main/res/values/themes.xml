@@ -1,0 +1,48 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Box-style buttons with 10dp corner radius -->
+    <style name="Widget.G08.Button" parent="Widget.Material3.Button">
+        <item name="cornerRadius">@dimen/button_corner_radius</item>
+        <item name="android:paddingTop">@dimen/button_vertical_padding</item>
+        <item name="android:paddingBottom">@dimen/button_vertical_padding</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">@dimen/button_vertical_margin</item>
+        <item name="android:layout_marginBottom">@dimen/button_vertical_margin</item>
+    </style>
+
+    <!-- Outlined (border-only) button for Create Client Account -->
+    <style name="Widget.G08.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="cornerRadius">@dimen/button_corner_radius</item>
+        <item name="android:paddingTop">@dimen/button_vertical_padding</item>
+        <item name="android:paddingBottom">@dimen/button_vertical_padding</item>
+        <item name="android:textStyle">bold</item>
+        <item name="strokeColor">@color/main_netural_color</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="android:layout_marginTop">@dimen/button_vertical_margin</item>
+        <item name="android:layout_marginBottom">@dimen/button_vertical_margin</item>
+    </style>
+
+    <!-- Bordered text input with 10dp corner radius -->
+    <style name="Widget.G08.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/edittext_bordered</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <!-- Base application theme. -->
+    <style name="Base.Theme.G08" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:windowBackground">@color/cardview_light_background</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="materialButtonStyle">@style/Widget.G08.Button</item>
+        <item name="editTextStyle">@style/Widget.G08.EditText</item>
+    </style>
+
+    <style name="Theme.G08" parent="Base.Theme.G08" />
+
+    <!-- Splash screen: no action bar, full-screen feel -->
+    <style name="Theme.Splash" parent="Base.Theme.G08">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+</resources>
