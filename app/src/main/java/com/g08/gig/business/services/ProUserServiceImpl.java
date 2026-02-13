@@ -1,6 +1,7 @@
 package com.g08.gig.business.services;
 
 import com.g08.gig.business.validation.UserValidator;
+import com.g08.gig.business.validation.ValidationException;
 import com.g08.gig.models.Pro;
 import com.g08.gig.models.User;
 import com.g08.gig.persistence.ProRepository;
@@ -17,7 +18,7 @@ public class ProUserServiceImpl implements ProUserService {
     private final UserValidator validator;
 
     public ProUserServiceImpl(ProRepository repo, UserRepository userRepo) {
-        this(repo, userRepo, new UserValidator(userRepo));
+        this(repo, userRepo, new UserValidator());
     }
 
     public ProUserServiceImpl(ProRepository repo, UserRepository userRepo, UserValidator validator) {
@@ -27,8 +28,12 @@ public class ProUserServiceImpl implements ProUserService {
     }
 
     @Override
-    public Pro addPro(String firstName, String lastName, String email, String phone, String password, String confirmPassowrd, String[] skillSet, String cityOfOperation) {
-        validator.validate(firstName, lastName, email, phone, password, confirmPassowrd);
+    public Pro addPro(String firstName, String lastName, String email, String phone, String password, String confirmPassword, String[] skillSet, String cityOfOperation) {
+        String trimmedEmail = safeTrim(email);
+        if (trimmedEmail != null && userRepo.getByEmail(trimmedEmail) != null) {
+            throw new ValidationException("Email already exists. Please use a different one.");
+        }
+        validator.validate(firstName, lastName, email, phone, password, confirmPassword);
 
         //encrypts the password using BCrypt before adding it to repository
         String hashedPassword = BCrypt.withDefaults().hashToString(BCRYPT_COST, password.trim().toCharArray());

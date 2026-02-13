@@ -1,7 +1,5 @@
 package com.g08.gig.persistence.fake;
 
-import android.util.Log;
-
 import com.g08.gig.persistence.UserRepository;
 import com.g08.gig.models.User;
 
@@ -44,7 +42,6 @@ public class FakeUserRepository implements UserRepository {
 
         User stored = new User(id, user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(), user.getPassword(), user.getRole());
         users.add(stored);
-        Log.d("STUB_DB", "Total users: " + users.size());
         return stored;
     }
 
@@ -54,7 +51,7 @@ public class FakeUserRepository implements UserRepository {
 
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).getId() == user.getId()) {
-                User updated = new User(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPassword(), user.getRole());
+                User updated = new User(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(), user.getPassword(), user.getRole());
                 users.set(i, updated);
                 return true;
             }

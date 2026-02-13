@@ -65,6 +65,7 @@ public class CreateClientUser extends AppCompatActivity {
             }
         });
     }
+
     private void clearAllErrors() {
         firstNameInput.setError(null);
         lastNameInput.setError(null);

@@ -2,8 +2,8 @@ package com.g08.gig.models;
 
 public class Pro extends User{
 
-    public final String[] skillSet;
-    public final String cityOfOperation;
+    private final String[] skillSet;
+    private final String cityOfOperation;
     public Pro(int id, String email, String firstName, String lastName, String phoneNumber, String[] skillSet, String cityOfOperation){
         super(id, email, firstName, lastName, phoneNumber, "PRO");
         this.skillSet = skillSet;
