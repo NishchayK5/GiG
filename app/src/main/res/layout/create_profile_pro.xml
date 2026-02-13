@@ -6,88 +6,77 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <LinearLayout
-        android:id="@+id/rootLayout"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/rootLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+        <Button
+            android:id="@+id/backButton"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:minHeight="48dp"
+            android:minWidth="0dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="16dp"
+            android:text="@string/back"
+            android:textColor="@color/grey"
+            android:textSize="16sp"
+            app:icon="@drawable/ic_arrow_back"
+            app:iconGravity="textStart"
+            app:iconSize="24dp"
+            app:iconTint="@color/grey" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/proTitle"
             android:layout_width="match_parent"
-            android:layout_height="27dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:text="Create Professional Account"
-            android:textSize="18sp" />
+            android:text="@string/pro_create_title"
+            android:textAlignment="textStart"
+            android:textColor="@color/main_netural_color"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/proSubtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:gravity="left"
-            android:text="Login Information"
-            android:textSize="15sp" />
+            android:layout_marginTop="4dp"
+            android:paddingBottom="8dp"
+            android:text="@string/pro_create_subtitle"
+            android:textAlignment="textStart"
+            android:textColor="@color/grey"
+            android:textSize="12sp" />
 
-        <EditText
-            android:id="@+id/emailInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            android:hint="@string/user_email"
-            android:importantForAutofill="no"
-            android:inputType="textEmailAddress"
-            android:maxWidth="320dp"
-            android:minHeight="48dp"
-            android:textColorHint="#666666"
-            android:textSize="16sp" />
 
-        <EditText
-            android:id="@+id/passwordInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/user_password"
-            android:importantForAutofill="no"
-            android:inputType="textPassword"
-            android:maxWidth="320dp"
-            android:minHeight="48dp"
-            android:textColorHint="#666666"
-            android:textSize="16sp" />
 
-        <EditText
-            android:id="@+id/confirmPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/confirm_password"
-            android:importantForAutofill="no"
-            android:inputType="textPassword"
-            android:maxWidth="320dp"
-            android:minHeight="48dp"
-            android:textColorHint="#666666"
-            android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:gravity="left"
-            android:text="Personal Information"
-            android:textSize="15sp" />
+
 
         <EditText
             android:id="@+id/firstNameInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
+            android:background="@drawable/edittext_bordered"
             android:hint="@string/user_first_name"
             android:importantForAutofill="no"
             android:inputType="textPersonName"
+            android:layout_marginVertical="@dimen/button_vertical_margin"
             android:maxWidth="320dp"
             android:minHeight="48dp"
+            android:padding="12dp"
             android:textColorHint="#666666"
             android:textSize="16sp" />
 
@@ -95,35 +84,115 @@
             android:id="@+id/lastNameInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/edittext_bordered"
             android:hint="@string/user_last_name"
             android:importantForAutofill="no"
             android:inputType="textPersonName"
+            android:layout_marginVertical="@dimen/button_vertical_margin"
             android:maxWidth="320dp"
             android:minHeight="48dp"
+            android:padding="12dp"
             android:textColorHint="#666666"
             android:textSize="16sp" />
 
+
+
         <EditText
-            android:id="@+id/phoneInput"
+            android:id="@+id/emailInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/user_phone_number"
+            android:layout_marginTop="0dp"
+            android:background="@drawable/edittext_bordered"
+            android:hint="@string/user_email"
             android:importantForAutofill="no"
-            android:inputType="phone"
+            android:inputType="textEmailAddress"
+            android:layout_marginVertical="@dimen/button_vertical_margin"
             android:maxWidth="320dp"
             android:minHeight="48dp"
+            android:padding="12dp"
             android:textColorHint="#666666"
             android:textSize="16sp" />
+            <EditText
+                android:id="@+id/phoneInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_bordered"
+                android:hint="@string/user_phone_number"
+                android:importantForAutofill="no"
+                android:inputType="phone"
+                android:layout_marginVertical="@dimen/button_vertical_margin"
+                android:maxWidth="320dp"
+                android:minHeight="48dp"
+                android:padding="12dp"
+                android:textColorHint="#666666"
+                android:textSize="16sp" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:endIconMode="password_toggle">
+            <EditText
+                android:id="@+id/passwordInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_bordered"
+                android:hint="@string/user_password"
+                android:importantForAutofill="no"
+                android:inputType="textPassword"
+                android:layout_marginVertical="@dimen/button_vertical_margin"
+                android:maxWidth="320dp"
+                android:minHeight="48dp"
+                android:padding="12dp"
+                android:textColorHint="#666666"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:endIconMode="password_toggle">
+            <EditText
+                android:id="@+id/confirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_bordered"
+                android:hint="@string/confirm_password"
+                android:importantForAutofill="no"
+                android:inputType="textPassword"
+                android:layout_marginVertical="@dimen/button_vertical_margin"
+                android:maxWidth="320dp"
+                android:minHeight="48dp"
+                android:padding="12dp"
+                android:textColorHint="#666666"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+            <TextView
+            android:id="@+id/sectionProfessional"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/pro_section_professional"
+            android:textAlignment="textStart"
+            android:textColor="@color/main_netural_color"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/cityInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:background="@drawable/edittext_bordered"
             android:hint="@string/user_city"
             android:importantForAutofill="no"
             android:inputType="text"
+            android:layout_marginVertical="@dimen/button_vertical_margin"
             android:maxWidth="320dp"
             android:minHeight="48dp"
+            android:padding="12dp"
             android:textColorHint="#666666"
             android:textSize="16sp" />
 
@@ -131,12 +200,14 @@
             android:id="@+id/qualificationsInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:background="@drawable/edittext_bordered"
             android:hint="@string/user_qualifications"
             android:importantForAutofill="no"
             android:inputType="text"
+            android:layout_marginVertical="@dimen/button_vertical_margin"
             android:maxWidth="320dp"
             android:minHeight="48dp"
+            android:padding="12dp"
             android:textColorHint="#666666"
             android:textSize="16sp" />
 
@@ -144,14 +215,14 @@
             android:id="@+id/addProUserButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="45dp"
+            android:layout_marginTop="35dp"
             android:maxWidth="320dp"
             android:text="@string/button_add_user"
-            android:textColorLink="@color/main_pro_color"
+            android:textColorLink="@color/main_cust_color"
             android:textSize="14sp"
-            app:backgroundTint="@color/main_pro_color" />
+            app:backgroundTint="@color/main_netural_color" />
 
-    </LinearLayout>
-
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

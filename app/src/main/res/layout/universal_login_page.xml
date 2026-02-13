@@ -14,56 +14,89 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
-        <ImageView
-            android:id="@+id/imgLogo"
+        <Button
+            android:id="@+id/backButton"
+            style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
-            android:layout_height="295dp"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/gig_logo" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:minHeight="48dp"
+            android:minWidth="0dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="16dp"
+            android:text="@string/back"
+            android:textColor="@color/grey"
+            android:textSize="16sp"
+            app:icon="@drawable/ic_arrow_back"
+            app:iconGravity="textStart"
+            app:iconSize="24dp"
+            app:iconTint="@color/grey" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/loginTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:gravity="left"
-            android:text="Login Information"
-            android:textSize="15sp" />
+            android:layout_marginTop="16dp"
+            android:text="@string/login_title"
+            android:textAlignment="textStart"
+            android:textColor="@color/main_netural_color"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/loginSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:paddingBottom="8dp"
+            android:text="@string/login_subtitle"
+            android:textAlignment="textStart"
+            android:textColor="@color/grey"
+            android:textSize="12sp" />
 
         <EditText
             android:id="@+id/emailInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
+            android:background="@drawable/edittext_bordered"
             android:hint="@string/user_email"
             android:importantForAutofill="no"
             android:inputType="textEmailAddress"
+            android:layout_marginVertical="@dimen/button_vertical_margin"
             android:maxWidth="320dp"
             android:minHeight="48dp"
+            android:padding="12dp"
             android:textColorHint="#666666"
             android:textSize="16sp" />
 
-        <EditText
-            android:id="@+id/passwordInput"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/user_password"
-            android:importantForAutofill="no"
-            android:inputType="textPassword"
-            android:maxWidth="320dp"
-            android:minHeight="48dp"
-            android:textColorHint="#666666"
-            android:textSize="16sp" />
+            app:endIconMode="password_toggle">
+            <EditText
+                android:id="@+id/passwordInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_bordered"
+                android:hint="@string/user_password"
+                android:importantForAutofill="no"
+                android:inputType="textPassword"
+                android:layout_marginVertical="@dimen/button_vertical_margin"
+                android:maxWidth="320dp"
+                android:minHeight="48dp"
+                android:padding="12dp"
+                android:textColorHint="#666666"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
 
         <Button
             android:id="@+id/loginbutton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="45dp"
+            android:layout_marginTop="35dp"
             android:maxWidth="320dp"
             android:text="@string/home_login_button"
             android:textColorLink="@color/main_cust_color"
