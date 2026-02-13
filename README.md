@@ -31,4 +31,4 @@ If these goals are achieved, our project will be considered successful.
 
 [ARCHITECTURE.md](Documents/ARCHITECTURE.md)
 
-[Release Notes](APK/ReleaseNotes.md)
+[Release Notes - Contains link to APK](APK/ReleaseNotes.md)
