@@ -14,11 +14,8 @@ import com.g08.gig.persistence.UserRepository;
 import com.g08.gig.persistence.fake.FakeClientRepository;
 import com.g08.gig.persistence.fake.FakeProRepository;
 import com.g08.gig.persistence.fake.FakeUserRepository;
-import com.g08.gig.persistence.real.AppDbHelper;
 
 public class GiGApp extends Application {
-
-    private AppDbHelper dbHelper;
     private ClientUserService clientUserService;
     private ProUserService proUserService;
     private AuthService authService;
@@ -26,9 +23,12 @@ public class GiGApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        //Sets up repositories (we are using fake ones for now)
         UserRepository userRepo = new FakeUserRepository();
         ClientRepository clientRepo = new FakeClientRepository();
         ProRepository proRepo = new FakeProRepository();
+
+        //sets up all needed services
         clientUserService = new ClientUserServiceImpl(clientRepo, userRepo);
         proUserService = new ProUserServiceImpl(proRepo, userRepo);
         authService = new AuthServiceImpl(userRepo, clientRepo, proRepo);
@@ -47,6 +47,9 @@ public class GiGApp extends Application {
         return authService;
     }
 
+    /**
+     * Populates the repository with fake "stub" data for both clients and professionals
+     */
     public void populateRepo(){
         clientUserService.addClient("Client", "One","testemailone@test.com", "TestPassOne", "TestPassOne", "9999999999", "98 Street, Winnipeg, MB");
         clientUserService.addClient("Client", "Two","testemailtwo@test.com", "TestPassTwo", "TestPassTwo", "9999999998", "97 Street, Winnipeg, MB");

@@ -3,9 +3,7 @@ package com.g08.gig.business.validation;
 import com.g08.gig.persistence.UserRepository;
 
 public class UserValidator {
-
-    UserRepository repo;
-
+    final UserRepository repo;
     public UserValidator(UserRepository repo)
     {
         this.repo = repo;
@@ -30,14 +28,13 @@ public class UserValidator {
         if (email.trim().length() > 255) {
             throw new ValidationException("Email must be 255 characters or less.");
         }
-        // Basic email format check
         if (!email.trim().contains("@")) {
             throw new ValidationException("Email must be a valid format.");
         }
+        //checks if email is already in our repository, if so, user must choose a new one
         if (repo.getByEmail(email.trim()) != null) {
             throw new ValidationException("Email already exists. Please use a different one.");
         }
-
         if (phone == null || phone.trim().isEmpty()) {
             throw new ValidationException("Phone number is required.");
         }
@@ -47,6 +44,9 @@ public class UserValidator {
     }
 
 
+    /**
+     * Used to validate "new users" as it includes the password field as a parameter
+     */
     public void validate(String firstName, String lastName, String email, String phone, String password, String confirmPassword) {
         validate(firstName, lastName, email, phone);
 
