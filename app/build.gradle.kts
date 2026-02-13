@@ -65,6 +65,8 @@ dependencies {
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
 
+    implementation("at.favre.lib:bcrypt:0.10.2")
+
     testImplementation(libs.junit.jupiter)
 
     androidTestImplementation(libs.androidx.junit)

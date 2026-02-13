@@ -4,15 +4,17 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.g08.gig.persistence.real.Client.ClientTable;
+import com.g08.gig.persistence.real.Pro.ProTable;
 import com.g08.gig.persistence.real.user.UserTable;
 
 public class AppDbHelper extends SQLiteOpenHelper {
 
     public static final String DB_NAME = "gig.db";
-    public static final int DB_VERSION = 1;
+    public static final int DB_VERSION = 4;
 
     private static final TableSchema[] SCHEMA_TABLES = {
-        new UserTable()
+        new UserTable(), new ClientTable(), new ProTable()
     };
 
     public AppDbHelper(Context context) {
