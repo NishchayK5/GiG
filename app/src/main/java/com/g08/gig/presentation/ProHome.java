@@ -108,6 +108,8 @@ public class ProHome extends AppCompatActivity {
         profileViewContent.setVisibility(visibleView == profileViewContent ? View.VISIBLE : View.GONE);
     }
 
+
+    //this is what I need to replace
     private void loadTemporaryRequests() {
         Client placeholderClient = new Client(1, "client@email.com", "Sarah", "Martinez",
                 "2045552233", "452 Oak Street, Winnipeg", null);

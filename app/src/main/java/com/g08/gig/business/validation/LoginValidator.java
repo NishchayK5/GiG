@@ -11,13 +11,13 @@ public class LoginValidator {
 
     public void validate(String email, String password){
         if (email.isEmpty()) {
-            throw new ValidationException("Email is required.");
+            throw new ValidationException("Email is required.", "email");
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            throw new ValidationException("Please enter a valid email address.");
+            throw new ValidationException("Please enter a valid email address.", "email");
         }
 
         if (password.isEmpty()) {
-            throw new ValidationException("Password is required.");
+            throw new ValidationException("Password is required.", "password");
         }
     }
 

@@ -13,7 +13,7 @@ public class ClientUserServiceImpl implements ClientUserService{
 
     private static final int BCRYPT_COST = 12;
     private final ClientRepository repo;
-    public UserRepository userRepo;
+    private final UserRepository userRepo;
     private final UserValidator validator;
 
     public ClientUserServiceImpl(ClientRepository repo, UserRepository userRepo) {
@@ -30,7 +30,7 @@ public class ClientUserServiceImpl implements ClientUserService{
     public Client addClient(String firstName, String lastName, String email, String password, String confirmPassword, String phone, String address) {
         String trimmedEmail = safeTrim(email);
         if (trimmedEmail != null && userRepo.getByEmail(trimmedEmail) != null) {
-            throw new ValidationException("Email already exists. Please use a different one.");
+            throw new ValidationException("Email already exists. Please use a different one.", "email");
         }
         validator.validate(firstName, lastName, email, phone, password, confirmPassword);
 

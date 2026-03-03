@@ -13,7 +13,7 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 public class ProUserServiceImpl implements ProUserService {
 
     private static final int BCRYPT_COST = 12;
-    public UserRepository userRepo;
+    private final UserRepository userRepo;
     private final ProRepository repo;
     private final UserValidator validator;
 
@@ -31,7 +31,7 @@ public class ProUserServiceImpl implements ProUserService {
     public Pro addPro(String firstName, String lastName, String email, String phone, String password, String confirmPassword, String[] skillSet, String cityOfOperation) {
         String trimmedEmail = safeTrim(email);
         if (trimmedEmail != null && userRepo.getByEmail(trimmedEmail) != null) {
-            throw new ValidationException("Email already exists. Please use a different one.");
+            throw new ValidationException("Email already exists. Please use a different one.", "email");
         }
         validator.validate(firstName, lastName, email, phone, password, confirmPassword);
 

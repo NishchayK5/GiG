@@ -53,7 +53,7 @@ public class Login extends AppCompatActivity {
                 }
             }
             catch (com.g08.gig.business.validation.ValidationException ex) {
-                EditText errorField = getErrorFieldForMessage(ex.getMessage());
+                EditText errorField = getErrorFieldForMessage(ex.getField());
                 if (errorField != null) {
                     errorField.setError(ex.getMessage());
                     errorField.requestFocus();
@@ -61,10 +61,10 @@ public class Login extends AppCompatActivity {
             }
         });
     }
-    private EditText getErrorFieldForMessage(String message) {
-        if (message == null) return emailInput;
-        if (message.startsWith("Email is required.") || message.startsWith("Please enter a valid email address.")) return emailInput;
-        if (message.startsWith("Password is required.")) return passwordInput;
+    private EditText getErrorFieldForMessage(String field) {
+        if (field == null) return emailInput;
+        if (field.startsWith("email")) return emailInput;
+        if (field.startsWith("password")) return passwordInput;
         return emailInput;
     }
 }
