@@ -11,6 +11,8 @@ public class UserValidator {
     private static final int MAX_EMAIL_LENGTH = 255;
     private static final int PHONE_LENGTH = 10;
 
+    private static final int PASSWORD_LENGTH = 8;
+
     public UserValidator() {
     }
 
@@ -78,7 +80,7 @@ public class UserValidator {
         if (!password.trim().equals(confirmPassword.trim())) {
             throw new ValidationException("Passwords must match.", "confirmPassword");
         }
-        if (password.trim().length() < 8) {
+        if (password.trim().length() < PASSWORD_LENGTH) {
             throw new ValidationException("Password must be at least 8 characters.", "password");
         }
     }
