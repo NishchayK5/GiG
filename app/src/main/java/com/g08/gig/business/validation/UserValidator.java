@@ -78,5 +78,8 @@ public class UserValidator {
         if (!password.trim().equals(confirmPassword.trim())) {
             throw new ValidationException("Passwords must match.", "confirmPassword");
         }
+        if (password.trim().length() < 8) {
+            throw new ValidationException("Password must be at least 8 characters.", "password");
+        }
     }
 }
