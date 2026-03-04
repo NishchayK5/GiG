@@ -82,24 +82,13 @@ public class SqlProRepository implements ProRepository{
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
-            ContentValues values= new ContentValues();
-            values.put(UserTable.COL_USER_EMAIL, pro.getEmail());
-            values.put(UserTable.COL_USER_FIRST_NAME, pro.getFirstName());
-            values.put(UserTable.COL_USER_LAST_NAME, pro.getLastName());
-            values.put(UserTable.COL_USER_PHONE, pro.getPhoneNumber());
-            values.put(UserTable.COL_USER_PASSWORD, pro.getPassword());
-
-            long insertResult = db.insert(UserTable.TABLE_USER, null, values);
-            if (insertResult == -1) return null;
-            int userID = (int) insertResult;
-
             ContentValues proValues = new ContentValues();
-            proValues.put(ProTable.COL_PRO_ID, userID);
+            proValues.put(ProTable.COL_PRO_ID, pro.getId());
             proValues.put(ProTable.COL_PRO_CITY_LOCATION, pro.getCityOfOperation());
             long result = db.insert(ProTable.TABLE_PRO,null, proValues);
             if(result==-1) return null;
             db.setTransactionSuccessful();
-            return getById(userID);
+            return getById(pro.getId());
         }
         finally{
             db.endTransaction();
