@@ -30,7 +30,7 @@ public class GiGApp extends Application {
         super.onCreate();
 
         dbHelper = new AppDbHelper(getApplicationContext());
-        //Sets up repositories (we are using fake ones for now)
+        //Sets up repositories
         UserRepository userRepo = new SqlUserRepository(dbHelper);
         ClientRepository clientRepo = new SqlClientRepository(dbHelper);
         ProRepository proRepo = new SqlProRepository(dbHelper);
@@ -39,7 +39,7 @@ public class GiGApp extends Application {
         clientUserService = new ClientUserServiceImpl(clientRepo, userRepo);
         proUserService = new ProUserServiceImpl(proRepo, userRepo);
         authService = new AuthServiceImpl(userRepo, clientRepo, proRepo);
-        populateRepo();
+        //populateRepo();
     }
 
     public ClientUserService getClientUserService() {
