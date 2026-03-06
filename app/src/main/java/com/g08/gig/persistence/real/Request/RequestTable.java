@@ -18,11 +18,11 @@ public class RequestTable implements TableSchema {
     @Override
     public String getCreateSql(){
         return "CREATE TABLE " + TABLE_REQUEST + "( " +
-                COL_REQUEST_ID + " INTEGER PRIMARY KEY AUTO INCREMENT, " +
+                COL_REQUEST_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COL_REQUEST_CLIENT_ID + " INTEGER, " +
                 COL_REQUEST_TITLE + " TEXT NOT NULL, " +
                 COL_REQUEST_BODY + " TEXT NOT NULL, " +
                 COL_REQUEST_TIME_OF_REQUEST + " TEXT NOT NULL, " +
-                "FOREIGN KEY("+ COL_REQUEST_CLIENT_ID +") REFERENCES " + ClientTable.TABLE_CLIENT + "." + ClientTable.COL_CLIENT_ID + " ON DELETE CASCADE);";
+                "FOREIGN KEY("+ COL_REQUEST_CLIENT_ID +") REFERENCES " + ClientTable.TABLE_CLIENT + "(" + ClientTable.COL_CLIENT_ID + ") ON DELETE CASCADE);";
     }
 }
