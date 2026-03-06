@@ -1,7 +1,5 @@
 package com.g08.gig.business.services;
 
-import android.util.Log;
-
 import com.g08.gig.business.validation.UserValidator;
 import com.g08.gig.business.validation.ValidationException;
 import com.g08.gig.models.Client;
@@ -15,7 +13,7 @@ public class ClientUserServiceImpl implements ClientUserService{
 
     private static final int BCRYPT_COST = 12;
     private final ClientRepository repo;
-    public UserRepository userRepo;
+    private final UserRepository userRepo;
     private final UserValidator validator;
 
     public ClientUserServiceImpl(ClientRepository repo, UserRepository userRepo) {
@@ -30,11 +28,9 @@ public class ClientUserServiceImpl implements ClientUserService{
 
     @Override
     public Client addClient(String firstName, String lastName, String email, String password, String confirmPassword, String phone, String address) {
-        Log.d("Test","Atleast it came here");
         String trimmedEmail = safeTrim(email);
         if (trimmedEmail != null && userRepo.getByEmail(trimmedEmail) != null) {
-            Log.d("Test","email being validated. "+trimmedEmail);
-            throw new ValidationException("Email already exists. Please use a different one.");
+            throw new ValidationException("Email already exists. Please use a different one.", "email");
         }
         validator.validate(firstName, lastName, email, phone, password, confirmPassword);
 

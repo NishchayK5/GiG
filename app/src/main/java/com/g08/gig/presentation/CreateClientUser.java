@@ -57,7 +57,7 @@ public class CreateClientUser extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             } catch (com.g08.gig.business.validation.ValidationException ex) {
-                EditText errorField = getErrorFieldForMessage(ex.getMessage());
+                EditText errorField = getErrorFieldForMessage(ex.getField());
                 if (errorField != null) {
                     errorField.setError(ex.getMessage());
                     errorField.requestFocus();
@@ -76,14 +76,14 @@ public class CreateClientUser extends AppCompatActivity {
         addressInput.setError(null);
     }
 
-    private EditText getErrorFieldForMessage(String message) {
-        if (message == null) return emailInput;
-        if (message.startsWith("First name")) return firstNameInput;
-        if (message.startsWith("Last name")) return lastNameInput;
-        if (message.startsWith("Email")) return emailInput;
-        if (message.startsWith("Phone number")) return phoneInput;
-        if (message.equals("Password is required.")) return passwordInput;
-        if (message.equals("Confirm password is required.") || message.equals("Passwords must match.")) return confirmPassword;
+    private EditText getErrorFieldForMessage(String field) {
+        if (field == null) return emailInput;
+        if (field.startsWith("fname")) return firstNameInput;
+        if (field.startsWith("lname")) return lastNameInput;
+        if (field.startsWith("email")) return emailInput;
+        if (field.startsWith("phone")) return phoneInput;
+        if (field.equals("password")) return passwordInput;
+        if (field.equals("confirmPassword")) return confirmPassword;
         return emailInput;
     }
 

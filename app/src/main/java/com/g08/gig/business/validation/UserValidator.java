@@ -11,6 +11,8 @@ public class UserValidator {
     private static final int MAX_EMAIL_LENGTH = 255;
     private static final int PHONE_LENGTH = 10;
 
+    private static final int PASSWORD_LENGTH = 8;
+
     public UserValidator() {
     }
 
@@ -31,52 +33,55 @@ public class UserValidator {
 
     private void validateFirstName(String firstName) {
         if (firstName == null || firstName.trim().isEmpty()) {
-            throw new ValidationException("First name is required.");
+            throw new ValidationException("First name is required.", "fname");
         }
         if (firstName.trim().length() > MAX_FIRST_NAME_LENGTH) {
-            throw new ValidationException("First name must be 60 characters or less.");
+            throw new ValidationException("First name must be 60 characters or less.", "fname");
         }
     }
 
     private void validateLastName(String lastName) {
         if (lastName == null || lastName.trim().isEmpty()) {
-            throw new ValidationException("Last name is required.");
+            throw new ValidationException("Last name is required.", "lname");
         }
         if (lastName.trim().length() > MAX_LAST_NAME_LENGTH) {
-            throw new ValidationException("Last name must be 60 characters or less.");
+            throw new ValidationException("Last name must be 60 characters or less.", "lname");
         }
     }
 
     private void validateEmailFormat(String email) {
         if (email == null || email.trim().isEmpty()) {
-            throw new ValidationException("Email is required.");
+            throw new ValidationException("Email is required.", "email");
         }
         if (email.trim().length() > MAX_EMAIL_LENGTH) {
-            throw new ValidationException("Email must be 255 characters or less.");
+            throw new ValidationException("Email must be 255 characters or less.", "email");
         }
         if (!email.trim().contains("@")) {
-            throw new ValidationException("Email must be a valid format.");
+            throw new ValidationException("Email must be a valid format.", "email");
         }
     }
 
     private void validatePhone(String phone) {
         if (phone == null || phone.trim().isEmpty()) {
-            throw new ValidationException("Phone number is required.");
+            throw new ValidationException("Phone number is required.", "phone");
         }
         if (phone.trim().length() != PHONE_LENGTH) {
-            throw new ValidationException("Phone number must be exactly 10 digits long.");
+            throw new ValidationException("Phone number must be exactly 10 digits long.", "phone");
         }
     }
 
     private void validatePasswordAndConfirmation(String password, String confirmPassword) {
         if (password == null || password.trim().isEmpty()) {
-            throw new ValidationException("Password is required.");
+            throw new ValidationException("Password is required.", "password");
         }
         if (confirmPassword == null || confirmPassword.trim().isEmpty()) {
-            throw new ValidationException("Confirm password is required.");
+            throw new ValidationException("Confirm password is required.", "confirmPassword");
         }
         if (!password.trim().equals(confirmPassword.trim())) {
-            throw new ValidationException("Passwords must match.");
+            throw new ValidationException("Passwords must match.", "confirmPassword");
+        }
+        if (password.trim().length() < PASSWORD_LENGTH) {
+            throw new ValidationException("Password must be at least 8 characters.", "password");
         }
     }
 }
