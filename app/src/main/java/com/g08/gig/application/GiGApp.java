@@ -14,19 +14,26 @@ import com.g08.gig.persistence.UserRepository;
 import com.g08.gig.persistence.fake.FakeClientRepository;
 import com.g08.gig.persistence.fake.FakeProRepository;
 import com.g08.gig.persistence.fake.FakeUserRepository;
+import com.g08.gig.persistence.real.AppDbHelper;
+import com.g08.gig.persistence.real.Client.SqlClientRepository;
+import com.g08.gig.persistence.real.Pro.SqlProRepository;
+import com.g08.gig.persistence.real.user.SqlUserRepository;
 
 public class GiGApp extends Application {
     private ClientUserService clientUserService;
     private ProUserService proUserService;
     private AuthService authService;
+    private AppDbHelper dbHelper;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        dbHelper = new AppDbHelper(getApplicationContext());
         //Sets up repositories (we are using fake ones for now)
-        UserRepository userRepo = new FakeUserRepository();
-        ClientRepository clientRepo = new FakeClientRepository();
-        ProRepository proRepo = new FakeProRepository();
+        UserRepository userRepo = new SqlUserRepository(dbHelper);
+        ClientRepository clientRepo = new SqlClientRepository(dbHelper);
+        ProRepository proRepo = new SqlProRepository(dbHelper);
 
         //sets up all needed services
         clientUserService = new ClientUserServiceImpl(clientRepo, userRepo);

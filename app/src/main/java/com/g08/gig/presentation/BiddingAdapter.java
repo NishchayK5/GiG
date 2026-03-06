@@ -1,0 +1,84 @@
+package com.g08.gig.presentation;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.g08.gig.R;
+import com.g08.gig.models.Request;
+
+import java.time.format.DateTimeFormatter;
+
+public class BiddingAdapter extends ListAdapter<Request, BiddingAdapter.BiddingViewHolder> {
+
+    private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("MMM d, yyyy · h:mm a");
+
+    public interface OnBiddingActionListener {
+        void onBid(Request request);
+        void onReject(Request request);
+    }
+
+    private final OnBiddingActionListener listener;
+
+    public BiddingAdapter(OnBiddingActionListener listener) {
+        super(new DiffUtil.ItemCallback<Request>() {
+            @Override
+            public boolean areItemsTheSame(@NonNull Request oldItem, @NonNull Request newItem) {
+                return oldItem.getId() == newItem.getId();
+            }
+
+            @Override
+            public boolean areContentsTheSame(@NonNull Request oldItem, @NonNull Request newItem) {
+                return oldItem.getTitle().equals(newItem.getTitle())
+                        && oldItem.getBody().equals(newItem.getBody());
+            }
+        });
+        this.listener = listener;
+    }
+
+    @NonNull
+    @Override
+    public BiddingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_bidding_card, parent, false);
+        return new BiddingViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull BiddingViewHolder holder, int position) {
+        Request request = getItem(position);
+        holder.title.setText(request.getTitle());
+        holder.body.setText(request.getBody());
+        if (request.getTimeOfRequest() != null) {
+            holder.time.setText(request.getTimeOfRequest().format(TIME_FORMAT));
+        } else {
+            holder.time.setText("");
+        }
+        holder.btnBid.setOnClickListener(v -> listener.onBid(request));
+        holder.btnReject.setOnClickListener(v -> listener.onReject(request));
+    }
+
+    static class BiddingViewHolder extends RecyclerView.ViewHolder {
+        final TextView title;
+        final TextView body;
+        final TextView time;
+        final Button btnBid;
+        final Button btnReject;
+
+        BiddingViewHolder(@NonNull View itemView) {
+            super(itemView);
+            title = itemView.findViewById(R.id.requestCardTitle);
+            body = itemView.findViewById(R.id.requestCardBody);
+            time = itemView.findViewById(R.id.requestCardTime);
+            btnBid = itemView.findViewById(R.id.btnBid);
+            btnReject = itemView.findViewById(R.id.btnReject);
+        }
+    }
+}
