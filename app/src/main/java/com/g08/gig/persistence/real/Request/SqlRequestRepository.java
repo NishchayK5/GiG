@@ -30,7 +30,7 @@ public class SqlRequestRepository implements RequestRepository {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.query(RequestTable.TABLE_REQUEST, new String[]{RequestTable.COL_REQUEST_ID, RequestTable.COL_REQUEST_CLIENT_ID, RequestTable.COL_REQUEST_TITLE, RequestTable.COL_REQUEST_BODY, RequestTable.COL_REQUEST_TIME_OF_REQUEST},
                 null, null, null, null,
-                RequestTable.TABLE_REQUEST + " DESC");
+                RequestTable.COL_REQUEST_ID + " DESC");
 
         List<Request> result = new ArrayList<>();
         try {
