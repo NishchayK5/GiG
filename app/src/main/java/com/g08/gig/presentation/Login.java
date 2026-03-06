@@ -46,6 +46,7 @@ public class Login extends AppCompatActivity {
                             ? new Intent(Login.this, ClientHome.class)
                             : new Intent(Login.this, ProHome.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra("USER_ID", result.getUserId());
                     startActivity(intent);
                     finish();
                 } else {

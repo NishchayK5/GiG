@@ -38,5 +38,10 @@ public class RequestServiceImpl implements RequestService{
         return reqRepo.getAll();
     }
 
+    @Override
+    public List<Request> getRequestsByClient(int id) {
+        return reqRepo.getByClient(id);
+    }
+
 
 }

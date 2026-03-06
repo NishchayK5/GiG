@@ -1,6 +1,8 @@
 package com.g08.gig.presentation;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -59,6 +61,10 @@ public class ClientHome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_client);
         requestService = ((GiGApp) getApplication()).getRequestService();
+        int clientId = getIntent().getIntExtra("USER_ID", -1);
+
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        prefs.edit().putInt("USER_ID", clientId).apply();
 
 
         emptyRequestsView = findViewById(R.id.emptyRequestsView);
@@ -88,7 +94,7 @@ public class ClientHome extends AppCompatActivity {
         });
 
         setupTabs();
-        loadRequests(); // TODO: replace with real data from repository
+        loadRequests();
         showListForCurrentTab();
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
@@ -137,10 +143,13 @@ public class ClientHome extends AppCompatActivity {
      * Remove or replace with repository data when ready.
      */
     private void loadRequests() {
+
         Client placeholderClient = new Client(1, "client@email.com", "Sarah", "Martinez",
                 "2045552233", "452 Oak Street, Winnipeg", null);
 
-        currentRequests = requestService.getAllRequests();
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        int clientId = prefs.getInt("USER_ID", -1);
+        currentRequests = requestService.getRequestsByClient(clientId);
         LocalDateTime now = LocalDateTime.now();
 
         pastRequests = new ArrayList<>();

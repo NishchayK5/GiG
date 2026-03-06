@@ -37,6 +37,10 @@ public class GiGApp extends Application {
 
     private RequestService reqService;
     private AppDbHelper dbHelper;
+    private UserRepository userRepo;
+    private ClientRepository clientRepo;
+    private ProRepository proRepo;
+    private RequestRepository reqRepo;
 
     @Override
     public void onCreate() {
@@ -45,10 +49,7 @@ public class GiGApp extends Application {
         dbHelper = new AppDbHelper(getApplicationContext());
         //Sets up repositories
 
-        UserRepository userRepo;
-        ClientRepository clientRepo;
-        ProRepository proRepo;
-        RequestRepository reqRepo;
+
 
         final boolean FAKE_REPO = false;
 
@@ -70,7 +71,11 @@ public class GiGApp extends Application {
         proUserService = new ProUserServiceImpl(proRepo, userRepo);
         authService = new AuthServiceImpl(userRepo, clientRepo, proRepo);
         reqService = new RequestServiceImpl(reqRepo);
-        populateRepo();
+
+        if(FAKE_REPO) {
+            populateRepo();
+        }
+
     }
 
     public ClientUserService getClientUserService() {
@@ -102,8 +107,7 @@ public class GiGApp extends Application {
 
     public void populateRequestRepo()
     {
-        Client placeholderClient = new Client(1, "client@email.com", "Sarah", "Martinez",
-                "2045552233", "452 Oak Street, Winnipeg", null);
+        Client placeholderClient = clientRepo.getById(1);
         reqService.addRequest(placeholderClient, "Brake pad replacement",
                 "My 2019 Honda Civic needs new front brake pads. There's a grinding noise when I stop.");
         reqService.addRequest(placeholderClient, "Oil change needed",

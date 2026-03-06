@@ -34,7 +34,7 @@ public class SqlRequestRepository implements RequestRepository {
 
         List<Request> result = new ArrayList<>();
         try {
-            while (c.moveToFirst()){
+            while (c.moveToNext()){
                 result.add(cursorToRequest(c));
             }
         } finally {
@@ -52,7 +52,7 @@ public class SqlRequestRepository implements RequestRepository {
                 new String[]{String.valueOf(id)},
                 null, null, null);
         try {
-            if(!c.moveToFirst()) return null;
+            if(!c.moveToNext()) return null;
             return cursorToRequest(c);
         } finally {
             c.close();
@@ -70,7 +70,7 @@ public class SqlRequestRepository implements RequestRepository {
 
         List<Request> result = new ArrayList<>();
         try {
-            while (c.moveToFirst()){
+            while (c.moveToNext()){
                 result.add(cursorToRequest(c));
             }
         } finally {

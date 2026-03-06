@@ -52,6 +52,11 @@ public class ClientUserServiceImpl implements ClientUserService{
 
         return repo.update(updated)&& userRepo.update(updated);
     }
+    @Override
+    public Client getClientById(int id) {
+        return repo.getById(id);
+    }
+
 
     @Override
     public boolean deleteClient(int id) {
