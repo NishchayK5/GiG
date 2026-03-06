@@ -1,0 +1,70 @@
+package com.g08.gig.persistence.fake;
+
+import com.g08.gig.models.Request;
+import com.g08.gig.persistence.RequestRepository;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class FakeRequestRepository implements RequestRepository {
+
+    private final List<Request> requests;
+    private int nextId;
+
+    public FakeRequestRepository() {
+        requests = new ArrayList<>();
+        nextId = 1;
+    }
+
+    @Override
+    public List<Request> getAll() {
+        return Collections.unmodifiableList(requests);
+    }
+
+    @Override
+    public Request getById(int id) {
+        for (Request request : requests) {
+            if (request.getId() == id) return request;
+        }
+        return null;
+    }
+
+    @Override
+    public Request add(Request request) {
+        if (request == null) return null;
+
+        int id = request.getId();
+        if (id == 0) {
+            id = nextId++;
+        } else if (getById(id) != null) {
+            return null;
+        }
+
+        Request stored = new Request(id, request.getClient(), request.getTitle(), request.getBody(), request.getTimeOfRequest());
+        requests.add(stored);
+        return stored;
+    }
+
+    @Override
+    public boolean delete(int id){
+        for(int i = 0; i<requests.size(); i++){
+            if(requests.get(i).getId()==id) {
+                requests.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public List<Request> getByClient(int clientId){
+        List<Request> result = new ArrayList<>();
+        for(Request request : requests){
+            if(request.getClient().getId() == clientId){
+                result.add(request);
+            }
+        }
+        return result;
+    }
+}
