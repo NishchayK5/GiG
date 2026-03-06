@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.g08.gig.R;
+import com.g08.gig.application.GiGApp;
+import com.g08.gig.business.services.RequestService;
 import com.g08.gig.models.Client;
 import com.g08.gig.models.Request;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -34,6 +36,8 @@ public class ClientHome extends AppCompatActivity {
     private List<Request> currentRequests = new ArrayList<>();
     private List<Request> pastRequests = new ArrayList<>();
 
+    private RequestService requestService;
+
     private final ActivityResultLauncher<Intent> createRequestLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -54,6 +58,8 @@ public class ClientHome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_client);
+        requestService = ((GiGApp) getApplication()).getRequestService();
+
 
         emptyRequestsView = findViewById(R.id.emptyRequestsView);
         requestsList = findViewById(R.id.requestsList);
@@ -82,7 +88,7 @@ public class ClientHome extends AppCompatActivity {
         });
 
         setupTabs();
-        loadTemporaryRequests(); // TODO: replace with real data from repository
+        loadRequests(); // TODO: replace with real data from repository
         showListForCurrentTab();
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
@@ -130,19 +136,12 @@ public class ClientHome extends AppCompatActivity {
      * Temporary sample data so you can see the request cards in the UI.
      * Remove or replace with repository data when ready.
      */
-    private void loadTemporaryRequests() {
+    private void loadRequests() {
         Client placeholderClient = new Client(1, "client@email.com", "Sarah", "Martinez",
                 "2045552233", "452 Oak Street, Winnipeg", null);
 
+        currentRequests = requestService.getAllRequests();
         LocalDateTime now = LocalDateTime.now();
-
-        currentRequests = new ArrayList<>();
-        currentRequests.add(new Request(1, placeholderClient, "Brake pad replacement",
-                "My 2019 Honda Civic needs new front brake pads. There's a grinding noise when I stop.", now.minusDays(1)));
-        currentRequests.add(new Request(2, placeholderClient, "Oil change needed",
-                "Due for synthetic oil change. Prefer weekend appointment if possible.", now.minusHours(5)));
-        currentRequests.add(new Request(3, placeholderClient, "AC not cooling",
-                "Car AC blows warm air. 2020 Toyota Corolla. Would like a diagnosis.", now.minusHours(2)));
 
         pastRequests = new ArrayList<>();
         pastRequests.add(new Request(4, placeholderClient, "Tire rotation",

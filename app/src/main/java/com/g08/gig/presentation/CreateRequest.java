@@ -8,6 +8,8 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.g08.gig.R;
+import com.g08.gig.application.GiGApp;
+import com.g08.gig.business.services.RequestService;
 
 /**
  * Form to create a new service request (title + description).
@@ -20,11 +22,14 @@ public class CreateRequest extends AppCompatActivity {
 
     private EditText requestTitleInput;
     private EditText requestDescriptionInput;
+    private RequestService requestService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_request);
+
+        requestService = ((GiGApp) getApplication()).getRequestService();
 
         requestTitleInput = findViewById(R.id.requestTitleInput);
         requestDescriptionInput = findViewById(R.id.requestDescriptionInput);
@@ -50,11 +55,11 @@ public class CreateRequest extends AppCompatActivity {
             requestDescriptionInput.requestFocus();
             return;
         }
-
+        requestService.addRequest(null, title, body);
         Intent data = new Intent();
-        data.putExtra(EXTRA_REQUEST_TITLE, title);
-        data.putExtra(EXTRA_REQUEST_BODY, body);
-        setResult(RESULT_OK, data);
+        //putExtra(EXTRA_REQUEST_TITLE, title);
+        //data.putExtra(EXTRA_REQUEST_BODY, body);
+        //setResult(RESULT_OK, data);
         finish();
     }
 }

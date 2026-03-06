@@ -8,21 +8,34 @@ import com.g08.gig.business.services.ClientUserService;
 import com.g08.gig.business.services.ClientUserServiceImpl;
 import com.g08.gig.business.services.ProUserService;
 import com.g08.gig.business.services.ProUserServiceImpl;
+import com.g08.gig.business.services.RequestService;
+import com.g08.gig.business.services.RequestServiceImpl;
+import com.g08.gig.models.Client;
+import com.g08.gig.models.Pro;
+import com.g08.gig.models.Request;
 import com.g08.gig.persistence.ClientRepository;
 import com.g08.gig.persistence.ProRepository;
+import com.g08.gig.persistence.RequestRepository;
 import com.g08.gig.persistence.UserRepository;
 import com.g08.gig.persistence.fake.FakeClientRepository;
 import com.g08.gig.persistence.fake.FakeProRepository;
+import com.g08.gig.persistence.fake.FakeRequestRepository;
 import com.g08.gig.persistence.fake.FakeUserRepository;
 import com.g08.gig.persistence.real.AppDbHelper;
 import com.g08.gig.persistence.real.Client.SqlClientRepository;
 import com.g08.gig.persistence.real.Pro.SqlProRepository;
+import com.g08.gig.persistence.real.Request.SqlRequestRepository;
 import com.g08.gig.persistence.real.user.SqlUserRepository;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class GiGApp extends Application {
     private ClientUserService clientUserService;
     private ProUserService proUserService;
     private AuthService authService;
+
+    private RequestService reqService;
     private AppDbHelper dbHelper;
 
     @Override
@@ -31,15 +44,33 @@ public class GiGApp extends Application {
 
         dbHelper = new AppDbHelper(getApplicationContext());
         //Sets up repositories
-        UserRepository userRepo = new SqlUserRepository(dbHelper);
-        ClientRepository clientRepo = new SqlClientRepository(dbHelper);
-        ProRepository proRepo = new SqlProRepository(dbHelper);
+
+        UserRepository userRepo;
+        ClientRepository clientRepo;
+        ProRepository proRepo;
+        RequestRepository reqRepo;
+
+        final boolean FAKE_REPO = true;
+
+        if(!FAKE_REPO) {
+            userRepo = new SqlUserRepository(dbHelper);
+            clientRepo = new SqlClientRepository(dbHelper);
+            proRepo = new SqlProRepository(dbHelper);
+            reqRepo = new SqlRequestRepository(dbHelper, clientRepo);
+        }
+        else {
+            userRepo = new FakeUserRepository();
+            clientRepo = new FakeClientRepository();
+            proRepo = new FakeProRepository();
+            reqRepo = new FakeRequestRepository();
+        }
 
         //sets up all needed services
         clientUserService = new ClientUserServiceImpl(clientRepo, userRepo);
         proUserService = new ProUserServiceImpl(proRepo, userRepo);
         authService = new AuthServiceImpl(userRepo, clientRepo, proRepo);
-        //populateRepo();
+        reqService = new RequestServiceImpl(reqRepo);
+        populateRepo();
     }
 
     public ClientUserService getClientUserService() {
@@ -54,6 +85,8 @@ public class GiGApp extends Application {
         return authService;
     }
 
+    public RequestService getRequestService() { return reqService; }
+
     /**
      * Populates the repository with fake "stub" data for both clients and professionals
      */
@@ -64,6 +97,19 @@ public class GiGApp extends Application {
         proUserService.addPro("Pro", "One", "testemailfour@test.com", "9999999996", "TestPassFour", "TestPassFour", new String[]{"SkillOne", "SkillTwo"}, "Winnipeg");
         proUserService.addPro("Pro", "Two", "testemailfive@test.com", "9999999995", "TestPassFive", "TestPassFive", new String[]{"SkillOne"}, "Winnipeg");
         proUserService.addPro("Pro", "Three", "testemailsix@test.com", "9999999994", "TestPassSix", "TestPassSix", new String[]{"SkillOne", "SkillTwo", "SkillThree"}, "Edmonton");
-
+        populateRequestRepo();
     }
+
+    public void populateRequestRepo()
+    {
+        Client placeholderClient = new Client(1, "client@email.com", "Sarah", "Martinez",
+                "2045552233", "452 Oak Street, Winnipeg", null);
+        reqService.addRequest(placeholderClient, "Brake pad replacement",
+                "My 2019 Honda Civic needs new front brake pads. There's a grinding noise when I stop.");
+        reqService.addRequest(placeholderClient, "Oil change needed",
+                "Due for synthetic oil change. Prefer weekend appointment if possible.");
+        reqService.addRequest(placeholderClient, "AC not cooling",
+                "Car AC blows warm air. 2020 Toyota Corolla. Would like a diagnosis.");
+    }
+
 }

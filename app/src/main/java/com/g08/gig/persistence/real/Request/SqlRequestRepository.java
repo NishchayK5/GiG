@@ -20,7 +20,7 @@ public class SqlRequestRepository implements RequestRepository {
     private final AppDbHelper dbHelper;
 
     private ClientRepository clientRepo;
-    public SqlRequestRepository(AppDbHelper dbHelper, SqlClientRepository clientRepo) {
+    public SqlRequestRepository(AppDbHelper dbHelper, ClientRepository clientRepo) {
         this.dbHelper = dbHelper;
         this.clientRepo = clientRepo;
     }
