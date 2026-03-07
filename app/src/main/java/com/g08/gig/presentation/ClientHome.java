@@ -50,7 +50,7 @@ public class ClientHome extends AppCompatActivity {
                 int newId = 100 + currentRequests.size() + pastRequests.size();
                 Client placeholderClient = new Client(1, "client@email.com", "Sarah", "Martinez",
                         "2045552233", "452 Oak Street, Winnipeg", null);
-                currentRequests.add(0, new Request(newId, placeholderClient, title, body, LocalDateTime.now()));
+                currentRequests.add(0, new Request(newId, placeholderClient, title, body, LocalDateTime.now(), true));
                 showListForCurrentTab();
                 Toast.makeText(this, R.string.create_request_submitted, Toast.LENGTH_SHORT).show();
             }
@@ -154,9 +154,9 @@ public class ClientHome extends AppCompatActivity {
 
         pastRequests = new ArrayList<>();
         pastRequests.add(new Request(4, placeholderClient, "Tire rotation",
-                "Had my tires rotated last month. Service was quick and professional.", now.minusDays(14)));
+                "Had my tires rotated last month. Service was quick and professional.", now.minusDays(14), false));
         pastRequests.add(new Request(5, placeholderClient, "Battery replacement",
-                "Old battery was replaced. All good now.", now.minusDays(30)));
+                "Old battery was replaced. All good now.", now.minusDays(30), false));
     }
 
     private void showListForCurrentTab() {

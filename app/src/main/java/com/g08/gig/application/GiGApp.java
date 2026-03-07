@@ -71,7 +71,6 @@ public class GiGApp extends Application {
         proUserService = new ProUserServiceImpl(proRepo, userRepo);
         authService = new AuthServiceImpl(userRepo, clientRepo, proRepo);
         reqService = new RequestServiceImpl(reqRepo);
-
         if(FAKE_REPO) {
             populateRepo();
         }

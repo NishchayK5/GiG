@@ -15,6 +15,8 @@ public interface RequestRepository {
 
     List<Request> getByClient(int clientId);
 
+    List<Request> getAllWithStatus(boolean status);
+
     //To be implemented only if we have edit request feature
     //boolean update(Request request);
 }

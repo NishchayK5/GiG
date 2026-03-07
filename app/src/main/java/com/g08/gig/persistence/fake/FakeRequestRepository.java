@@ -41,7 +41,7 @@ public class FakeRequestRepository implements RequestRepository {
             return null;
         }
 
-        Request stored = new Request(id, request.getClient(), request.getTitle(), request.getBody(), request.getTimeOfRequest());
+        Request stored = new Request(id, request.getClient(), request.getTitle(), request.getBody(), request.getTimeOfRequest(), request.getRequestStatus());
         requests.add(stored);
         return stored;
     }
@@ -62,6 +62,17 @@ public class FakeRequestRepository implements RequestRepository {
         List<Request> result = new ArrayList<>();
         for(Request request : requests){
             if(request.getClient().getId() == clientId){
+                result.add(request);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<Request> getAllWithStatus(boolean status){
+        List<Request> result = new ArrayList<>();
+        for(Request request : requests){
+            if(request.getRequestStatus()==status){
                 result.add(request);
             }
         }

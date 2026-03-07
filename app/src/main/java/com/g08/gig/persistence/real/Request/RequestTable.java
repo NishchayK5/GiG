@@ -11,6 +11,7 @@ public class RequestTable implements TableSchema {
     public static final String COL_REQUEST_TITLE = "title";
     public static final String COL_REQUEST_BODY = "body";
     public static final String COL_REQUEST_TIME_OF_REQUEST = "timeOfRequest";
+    public static final String COL_REQUEST_STATUS = "status";
 
     @Override
     public String getTableName(){return TABLE_REQUEST;}
@@ -23,6 +24,7 @@ public class RequestTable implements TableSchema {
                 COL_REQUEST_TITLE + " TEXT NOT NULL, " +
                 COL_REQUEST_BODY + " TEXT NOT NULL, " +
                 COL_REQUEST_TIME_OF_REQUEST + " TEXT NOT NULL, " +
+                COL_REQUEST_STATUS + " INTEGER NOT NULL DEFAULT 1, " +
                 "FOREIGN KEY("+ COL_REQUEST_CLIENT_ID +") REFERENCES " + ClientTable.TABLE_CLIENT + "(" + ClientTable.COL_CLIENT_ID + ") ON DELETE CASCADE);";
     }
 }

@@ -21,7 +21,7 @@ public class RequestServiceImpl implements RequestService{
     public Request addRequest(Client client, String title, String body) {
         LocalDateTime dateTimeNow = LocalDateTime.now();
 
-        Request toCreate = new Request(0, client, title, body, dateTimeNow);
+        Request toCreate = new Request(0, client, title, body, dateTimeNow, true);
 
         reqRepo.add(toCreate);
 

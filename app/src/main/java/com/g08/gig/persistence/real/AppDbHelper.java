@@ -12,7 +12,7 @@ import com.g08.gig.persistence.real.user.UserTable;
 public class AppDbHelper extends SQLiteOpenHelper {
 
     public static final String DB_NAME = "gig.db";
-    public static final int DB_VERSION = 6;
+    public static final int DB_VERSION = 9;
 
     private static final TableSchema[] SCHEMA_TABLES = {
         new UserTable(), new ClientTable(), new ProTable(), new RequestTable()

@@ -18,7 +18,6 @@ import java.util.List;
 public class SqlRequestRepository implements RequestRepository {
 
     private final AppDbHelper dbHelper;
-
     private ClientRepository clientRepo;
     public SqlRequestRepository(AppDbHelper dbHelper, ClientRepository clientRepo) {
         this.dbHelper = dbHelper;
@@ -28,7 +27,7 @@ public class SqlRequestRepository implements RequestRepository {
     @Override
     public List<Request> getAll(){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor c = db.query(RequestTable.TABLE_REQUEST, new String[]{RequestTable.COL_REQUEST_ID, RequestTable.COL_REQUEST_CLIENT_ID, RequestTable.COL_REQUEST_TITLE, RequestTable.COL_REQUEST_BODY, RequestTable.COL_REQUEST_TIME_OF_REQUEST},
+        Cursor c = db.query(RequestTable.TABLE_REQUEST, new String[]{RequestTable.COL_REQUEST_ID, RequestTable.COL_REQUEST_CLIENT_ID, RequestTable.COL_REQUEST_TITLE, RequestTable.COL_REQUEST_BODY, RequestTable.COL_REQUEST_TIME_OF_REQUEST, RequestTable.COL_REQUEST_STATUS},
                 null, null, null, null,
                 RequestTable.COL_REQUEST_ID + " DESC");
 
@@ -47,7 +46,7 @@ public class SqlRequestRepository implements RequestRepository {
     public Request getById(int id){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.query(RequestTable.TABLE_REQUEST,
-                new String[]{RequestTable.COL_REQUEST_ID, RequestTable.COL_REQUEST_CLIENT_ID, RequestTable.COL_REQUEST_TITLE, RequestTable.COL_REQUEST_BODY, RequestTable.COL_REQUEST_TIME_OF_REQUEST},
+                new String[]{RequestTable.COL_REQUEST_ID, RequestTable.COL_REQUEST_CLIENT_ID, RequestTable.COL_REQUEST_TITLE, RequestTable.COL_REQUEST_BODY, RequestTable.COL_REQUEST_TIME_OF_REQUEST, RequestTable.COL_REQUEST_STATUS},
                 RequestTable.COL_REQUEST_ID + "=?",
                 new String[]{String.valueOf(id)},
                 null, null, null);
@@ -63,7 +62,7 @@ public class SqlRequestRepository implements RequestRepository {
     public List<Request> getByClient(int clientId){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.query(RequestTable.TABLE_REQUEST,
-                new String[]{RequestTable.COL_REQUEST_ID, RequestTable.COL_REQUEST_CLIENT_ID, RequestTable.COL_REQUEST_TITLE, RequestTable.COL_REQUEST_BODY, RequestTable.COL_REQUEST_TIME_OF_REQUEST},
+                new String[]{RequestTable.COL_REQUEST_ID, RequestTable.COL_REQUEST_CLIENT_ID, RequestTable.COL_REQUEST_TITLE, RequestTable.COL_REQUEST_BODY, RequestTable.COL_REQUEST_TIME_OF_REQUEST, RequestTable.COL_REQUEST_STATUS},
                 RequestTable.COL_REQUEST_CLIENT_ID + "=?",
                 new String[]{String.valueOf(clientId)},
                 null, null, null);
@@ -97,7 +96,7 @@ public class SqlRequestRepository implements RequestRepository {
             values.put(RequestTable.COL_REQUEST_TITLE, request.getTitle());
             values.put(RequestTable.COL_REQUEST_BODY, request.getBody());
             values.put(RequestTable.COL_REQUEST_TIME_OF_REQUEST, request.getTimeOfRequest().toString());
-
+            values.put(RequestTable.COL_REQUEST_STATUS, request.getRequestStatus()?1:0);
             long requestId = db.insert(RequestTable.TABLE_REQUEST, null, values);
             if(requestId==-1) return null;
             db.setTransactionSuccessful();
@@ -105,6 +104,26 @@ public class SqlRequestRepository implements RequestRepository {
         } finally {
             db.endTransaction();
         }
+    }
+
+    @Override
+    public List<Request> getAllWithStatus(boolean status){
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.query(RequestTable.TABLE_REQUEST,
+                new String[]{RequestTable.COL_REQUEST_ID, RequestTable.COL_REQUEST_CLIENT_ID, RequestTable.COL_REQUEST_TITLE, RequestTable.COL_REQUEST_BODY, RequestTable.COL_REQUEST_TIME_OF_REQUEST, RequestTable.COL_REQUEST_STATUS},
+                RequestTable.COL_REQUEST_STATUS + "=?",
+                new String[]{String.valueOf(status ? 1 : 0)},
+                null, null, null);
+
+        List<Request> result = new ArrayList<>();
+        try {
+            while (c.moveToNext()){
+                result.add(cursorToRequest(c));
+            }
+        } finally {
+            c.close();
+        }
+        return result;
     }
 
     private Request cursorToRequest(Cursor c) {
@@ -115,7 +134,7 @@ public class SqlRequestRepository implements RequestRepository {
         String body = c.getString(c.getColumnIndexOrThrow(RequestTable.COL_REQUEST_BODY));
         String timeofRequestString = c.getString(c.getColumnIndexOrThrow(RequestTable.COL_REQUEST_TIME_OF_REQUEST));
         LocalDateTime timeOfRequest = LocalDateTime.parse(timeofRequestString);
-
-        return new Request(id, client, title, body, timeOfRequest);
+        boolean isActive = c.getInt(c.getColumnIndexOrThrow(RequestTable.COL_REQUEST_STATUS))==1;
+        return new Request(id, client, title, body, timeOfRequest, isActive);
     }
 }
