@@ -118,7 +118,8 @@ public class ProHome extends AppCompatActivity {
 
 
     private void loadRequests() {
-        availableRequests = requestService.getAllRequests();
+
+        availableRequests = requestService.getRequestsByStatus(true);
     }
 
     private void updateEmptyState() {

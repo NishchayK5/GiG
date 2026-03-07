@@ -37,7 +37,6 @@ public class ClientHome extends AppCompatActivity {
     private View profileContent;
     private List<Request> currentRequests = new ArrayList<>();
     private List<Request> pastRequests = new ArrayList<>();
-
     private RequestService requestService;
 
     private final ActivityResultLauncher<Intent> createRequestLauncher = registerForActivityResult(
@@ -51,7 +50,7 @@ public class ClientHome extends AppCompatActivity {
                 Client placeholderClient = new Client(1, "client@email.com", "Sarah", "Martinez",
                         "2045552233", "452 Oak Street, Winnipeg", null);
                 currentRequests.add(0, new Request(newId, placeholderClient, title, body, LocalDateTime.now(), true));
-                showListForCurrentTab();
+                setRequests(currentRequests, pastRequests);
                 Toast.makeText(this, R.string.create_request_submitted, Toast.LENGTH_SHORT).show();
             }
     );
@@ -143,20 +142,23 @@ public class ClientHome extends AppCompatActivity {
      * Remove or replace with repository data when ready.
      */
     private void loadRequests() {
-
-        Client placeholderClient = new Client(1, "client@email.com", "Sarah", "Martinez",
-                "2045552233", "452 Oak Street, Winnipeg", null);
-
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
         int clientId = prefs.getInt("USER_ID", -1);
-        currentRequests = requestService.getRequestsByClient(clientId);
-        LocalDateTime now = LocalDateTime.now();
 
-        pastRequests = new ArrayList<>();
-        pastRequests.add(new Request(4, placeholderClient, "Tire rotation",
-                "Had my tires rotated last month. Service was quick and professional.", now.minusDays(14), false));
-        pastRequests.add(new Request(5, placeholderClient, "Battery replacement",
-                "Old battery was replaced. All good now.", now.minusDays(30), false));
+        List<Request> allRequests = requestService.getRequestsByClient(clientId);
+
+        List<Request> current = new ArrayList<>();
+        List<Request> past = new ArrayList<>();
+
+        for (Request r : allRequests) {
+            if (r.getRequestStatus()) {
+                current.add(r);
+            } else {
+                past.add(r);
+            }
+        }
+
+        setRequests(current, past);
     }
 
     private void showListForCurrentTab() {

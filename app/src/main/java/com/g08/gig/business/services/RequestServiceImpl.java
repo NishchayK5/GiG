@@ -43,5 +43,10 @@ public class RequestServiceImpl implements RequestService{
         return reqRepo.getByClient(id);
     }
 
+    @Override
+    public List<Request> getRequestsByStatus(boolean status) {
+        return reqRepo.getAllWithStatus(true);
+    }
+
 
 }

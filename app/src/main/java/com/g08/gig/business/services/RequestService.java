@@ -12,4 +12,6 @@ public interface RequestService {
     List<Request> getAllRequests();
 
     List<Request> getRequestsByClient(int id);
+
+    List<Request> getRequestsByStatus(boolean status);
 }
