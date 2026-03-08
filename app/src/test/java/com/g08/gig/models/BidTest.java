@@ -13,7 +13,9 @@ class BidTest {
         Pro pro = new Pro(1, "tony.mechanic@autoshop.ca", "Tony", "Santos", "2045559900",
                 new String[]{"Brake Service", "Suspension"}, "Winnipeg");
         LocalDateTime time = LocalDateTime.of(2025, 6, 20, 9, 0);
-        Bid bid = new Bid(7, pro, 289.99, time);
+        Client client = new Client(1, "clientemail@test.com", "Mike", "Ross", "2049998888", "Wall Street", "HarvardNahh");
+        Request request = new Request(1, client, "Table Repair", "I need someone to repair an adjustable office desk, which no more goes down with the button.", LocalDateTime.now(), true );
+        Bid bid = new Bid(7, pro, request, 289.99, time);
 
         assertEquals(7, bid.getId());
         assertSame(pro, bid.getPro());
@@ -26,7 +28,10 @@ class BidTest {
         Pro pro = new Pro(1, "jose.garza@quicklube.ca", "Jose", "Garza", "2045551010",
                 new String[]{"Oil Change"}, "Winnipeg");
         LocalDateTime time = LocalDateTime.now();
-        Bid bid = new Bid(1, pro, 79.99, time);
+        Client client = new Client(1, "clientemail@test.com", "Mike", "Ross", "2049998888", "Wall Street", "HarvardNahh");
+        Request request = new Request(1, client, "Table Repair", "I need someone to repair an adjustable office desk, which no more goes down with the button.", LocalDateTime.now(), true );
+
+        Bid bid = new Bid(1, pro, request,79.99, time);
 
         bid.setId(2);
         assertEquals(2, bid.getId());
