@@ -13,15 +13,18 @@ import com.g08.gig.business.services.RequestServiceImpl;
 import com.g08.gig.models.Client;
 import com.g08.gig.models.Pro;
 import com.g08.gig.models.Request;
+import com.g08.gig.persistence.BidRepository;
 import com.g08.gig.persistence.ClientRepository;
 import com.g08.gig.persistence.ProRepository;
 import com.g08.gig.persistence.RequestRepository;
 import com.g08.gig.persistence.UserRepository;
+import com.g08.gig.persistence.fake.FakeBidRepository;
 import com.g08.gig.persistence.fake.FakeClientRepository;
 import com.g08.gig.persistence.fake.FakeProRepository;
 import com.g08.gig.persistence.fake.FakeRequestRepository;
 import com.g08.gig.persistence.fake.FakeUserRepository;
 import com.g08.gig.persistence.real.AppDbHelper;
+import com.g08.gig.persistence.real.Bid.SqlBidRepository;
 import com.g08.gig.persistence.real.Client.SqlClientRepository;
 import com.g08.gig.persistence.real.Pro.SqlProRepository;
 import com.g08.gig.persistence.real.Request.SqlRequestRepository;
@@ -42,6 +45,8 @@ public class GiGApp extends Application {
     private ProRepository proRepo;
     private RequestRepository reqRepo;
 
+    private BidRepository bidRepo;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -58,12 +63,14 @@ public class GiGApp extends Application {
             clientRepo = new SqlClientRepository(dbHelper);
             proRepo = new SqlProRepository(dbHelper);
             reqRepo = new SqlRequestRepository(dbHelper, clientRepo);
+            bidRepo = new SqlBidRepository(dbHelper, proRepo, reqRepo);
         }
         else {
             userRepo = new FakeUserRepository();
             clientRepo = new FakeClientRepository();
             proRepo = new FakeProRepository();
             reqRepo = new FakeRequestRepository();
+            bidRepo = new FakeBidRepository();
         }
 
         //sets up all needed services
@@ -71,6 +78,7 @@ public class GiGApp extends Application {
         proUserService = new ProUserServiceImpl(proRepo, userRepo);
         authService = new AuthServiceImpl(userRepo, clientRepo, proRepo);
         reqService = new RequestServiceImpl(reqRepo);
+
         if(FAKE_REPO) {
             populateRepo();
         }
