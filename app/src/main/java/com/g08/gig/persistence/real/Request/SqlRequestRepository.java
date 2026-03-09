@@ -18,7 +18,7 @@ import java.util.List;
 public class SqlRequestRepository implements RequestRepository {
 
     private final AppDbHelper dbHelper;
-    private ClientRepository clientRepo;
+    private final ClientRepository clientRepo;
     public SqlRequestRepository(AppDbHelper dbHelper, ClientRepository clientRepo) {
         this.dbHelper = dbHelper;
         this.clientRepo = clientRepo;
@@ -132,8 +132,8 @@ public class SqlRequestRepository implements RequestRepository {
         Client client = clientRepo.getById(clientID);
         String title = c.getString(c.getColumnIndexOrThrow(RequestTable.COL_REQUEST_TITLE));
         String body = c.getString(c.getColumnIndexOrThrow(RequestTable.COL_REQUEST_BODY));
-        String timeofRequestString = c.getString(c.getColumnIndexOrThrow(RequestTable.COL_REQUEST_TIME_OF_REQUEST));
-        LocalDateTime timeOfRequest = LocalDateTime.parse(timeofRequestString);
+        String timeOfRequestString = c.getString(c.getColumnIndexOrThrow(RequestTable.COL_REQUEST_TIME_OF_REQUEST));
+        LocalDateTime timeOfRequest = LocalDateTime.parse(timeOfRequestString);
         boolean isActive = c.getInt(c.getColumnIndexOrThrow(RequestTable.COL_REQUEST_STATUS))==1;
         return new Request(id, client, title, body, timeOfRequest, isActive);
     }

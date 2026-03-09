@@ -4,12 +4,14 @@ import java.time.LocalDateTime;
 
 public class Bid {
     private int id;
+    private Request request;
     private Pro pro;
     private double cost;
     private LocalDateTime timeOfBid;
 
-    public Bid(int id, Pro pro, double cost, LocalDateTime timeOfBid) {
+    public Bid(int id, Pro pro, Request request, double cost, LocalDateTime timeOfBid) {
         this.id = id;
+        this.request = request;
         this.pro = pro;
         this.cost = cost;
         this.timeOfBid = timeOfBid;
@@ -22,6 +24,10 @@ public class Bid {
     public void setId(int id) {
         this.id = id;
     }
+
+    public Request getRequest(){return request;}
+
+    public void setRequest(Request request){this.request = request;}
 
     public Pro getPro() {
         return pro;
