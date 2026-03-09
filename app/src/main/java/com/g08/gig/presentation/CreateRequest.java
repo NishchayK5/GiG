@@ -1,6 +1,8 @@
 package com.g08.gig.presentation;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -8,6 +10,10 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.g08.gig.R;
+import com.g08.gig.application.GiGApp;
+import com.g08.gig.business.services.ClientUserService;
+import com.g08.gig.business.services.RequestService;
+import com.g08.gig.models.Client;
 
 /**
  * Form to create a new service request (title + description).
@@ -20,11 +26,17 @@ public class CreateRequest extends AppCompatActivity {
 
     private EditText requestTitleInput;
     private EditText requestDescriptionInput;
+    private RequestService requestService;
+
+    private ClientUserService clientUserService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_request);
+
+        requestService = ((GiGApp) getApplication()).getRequestService();
+        clientUserService = ((GiGApp) getApplication()).getClientUserService();
 
         requestTitleInput = findViewById(R.id.requestTitleInput);
         requestDescriptionInput = findViewById(R.id.requestDescriptionInput);
@@ -50,11 +62,14 @@ public class CreateRequest extends AppCompatActivity {
             requestDescriptionInput.requestFocus();
             return;
         }
-
-        Intent data = new Intent();
-        data.putExtra(EXTRA_REQUEST_TITLE, title);
-        data.putExtra(EXTRA_REQUEST_BODY, body);
-        setResult(RESULT_OK, data);
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        int clientId = prefs.getInt("USER_ID", -1);
+        Client client = clientUserService.getClientById(clientId);
+        requestService.addRequest(client, title, body);
+        //Intent data = new Intent();
+        //putExtra(EXTRA_REQUEST_TITLE, title);
+        //data.putExtra(EXTRA_REQUEST_BODY, body);
+        //setResult(RESULT_OK, data);
         finish();
     }
 }

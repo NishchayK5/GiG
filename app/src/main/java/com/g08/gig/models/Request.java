@@ -6,14 +6,16 @@ public class Request {
     private Client client;
     private String title;
     private String body;
+    private boolean isActive;
     private LocalDateTime timeOfRequest;
 
-    public Request(int id, Client client, String title, String body, LocalDateTime timeOfRequest) {
+    public Request(int id, Client client, String title, String body, LocalDateTime timeOfRequest, boolean isActive) {
         this.id = id;
         this.client = client;
         this.title = title;
         this.body = body;
         this.timeOfRequest = timeOfRequest;
+        this.isActive = isActive;
     }
 
     public int getId() {
@@ -55,4 +57,9 @@ public class Request {
     public void setTimeOfRequest(LocalDateTime timeOfRequest) {
         this.timeOfRequest = timeOfRequest;
     }
+
+    public void setRequestToExpire(){
+        isActive = false;
+    }
+    public boolean getRequestStatus(){return isActive;}
 }

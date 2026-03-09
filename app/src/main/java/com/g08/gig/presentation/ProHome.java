@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.g08.gig.R;
+import com.g08.gig.application.GiGApp;
+import com.g08.gig.business.services.RequestService;
+import com.g08.gig.business.services.RequestServiceImpl;
 import com.g08.gig.models.Client;
 import com.g08.gig.models.Request;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -25,6 +28,8 @@ public class ProHome extends AppCompatActivity {
     private View biddingsViewContent;
     private View appointmentViewContent;
     private View profileViewContent;
+
+    private RequestService requestService;
     private List<Request> availableRequests = new ArrayList<>();
 
     @Override
@@ -39,6 +44,8 @@ public class ProHome extends AppCompatActivity {
         profileViewContent = findViewById(R.id.profileViewContent);
 
         RecyclerView biddingsList = findViewById(R.id.biddingsList);
+
+        requestService = ((GiGApp) getApplication()).getRequestService();
 
         biddingAdapter = new BiddingAdapter(new BiddingAdapter.OnBiddingActionListener() {
             @Override
@@ -73,7 +80,7 @@ public class ProHome extends AppCompatActivity {
             }
         });
 
-        loadTemporaryRequests();
+        loadRequests();
         biddingAdapter.submitList(new ArrayList<>(availableRequests));
         updateEmptyState();
 
@@ -108,18 +115,11 @@ public class ProHome extends AppCompatActivity {
         profileViewContent.setVisibility(visibleView == profileViewContent ? View.VISIBLE : View.GONE);
     }
 
-    private void loadTemporaryRequests() {
-        Client placeholderClient = new Client(1, "client@email.com", "Sarah", "Martinez",
-                "2045552233", "452 Oak Street, Winnipeg", null);
-        LocalDateTime now = LocalDateTime.now();
 
-        availableRequests = new ArrayList<>();
-        availableRequests.add(new Request(1, placeholderClient, "Brake pad replacement",
-                "My 2019 Honda Civic needs new front brake pads. There's a grinding noise when I stop.", now.minusDays(1)));
-        availableRequests.add(new Request(2, placeholderClient, "Oil change needed",
-                "Due for synthetic oil change. Prefer weekend appointment if possible.", now.minusHours(5)));
-        availableRequests.add(new Request(3, placeholderClient, "AC not cooling",
-                "Car AC blows warm air. 2020 Toyota Corolla. Would like a diagnosis.", now.minusHours(2)));
+
+    private void loadRequests() {
+
+        availableRequests = requestService.getRequestsByStatus(true);
     }
 
     private void updateEmptyState() {

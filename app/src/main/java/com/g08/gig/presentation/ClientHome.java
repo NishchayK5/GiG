@@ -1,6 +1,8 @@
 package com.g08.gig.presentation;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -12,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.g08.gig.R;
+import com.g08.gig.application.GiGApp;
+import com.g08.gig.business.services.RequestService;
 import com.g08.gig.models.Client;
 import com.g08.gig.models.Request;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -33,6 +37,7 @@ public class ClientHome extends AppCompatActivity {
     private View profileContent;
     private List<Request> currentRequests = new ArrayList<>();
     private List<Request> pastRequests = new ArrayList<>();
+    private RequestService requestService;
 
     private final ActivityResultLauncher<Intent> createRequestLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -44,8 +49,8 @@ public class ClientHome extends AppCompatActivity {
                 int newId = 100 + currentRequests.size() + pastRequests.size();
                 Client placeholderClient = new Client(1, "client@email.com", "Sarah", "Martinez",
                         "2045552233", "452 Oak Street, Winnipeg", null);
-                currentRequests.add(0, new Request(newId, placeholderClient, title, body, LocalDateTime.now()));
-                showListForCurrentTab();
+                currentRequests.add(0, new Request(newId, placeholderClient, title, body, LocalDateTime.now(), true));
+                setRequests(currentRequests, pastRequests);
                 Toast.makeText(this, R.string.create_request_submitted, Toast.LENGTH_SHORT).show();
             }
     );
@@ -54,6 +59,12 @@ public class ClientHome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_client);
+        requestService = ((GiGApp) getApplication()).getRequestService();
+        int clientId = getIntent().getIntExtra("USER_ID", -1);
+
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        prefs.edit().putInt("USER_ID", clientId).apply();
+
 
         emptyRequestsView = findViewById(R.id.emptyRequestsView);
         requestsList = findViewById(R.id.requestsList);
@@ -82,7 +93,7 @@ public class ClientHome extends AppCompatActivity {
         });
 
         setupTabs();
-        loadTemporaryRequests(); // TODO: replace with real data from repository
+        loadRequests();
         showListForCurrentTab();
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
@@ -130,25 +141,24 @@ public class ClientHome extends AppCompatActivity {
      * Temporary sample data so you can see the request cards in the UI.
      * Remove or replace with repository data when ready.
      */
-    private void loadTemporaryRequests() {
-        Client placeholderClient = new Client(1, "client@email.com", "Sarah", "Martinez",
-                "2045552233", "452 Oak Street, Winnipeg", null);
+    private void loadRequests() {
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        int clientId = prefs.getInt("USER_ID", -1);
 
-        LocalDateTime now = LocalDateTime.now();
+        List<Request> allRequests = requestService.getRequestsByClient(clientId);
 
-        currentRequests = new ArrayList<>();
-        currentRequests.add(new Request(1, placeholderClient, "Brake pad replacement",
-                "My 2019 Honda Civic needs new front brake pads. There's a grinding noise when I stop.", now.minusDays(1)));
-        currentRequests.add(new Request(2, placeholderClient, "Oil change needed",
-                "Due for synthetic oil change. Prefer weekend appointment if possible.", now.minusHours(5)));
-        currentRequests.add(new Request(3, placeholderClient, "AC not cooling",
-                "Car AC blows warm air. 2020 Toyota Corolla. Would like a diagnosis.", now.minusHours(2)));
+        List<Request> current = new ArrayList<>();
+        List<Request> past = new ArrayList<>();
 
-        pastRequests = new ArrayList<>();
-        pastRequests.add(new Request(4, placeholderClient, "Tire rotation",
-                "Had my tires rotated last month. Service was quick and professional.", now.minusDays(14)));
-        pastRequests.add(new Request(5, placeholderClient, "Battery replacement",
-                "Old battery was replaced. All good now.", now.minusDays(30)));
+        for (Request r : allRequests) {
+            if (r.getRequestStatus()) {
+                current.add(r);
+            } else {
+                past.add(r);
+            }
+        }
+
+        setRequests(current, past);
     }
 
     private void showListForCurrentTab() {

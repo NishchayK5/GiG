@@ -16,6 +16,8 @@ import com.g08.gig.business.services.LoginResult;
 
 public class Login extends AppCompatActivity {
 
+    private EditText emailInput;
+    private EditText passwordInput;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,8 +26,8 @@ public class Login extends AppCompatActivity {
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> finish());
 
-        EditText emailInput = findViewById(R.id.emailInput);
-        EditText passwordInput = findViewById(R.id.passwordInput);
+        emailInput = findViewById(R.id.emailInput);
+        passwordInput = findViewById(R.id.passwordInput);
         Button loginButton = findViewById(R.id.loginbutton);
 
         AuthService authService = ((GiGApp) getApplication()).getAuthService();
@@ -37,38 +39,33 @@ public class Login extends AppCompatActivity {
             emailInput.setError(null);
             passwordInput.setError(null);
 
-            boolean hasError = false;
-            if (email.isEmpty()) {
-                emailInput.setError(getString(R.string.login_error_email_required));
-                hasError = true;
-            } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                emailInput.setError(getString(R.string.login_error_email_invalid));
-                hasError = true;
-            }
-            if (password.isEmpty()) {
-                passwordInput.setError(getString(R.string.login_error_password_required));
-                hasError = true;
-            }
-            if (hasError) {
-                if (emailInput.getError() != null) {
-                    emailInput.requestFocus();
+            try {
+                LoginResult result = authService.login(email, password);
+                if (result.isSuccess()) {
+                    Intent intent = result.isClient()
+                            ? new Intent(Login.this, ClientHome.class)
+                            : new Intent(Login.this, ProHome.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra("USER_ID", result.getUserId());
+                    startActivity(intent);
+                    finish();
                 } else {
-                    passwordInput.requestFocus();
+                    Toast.makeText(this, getString(R.string.login_error_invalid_credentials), Toast.LENGTH_SHORT).show();
                 }
-                return;
             }
-
-            LoginResult result = authService.login(email, password);
-            if (result.isSuccess()) {
-                Intent intent = result.isClient()
-                        ? new Intent(Login.this, ClientHome.class)
-                        : new Intent(Login.this, ProHome.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            } else {
-                Toast.makeText(this, getString(R.string.login_error_invalid_credentials), Toast.LENGTH_SHORT).show();
+            catch (com.g08.gig.business.validation.ValidationException ex) {
+                EditText errorField = getErrorFieldForMessage(ex.getField());
+                if (errorField != null) {
+                    errorField.setError(ex.getMessage());
+                    errorField.requestFocus();
+                }
             }
         });
+    }
+    private EditText getErrorFieldForMessage(String field) {
+        if (field == null) return emailInput;
+        if (field.startsWith("email")) return emailInput;
+        if (field.startsWith("password")) return passwordInput;
+        return emailInput;
     }
 }
