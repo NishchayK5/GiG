@@ -1,0 +1,40 @@
+package com.g08.gig.business.services;
+
+import com.g08.gig.models.Bid;
+import com.g08.gig.models.Pro;
+import com.g08.gig.models.Request;
+import com.g08.gig.persistence.BidRepository;
+import com.g08.gig.persistence.RequestRepository;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+
+public class BidServiceImpl implements BidService {
+
+    private final BidRepository bidRepo;
+
+    public BidServiceImpl(BidRepository bidRepo)
+    {
+        this.bidRepo = bidRepo;
+    }
+    @Override
+    public Bid addBid(Pro pro, Request request, double cost) {
+        LocalDateTime dateTimeNow = LocalDateTime.now();
+
+        Bid toCreate = new Bid(0, pro, request, cost, dateTimeNow);
+        bidRepo.add(toCreate);
+
+        return toCreate;
+    }
+
+    @Override
+    public List<Bid> getAllByRequest(Request request) {
+        return bidRepo.getAllByRequest(request);
+    }
+
+    @Override
+    public List<Bid> getAllByPro(Pro pro) {
+        return bidRepo.getAllByPro(pro);
+    }
+}

@@ -44,7 +44,6 @@ public class GiGApp extends Application {
     private ClientRepository clientRepo;
     private ProRepository proRepo;
     private RequestRepository reqRepo;
-
     private BidRepository bidRepo;
 
     @Override
@@ -114,6 +113,7 @@ public class GiGApp extends Application {
 
     public void populateRequestRepo()
     {
+        //TODO: Change placeholder client maybe?
         Client placeholderClient = clientRepo.getById(1);
         reqService.addRequest(placeholderClient, "Brake pad replacement",
                 "My 2019 Honda Civic needs new front brake pads. There's a grinding noise when I stop.");

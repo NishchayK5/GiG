@@ -8,10 +8,9 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-public class RequestServiceImpl implements RequestService{
+public class RequestServiceImpl implements RequestService {
 
     private final RequestRepository reqRepo;
-
     public RequestServiceImpl(RequestRepository reqRepo)
     {
         this.reqRepo = reqRepo;
