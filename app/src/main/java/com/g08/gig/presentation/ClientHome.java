@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -109,6 +110,18 @@ public class ClientHome extends AppCompatActivity {
             }
             return false;
         });
+
+        LinearLayout profileLogoutTile = findViewById(R.id.profileLogoutTile);
+
+        profileLogoutTile.setOnClickListener(v -> {
+            SharedPreferences logoutPrefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+            logoutPrefs.edit().clear().apply();
+
+            Intent intent = new Intent(this, StartUp.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void setupTabs() {
@@ -176,22 +189,10 @@ public class ClientHome extends AppCompatActivity {
         profileContent.setVisibility(View.VISIBLE);
     }
 
-    /**
-     * Call this when you have requests from a repository.
-     * Split into current (active) and past (completed/cancelled) as needed.
-     */
     public void setRequests(List<Request> current, List<Request> past) {
         currentRequests = current != null ? new ArrayList<>(current) : new ArrayList<>();
         pastRequests = past != null ? new ArrayList<>(past) : new ArrayList<>();
         showListForCurrentTab();
     }
 
-    /**
-     * Single list: all treated as current. Use setRequests(current, past) when you have split data.
-     */
-    public void setRequests(List<Request> requests) {
-        currentRequests = requests != null ? new ArrayList<>(requests) : new ArrayList<>();
-        pastRequests = new ArrayList<>();
-        showListForCurrentTab();
-    }
 }

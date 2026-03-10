@@ -20,10 +20,6 @@ import com.g08.gig.models.Client;
  * Returns the new request title and body via result intent.
  */
 public class CreateRequest extends AppCompatActivity {
-
-    public static final String EXTRA_REQUEST_TITLE = "extra_request_title";
-    public static final String EXTRA_REQUEST_BODY = "extra_request_body";
-
     private EditText requestTitleInput;
     private EditText requestDescriptionInput;
     private RequestService requestService;

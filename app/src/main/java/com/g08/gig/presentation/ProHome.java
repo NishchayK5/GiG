@@ -1,9 +1,11 @@
 package com.g08.gig.presentation;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -121,6 +123,18 @@ public class ProHome extends AppCompatActivity {
                 return true;
             }
             return false;
+        });
+
+        LinearLayout profileLogoutTile = findViewById(R.id.profileLogoutTile);
+
+        profileLogoutTile.setOnClickListener(v -> {
+            SharedPreferences logoutPrefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+            logoutPrefs.edit().clear().apply();
+
+            Intent intent = new Intent(this, StartUp.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
         });
     }
 
