@@ -66,10 +66,7 @@ public class CreateRequest extends AppCompatActivity {
         int clientId = prefs.getInt("USER_ID", -1);
         Client client = clientUserService.getClientById(clientId);
         requestService.addRequest(client, title, body);
-        //Intent data = new Intent();
-        //putExtra(EXTRA_REQUEST_TITLE, title);
-        //data.putExtra(EXTRA_REQUEST_BODY, body);
-        //setResult(RESULT_OK, data);
+        setResult(RESULT_OK);
         finish();
     }
 }

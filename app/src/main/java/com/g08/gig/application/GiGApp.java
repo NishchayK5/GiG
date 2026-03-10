@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.g08.gig.business.services.AuthService;
 import com.g08.gig.business.services.AuthServiceImpl;
+import com.g08.gig.business.services.BidService;
+import com.g08.gig.business.services.BidServiceImpl;
 import com.g08.gig.business.services.ClientUserService;
 import com.g08.gig.business.services.ClientUserServiceImpl;
 import com.g08.gig.business.services.ProUserService;
@@ -37,7 +39,7 @@ public class GiGApp extends Application {
     private ClientUserService clientUserService;
     private ProUserService proUserService;
     private AuthService authService;
-
+    private BidService bidService;
     private RequestService reqService;
     private AppDbHelper dbHelper;
     private UserRepository userRepo;
@@ -77,6 +79,7 @@ public class GiGApp extends Application {
         proUserService = new ProUserServiceImpl(proRepo, userRepo);
         authService = new AuthServiceImpl(userRepo, clientRepo, proRepo);
         reqService = new RequestServiceImpl(reqRepo);
+        bidService = new BidServiceImpl(bidRepo);
 
         if(FAKE_REPO) {
             populateRepo();
@@ -97,6 +100,8 @@ public class GiGApp extends Application {
     }
 
     public RequestService getRequestService() { return reqService; }
+
+    public BidService getBidService() { return bidService; }
 
     /**
      * Populates the repository with fake "stub" data for both clients and professionals

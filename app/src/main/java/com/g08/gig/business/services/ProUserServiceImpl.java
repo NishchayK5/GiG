@@ -60,6 +60,12 @@ public class ProUserServiceImpl implements ProUserService {
         return repo.delete(id);
     }
 
+    @Override
+    public Pro getProById(int id) {
+        return repo.getById(id);
+    }
+
+
     private String safeTrim(String s) {
         if (s == null) return null;
         String trimmed = s.trim();

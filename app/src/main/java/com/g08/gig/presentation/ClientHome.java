@@ -42,15 +42,8 @@ public class ClientHome extends AppCompatActivity {
     private final ActivityResultLauncher<Intent> createRequestLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if (result.getResultCode() != RESULT_OK || result.getData() == null) return;
-                String title = result.getData().getStringExtra(CreateRequest.EXTRA_REQUEST_TITLE);
-                String body = result.getData().getStringExtra(CreateRequest.EXTRA_REQUEST_BODY);
-                if (title == null || body == null) return;
-                int newId = 100 + currentRequests.size() + pastRequests.size();
-                Client placeholderClient = new Client(1, "client@email.com", "Sarah", "Martinez",
-                        "2045552233", "452 Oak Street, Winnipeg", null);
-                currentRequests.add(0, new Request(newId, placeholderClient, title, body, LocalDateTime.now(), true));
-                setRequests(currentRequests, pastRequests);
+                if (result.getResultCode() != RESULT_OK) return;
+                loadRequests();
                 Toast.makeText(this, R.string.create_request_submitted, Toast.LENGTH_SHORT).show();
             }
     );
@@ -60,10 +53,10 @@ public class ClientHome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_client);
         requestService = ((GiGApp) getApplication()).getRequestService();
-        int clientId = getIntent().getIntExtra("USER_ID", -1);
 
+        int userId = getIntent().getIntExtra("USER_ID", -1);
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-        prefs.edit().putInt("USER_ID", clientId).apply();
+        prefs.edit().putInt("USER_ID", userId).apply();
 
 
         emptyRequestsView = findViewById(R.id.emptyRequestsView);
