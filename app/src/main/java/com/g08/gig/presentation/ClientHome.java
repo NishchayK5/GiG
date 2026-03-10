@@ -22,7 +22,7 @@ import com.g08.gig.models.Request;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +65,7 @@ public class ClientHome extends AppCompatActivity {
         requestsContent = findViewById(R.id.requestsContent);
         profileContent = findViewById(R.id.profileContent);
 
-        requestAdapter = new RequestAdapter();
+        requestAdapter = new RequestAdapter(this::showRequestDetail);
         requestsList.setLayoutManager(new LinearLayoutManager(this));
         requestsList.setAdapter(requestAdapter);
 
@@ -195,4 +195,33 @@ public class ClientHome extends AppCompatActivity {
         showListForCurrentTab();
     }
 
+    private void showRequestDetail(Request request) {
+        String time = "";
+        if (request.getTimeOfRequest() != null) {
+            time = request.getTimeOfRequest().format(DateTimeFormatter.ofPattern("MMM d, yyyy · h:mm a"));
+        }
+
+        RequestDetailDialog dialog = RequestDetailDialog.newInstance(
+                request.getId(),
+                request.getTitle(),
+                request.getBody(),
+                time,
+                request.getRequestStatus()
+        );
+        dialog.setActionListener(new RequestDetailDialog.OnRequestActionListener() {
+            @Override
+            public void onDeleteRequest(int requestId) {
+                currentRequests.removeIf(r -> r.getId() == requestId);
+                pastRequests.removeIf(r -> r.getId() == requestId);
+                showListForCurrentTab();
+                Toast.makeText(ClientHome.this, "Request deleted", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onEditRequest(int requestId) {
+                Toast.makeText(ClientHome.this, "Edit request", Toast.LENGTH_SHORT).show();
+            }
+        });
+        dialog.show(getSupportFragmentManager(), "request_detail");
+    }
 }

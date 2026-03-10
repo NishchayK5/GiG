@@ -19,6 +19,12 @@ public class RequestAdapter extends ListAdapter<Request, RequestAdapter.RequestV
 
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("MMM d, yyyy · h:mm a");
 
+    public interface OnRequestClickListener {
+        void onRequestClick(Request request);
+    }
+
+    private OnRequestClickListener clickListener;
+
     public RequestAdapter() {
         super(new DiffUtil.ItemCallback<Request>() {
             @Override
@@ -32,6 +38,11 @@ public class RequestAdapter extends ListAdapter<Request, RequestAdapter.RequestV
                         && oldItem.getBody().equals(newItem.getBody());
             }
         });
+    }
+
+    public RequestAdapter(OnRequestClickListener listener) {
+        this();
+        this.clickListener = listener;
     }
 
     @NonNull
@@ -52,6 +63,12 @@ public class RequestAdapter extends ListAdapter<Request, RequestAdapter.RequestV
         } else {
             holder.time.setText("");
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            if (clickListener != null) {
+                clickListener.onRequestClick(request);
+            }
+        });
     }
 
     static class RequestViewHolder extends RecyclerView.ViewHolder {

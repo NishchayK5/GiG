@@ -21,6 +21,7 @@ import com.g08.gig.models.Pro;
 import com.g08.gig.models.Request;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,28 +61,7 @@ public class ProHome extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
         prefs.edit().putInt("USER_ID", userId).apply();
 
-        biddingAdapter = new BiddingAdapter(new BiddingAdapter.OnBiddingActionListener() {
-            @Override
-            public void onBid(Request request) {
-                Toast.makeText(ProHome.this, getString(R.string.bid) + ": " + request.getTitle(), Toast.LENGTH_SHORT).show();
-
-                int cost = 2;
-                bidService.addBid(proUserService.getProById(userId), request, cost);
-                //TODO: Add cost when someone submits a bid
-
-                //availableRequests.remove(request);
-                //biddingAdapter.submitList(new ArrayList<>(availableRequests));
-                updateEmptyState();
-            }
-
-            @Override
-            public void onReject(Request request) {
-                Toast.makeText(ProHome.this, getString(R.string.reject) + ": " + request.getTitle(), Toast.LENGTH_SHORT).show();
-                availableRequests.remove(request);
-                biddingAdapter.submitList(new ArrayList<>(availableRequests));
-                updateEmptyState();
-            }
-        });
+        biddingAdapter = new BiddingAdapter(request -> showBiddingDetail(request, userId));
 
         biddingsList.setLayoutManager(new LinearLayoutManager(this));
         biddingsList.setAdapter(biddingAdapter);
@@ -155,5 +135,27 @@ public class ProHome extends AppCompatActivity {
     private void updateEmptyState() {
         boolean isEmpty = biddingAdapter.getItemCount() == 0;
         emptyBiddingsView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+    }
+
+    private void showBiddingDetail(Request request, int userId) {
+        String time = "";
+        if (request.getTimeOfRequest() != null) {
+            time = request.getTimeOfRequest().format(DateTimeFormatter.ofPattern("MMM d, yyyy · h:mm a"));
+        }
+
+        BiddingDetailDialog dialog = BiddingDetailDialog.newInstance(
+                request.getId(),
+                request.getTitle(),
+                request.getBody(),
+                time,
+                request.getRequestStatus()
+        );
+        dialog.setActionListener((requestId, bidAmount) -> {
+            int cost = (int) bidAmount;
+            bidService.addBid(proUserService.getProById(userId), request, cost);
+            Toast.makeText(ProHome.this, getString(R.string.bid) + " $" + bidAmount + ": " + request.getTitle(), Toast.LENGTH_SHORT).show();
+            updateEmptyState();
+        });
+        dialog.show(getSupportFragmentManager(), "bidding_detail");
     }
 }

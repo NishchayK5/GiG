@@ -3,7 +3,6 @@ package com.g08.gig.presentation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,14 +19,13 @@ public class BiddingAdapter extends ListAdapter<Request, BiddingAdapter.BiddingV
 
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("MMM d, yyyy · h:mm a");
 
-    public interface OnBiddingActionListener {
-        void onBid(Request request);
-        void onReject(Request request);
+    public interface OnBiddingClickListener {
+        void onRequestClick(Request request);
     }
 
-    private final OnBiddingActionListener listener;
+    private final OnBiddingClickListener listener;
 
-    public BiddingAdapter(OnBiddingActionListener listener) {
+    public BiddingAdapter(OnBiddingClickListener listener) {
         super(new DiffUtil.ItemCallback<Request>() {
             @Override
             public boolean areItemsTheSame(@NonNull Request oldItem, @NonNull Request newItem) {
@@ -61,24 +59,20 @@ public class BiddingAdapter extends ListAdapter<Request, BiddingAdapter.BiddingV
         } else {
             holder.time.setText("");
         }
-        holder.btnBid.setOnClickListener(v -> listener.onBid(request));
-        holder.btnReject.setOnClickListener(v -> listener.onReject(request));
+
+        holder.itemView.setOnClickListener(v -> listener.onRequestClick(request));
     }
 
     static class BiddingViewHolder extends RecyclerView.ViewHolder {
         final TextView title;
         final TextView body;
         final TextView time;
-        final Button btnBid;
-        final Button btnReject;
 
         BiddingViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.requestCardTitle);
             body = itemView.findViewById(R.id.requestCardBody);
             time = itemView.findViewById(R.id.requestCardTime);
-            btnBid = itemView.findViewById(R.id.btnBid);
-            btnReject = itemView.findViewById(R.id.btnReject);
         }
     }
 }

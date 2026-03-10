@@ -105,6 +105,17 @@
     <string name="biddings_view">Biddings view</string>
     <string name="appointment_view">Appointment view</string>
 
+    <!-- Request detail dialog -->
+    <string name="request_detail_title">Request details</string>
+    <string name="request_detail_label_description">Description</string>
+    <string name="request_detail_label_posted">Posted</string>
+    <string name="request_detail_label_status">Status</string>
+    <string name="request_detail_status_active">Active</string>
+    <string name="request_detail_status_closed">Closed</string>
+    <string name="request_detail_close">Close</string>
+    <string name="request_detail_delete">Delete</string>
+    <string name="request_detail_edit">Edit</string>
+
     <!-- Create request form -->
     <string name="create_request_title">New request</string>
     <string name="create_request_subtitle">Describe what you need and we\'ll help you find a mechanic.</string>
@@ -122,6 +133,9 @@
     <string name="nav_requests">Biddings</string>
     <string name="nav_appointment">Appointment</string>
     <string name="bid">Bid</string>
+    <string name="bid_amount_label">Bid amount ($)</string>
+    <string name="bid_amount_hint">e.g. 150.00</string>
+    <string name="bid_amount_required">Please enter a bid amount.</string>
     <string name="reject">Reject</string>
     <string name="no_biddings">No requests to bid on.</string>
     <string name="no_biddings_hint">New client requests will appear here.</string>
