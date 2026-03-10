@@ -1,6 +1,8 @@
 package com.g08.gig.presentation;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.widget.Button;
@@ -42,6 +44,13 @@ public class Login extends AppCompatActivity {
             try {
                 LoginResult result = authService.login(email, password);
                 if (result.isSuccess()) {
+                    SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+                    prefs.edit()
+                            .putBoolean("IS_LOGGED_IN", true)
+                            .putInt("USER_ID", result.getUserId())
+                            .putString("USER_TYPE", result.isClient() ? "CLIENT" : "PRO")
+                            .apply();
+
                     Intent intent = result.isClient()
                             ? new Intent(Login.this, ClientHome.class)
                             : new Intent(Login.this, ProHome.class);

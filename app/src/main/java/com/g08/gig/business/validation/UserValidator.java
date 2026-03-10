@@ -38,6 +38,9 @@ public class UserValidator {
         if (firstName.trim().length() > MAX_FIRST_NAME_LENGTH) {
             throw new ValidationException("First name must be 60 characters or less.", "fname");
         }
+        if (!firstName.trim().matches("[a-zA-Z \\-']+")) {
+            throw new ValidationException("First name must contain only letters.", "fname");
+        }
     }
 
     private void validateLastName(String lastName) {
@@ -46,6 +49,9 @@ public class UserValidator {
         }
         if (lastName.trim().length() > MAX_LAST_NAME_LENGTH) {
             throw new ValidationException("Last name must be 60 characters or less.", "lname");
+        }
+        if (!lastName.trim().matches("[a-zA-Z \\-']+")) {
+            throw new ValidationException("Last name must contain only letters.", "lname");
         }
     }
 
@@ -65,7 +71,11 @@ public class UserValidator {
         if (phone == null || phone.trim().isEmpty()) {
             throw new ValidationException("Phone number is required.", "phone");
         }
-        if (phone.trim().length() != PHONE_LENGTH) {
+        String trimmed = phone.trim();
+        if (!trimmed.matches("\\d+")) {
+            throw new ValidationException("Phone number must contain only digits.", "phone");
+        }
+        if (trimmed.length() != PHONE_LENGTH) {
             throw new ValidationException("Phone number must be exactly 10 digits long.", "phone");
         }
     }
