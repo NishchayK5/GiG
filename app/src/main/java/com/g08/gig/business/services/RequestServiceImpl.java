@@ -22,9 +22,7 @@ public class RequestServiceImpl implements RequestService {
 
         Request toCreate = new Request(0, client, title, body, dateTimeNow, true);
 
-        reqRepo.add(toCreate);
-
-        return toCreate;
+        return reqRepo.add(toCreate);
     }
 
     @Override

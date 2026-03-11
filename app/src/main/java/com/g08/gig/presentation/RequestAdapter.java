@@ -56,6 +56,8 @@ public class RequestAdapter extends ListAdapter<Request, RequestAdapter.RequestV
     @Override
     public void onBindViewHolder(@NonNull RequestViewHolder holder, int position) {
         Request request = getItem(position);
+        if (request == null) return;
+
         holder.title.setText(request.getTitle());
         holder.body.setText(request.getBody());
         if (request.getTimeOfRequest() != null) {

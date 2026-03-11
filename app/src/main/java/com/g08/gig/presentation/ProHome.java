@@ -15,8 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.g08.gig.R;
 import com.g08.gig.application.GiGApp;
 import com.g08.gig.business.services.BidService;
+import com.g08.gig.business.services.ClientUserService;
 import com.g08.gig.business.services.ProUserService;
 import com.g08.gig.business.services.RequestService;
+import com.g08.gig.models.Bid;
 import com.g08.gig.models.Pro;
 import com.g08.gig.models.Request;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -28,6 +30,7 @@ import java.util.List;
 public class ProHome extends AppCompatActivity {
 
     private BiddingAdapter biddingAdapter;
+    private BiddingAdapter bidsAdapter;
     private View emptyBiddingsView;
     private View homeContent;
     private View biddingsViewContent;
@@ -39,6 +42,8 @@ public class ProHome extends AppCompatActivity {
 
     private ProUserService proUserService;
     private List<Request> availableRequests = new ArrayList<>();
+    private List<Request> bidRequests = new ArrayList<>(); // add this
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,7 @@ public class ProHome extends AppCompatActivity {
         profileViewContent = findViewById(R.id.profileViewContent);
 
         RecyclerView biddingsList = findViewById(R.id.biddingsList);
+        RecyclerView bidsList = findViewById(R.id.bidsList);
 
         requestService = ((GiGApp) getApplication()).getRequestService();
         bidService = ((GiGApp) getApplication()).getBidService();
@@ -77,10 +83,13 @@ public class ProHome extends AppCompatActivity {
                 updateEmptyState();
             }
         });
+        bidsAdapter = new BiddingAdapter(request -> {}); // no click action for now
+        bidsList.setLayoutManager(new LinearLayoutManager(this));
+        bidsList.setAdapter(bidsAdapter);
 
         loadRequests();
-        biddingAdapter.submitList(new ArrayList<>(availableRequests));
-        updateEmptyState();
+        loadBids();
+
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
         bottomNav.setSelectedItemId(R.id.nav_home);
@@ -124,12 +133,25 @@ public class ProHome extends AppCompatActivity {
         appointmentViewContent.setVisibility(visibleView == appointmentViewContent ? View.VISIBLE : View.GONE);
         profileViewContent.setVisibility(visibleView == profileViewContent ? View.VISIBLE : View.GONE);
     }
+    private void loadBids() {
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        int userId = prefs.getInt("USER_ID", -1);
+        List<Bid> myBids = bidService.getAllByPro(proUserService.getProById(userId));
+        bidRequests = new ArrayList<>();
+        for (Bid bid : myBids) {
+            if (bid != null && bid.getRequest() != null) {
+                bidRequests.add(bid.getRequest());
+            }
+        }
+        bidsAdapter.submitList(new ArrayList<>(bidRequests));
+    }
 
 
 
     private void loadRequests() {
-
         availableRequests = requestService.getRequestsByStatus(true);
+        biddingAdapter.submitList(new ArrayList<>(availableRequests));
+        updateEmptyState();
     }
 
     private void updateEmptyState() {
@@ -154,6 +176,7 @@ public class ProHome extends AppCompatActivity {
             int cost = (int) bidAmount;
             bidService.addBid(proUserService.getProById(userId), request, cost);
             Toast.makeText(ProHome.this, getString(R.string.bid) + " $" + bidAmount + ": " + request.getTitle(), Toast.LENGTH_SHORT).show();
+            loadBids();
             updateEmptyState();
         });
         dialog.show(getSupportFragmentManager(), "bidding_detail");

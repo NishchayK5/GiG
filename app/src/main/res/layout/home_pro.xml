@@ -109,21 +109,31 @@
                 </LinearLayout>
             </FrameLayout>
 
-            <!-- Biddings: center label -->
-            <FrameLayout
+            <LinearLayout
                 android:id="@+id/biddingsViewContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:orientation="vertical"
                 android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:text="@string/biddings_view"
                     android:textColor="@color/main_netural_color"
-                    android:textSize="18sp" />
-            </FrameLayout>
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:padding="16dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/bidsList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="16dp" />
+
+            </LinearLayout>
 
             <!-- Appointment: center label -->
             <FrameLayout

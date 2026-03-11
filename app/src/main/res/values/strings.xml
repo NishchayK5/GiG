@@ -102,7 +102,7 @@
     <string name="profile_edit">Edit profile</string>
     <string name="logout">Logout</string>
     <string name="home_view">Home view</string>
-    <string name="biddings_view">Biddings view</string>
+    <string name="biddings_view">Current Bids</string>
     <string name="appointment_view">Appointment view</string>
 
     <!-- Request detail dialog -->
