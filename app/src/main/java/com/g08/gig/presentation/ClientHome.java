@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.g08.gig.R;
 import com.g08.gig.application.GiGApp;
+import com.g08.gig.business.services.BidService;
 import com.g08.gig.business.services.RequestService;
 import com.g08.gig.models.Client;
 import com.g08.gig.models.Request;
@@ -39,6 +40,7 @@ public class ClientHome extends AppCompatActivity {
     private List<Request> currentRequests = new ArrayList<>();
     private List<Request> pastRequests = new ArrayList<>();
     private RequestService requestService;
+    private BidService bidService;
 
     private final ActivityResultLauncher<Intent> createRequestLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -54,7 +56,7 @@ public class ClientHome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_client);
         requestService = ((GiGApp) getApplication()).getRequestService();
-
+        bidService = ((GiGApp) getApplication()).getBidService();
         int userId = getIntent().getIntExtra("USER_ID", -1);
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
         prefs.edit().putInt("USER_ID", userId).apply();
@@ -208,6 +210,7 @@ public class ClientHome extends AppCompatActivity {
                 time,
                 request.getRequestStatus()
         );
+        dialog.setBids(bidService.getAllByRequest(request));
         dialog.setActionListener(new RequestDetailDialog.OnRequestActionListener() {
             @Override
             public void onDeleteRequest(int requestId) {

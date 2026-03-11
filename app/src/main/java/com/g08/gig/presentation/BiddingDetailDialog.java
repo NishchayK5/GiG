@@ -105,9 +105,6 @@ public class BiddingDetailDialog extends DialogFragment {
         bodyView.setText(args.getString(ARG_BODY, ""));
         timeView.setText(args.getString(ARG_TIME, ""));
 
-        statusView.setText("$150.00");
-        setStatusBackground(statusView, ContextCompat.getColor(requireContext(), R.color.badge_green));
-
         closeIcon.setOnClickListener(v -> dismiss());
 
         bidButton.setOnClickListener(v -> {

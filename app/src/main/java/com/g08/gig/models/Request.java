@@ -9,6 +9,9 @@ public class Request {
     private boolean isActive;
     private LocalDateTime timeOfRequest;
 
+    private double bidCost;
+
+
     public Request(int id, Client client, String title, String body, LocalDateTime timeOfRequest, boolean isActive) {
         this.id = id;
         this.client = client;
@@ -62,4 +65,6 @@ public class Request {
         isActive = false;
     }
     public boolean getRequestStatus(){return isActive;}
+    public double getBidCost() { return bidCost; }
+    public void setBidCost(double bidCost) { this.bidCost = bidCost; }
 }

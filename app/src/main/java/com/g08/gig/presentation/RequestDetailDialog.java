@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,10 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.g08.gig.R;
+import com.g08.gig.models.Bid;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RequestDetailDialog extends DialogFragment {
 
@@ -34,9 +39,13 @@ public class RequestDetailDialog extends DialogFragment {
     }
 
     private OnRequestActionListener actionListener;
+    private List<Bid> bids = new ArrayList<>();
 
     public void setActionListener(OnRequestActionListener listener) {
         this.actionListener = listener;
+    }
+    public void setBids(List<Bid> bids) {
+        this.bids = bids != null ? bids : new ArrayList<>();
     }
 
     public static RequestDetailDialog newInstance(int requestId, String title, String body, String time, boolean isActive) {
@@ -97,10 +106,11 @@ public class RequestDetailDialog extends DialogFragment {
         TextView bodyView = view.findViewById(R.id.dialogRequestBody);
         TextView timeView = view.findViewById(R.id.dialogRequestTime);
         TextView statusView = view.findViewById(R.id.dialogRequestStatus);
-        TextView highestBidView = view.findViewById(R.id.dialogHighestBid);
         ImageButton closeIcon = view.findViewById(R.id.dialogCloseIcon);
         Button deleteButton = view.findViewById(R.id.dialogDeleteButton);
         Button completeButton = view.findViewById(R.id.dialogCompleteButton);
+        LinearLayout bidsContainer = view.findViewById(R.id.dialogBidsContainer);
+
 
         titleView.setText(args.getString(ARG_TITLE, ""));
         bodyView.setText(args.getString(ARG_BODY, ""));
@@ -115,8 +125,15 @@ public class RequestDetailDialog extends DialogFragment {
             setStatusBackground(statusView, ContextCompat.getColor(requireContext(), R.color.grey));
         }
 
-        highestBidView.setText("$150.00");
-        setStatusBackground(highestBidView, ContextCompat.getColor(requireContext(), R.color.badge_green));
+        bidsContainer.removeAllViews();
+        for (Bid bid : bids) {
+            View bidRow = LayoutInflater.from(requireContext()).inflate(R.layout.bid_row, bidsContainer, false);
+            TextView bidderName = bidRow.findViewById(R.id.bidRowName);
+            TextView bidCost = bidRow.findViewById(R.id.bidRowCost);
+            bidderName.setText(bid.getPro().getFirstName() + " " + bid.getPro().getLastName());
+            bidCost.setText(String.format("$%.2f", bid.getCost()));
+            bidsContainer.addView(bidRow);
+        }
 
         closeIcon.setOnClickListener(v -> dismiss());
 

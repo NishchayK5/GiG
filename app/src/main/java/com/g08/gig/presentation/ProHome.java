@@ -137,13 +137,15 @@ public class ProHome extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
         int userId = prefs.getInt("USER_ID", -1);
         List<Bid> myBids = bidService.getAllByPro(proUserService.getProById(userId));
-        bidRequests = new ArrayList<>();
+        List<Request> result = new ArrayList<>();
         for (Bid bid : myBids) {
             if (bid != null && bid.getRequest() != null) {
-                bidRequests.add(bid.getRequest());
+                Request r = bid.getRequest();
+                r.setBidCost(bid.getCost());
+                result.add(r);
             }
         }
-        bidsAdapter.submitList(new ArrayList<>(bidRequests));
+        bidsAdapter.submitList(result);
     }
 
 
