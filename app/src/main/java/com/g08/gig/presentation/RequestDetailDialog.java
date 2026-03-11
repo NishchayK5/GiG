@@ -30,7 +30,7 @@ public class RequestDetailDialog extends DialogFragment {
 
     public interface OnRequestActionListener {
         void onDeleteRequest(int requestId);
-        void onEditRequest(int requestId);
+        void onCompleteRequest(int requestId);
     }
 
     private OnRequestActionListener actionListener;
@@ -100,7 +100,7 @@ public class RequestDetailDialog extends DialogFragment {
         TextView highestBidView = view.findViewById(R.id.dialogHighestBid);
         ImageButton closeIcon = view.findViewById(R.id.dialogCloseIcon);
         Button deleteButton = view.findViewById(R.id.dialogDeleteButton);
-        Button editButton = view.findViewById(R.id.dialogEditButton);
+        Button completeButton = view.findViewById(R.id.dialogCompleteButton);
 
         titleView.setText(args.getString(ARG_TITLE, ""));
         bodyView.setText(args.getString(ARG_BODY, ""));
@@ -127,9 +127,9 @@ public class RequestDetailDialog extends DialogFragment {
             dismiss();
         });
 
-        editButton.setOnClickListener(v -> {
+        completeButton.setOnClickListener(v -> {
             if (actionListener != null) {
-                actionListener.onEditRequest(requestId);
+                actionListener.onCompleteRequest(requestId);
             }
             dismiss();
         });

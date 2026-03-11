@@ -211,15 +211,16 @@ public class ClientHome extends AppCompatActivity {
         dialog.setActionListener(new RequestDetailDialog.OnRequestActionListener() {
             @Override
             public void onDeleteRequest(int requestId) {
-                currentRequests.removeIf(r -> r.getId() == requestId);
-                pastRequests.removeIf(r -> r.getId() == requestId);
-                showListForCurrentTab();
+                requestService.removeRequest(requestId);
+                loadRequests();
                 Toast.makeText(ClientHome.this, "Request deleted", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onEditRequest(int requestId) {
-                Toast.makeText(ClientHome.this, "Edit request", Toast.LENGTH_SHORT).show();
+            public void onCompleteRequest(int requestId) {
+                requestService.completeRequest(requestId);
+                loadRequests();
+                Toast.makeText(ClientHome.this, "Request Completed", Toast.LENGTH_SHORT).show();
             }
         });
         dialog.show(getSupportFragmentManager(), "request_detail");

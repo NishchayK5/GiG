@@ -9,7 +9,9 @@ import com.g08.gig.models.Request;
 import com.g08.gig.persistence.ClientRepository;
 import com.g08.gig.persistence.RequestRepository;
 import com.g08.gig.persistence.real.AppDbHelper;
+import com.g08.gig.persistence.real.Client.ClientTable;
 import com.g08.gig.persistence.real.Client.SqlClientRepository;
+import com.g08.gig.persistence.real.user.UserTable;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -124,6 +126,36 @@ public class SqlRequestRepository implements RequestRepository {
             c.close();
         }
         return result;
+    }
+
+    @Override
+    public boolean update(Request request) {
+        if (request == null) return false;
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            ContentValues requestValues = new ContentValues();
+            requestValues.put(RequestTable.COL_REQUEST_CLIENT_ID, request.getClient().getId());
+            requestValues.put(RequestTable.COL_REQUEST_TITLE, request.getTitle());
+            requestValues.put(RequestTable.COL_REQUEST_BODY, request.getBody());
+            requestValues.put(RequestTable.COL_REQUEST_TIME_OF_REQUEST, request.getTimeOfRequest().toString());
+            requestValues.put(RequestTable.COL_REQUEST_STATUS, request.getRequestStatus()?1:0);
+
+            int rows = db.update(
+                    RequestTable.TABLE_REQUEST,
+                    requestValues,
+                    RequestTable.COL_REQUEST_ID + "=?",
+                    new String[]{String.valueOf(request.getId())}
+            );
+
+            if (rows == 0) return false;
+
+            db.setTransactionSuccessful();
+            return true;
+        } finally {
+            db.endTransaction();
+        }
     }
 
     private Request cursorToRequest(Cursor c) {

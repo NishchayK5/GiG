@@ -1,5 +1,6 @@
 package com.g08.gig.persistence.fake;
 
+import com.g08.gig.models.Pro;
 import com.g08.gig.models.Request;
 import com.g08.gig.persistence.RequestRepository;
 
@@ -77,5 +78,19 @@ public class FakeRequestRepository implements RequestRepository {
             }
         }
         return result;
+    }
+
+    @Override
+    public boolean update(Request request) {
+        if(request==null){ return false;}
+
+        for(int i = 0; i<requests.size(); i++){
+            if (requests.get(i).getId() == request.getId()) {
+                Request updated = new Request(request.getId(), request.getClient(), request.getTitle(), request.getBody(), request.getTimeOfRequest(), request.getRequestStatus());
+                requests.set(i, updated);
+                return true;
+            }
+        }
+        return false;
     }
 }

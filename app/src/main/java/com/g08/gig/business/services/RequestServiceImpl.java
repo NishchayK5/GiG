@@ -46,6 +46,12 @@ public class RequestServiceImpl implements RequestService {
     public List<Request> getRequestsByStatus(boolean status) {
         return reqRepo.getAllWithStatus(true);
     }
+    @Override
+    public void completeRequest(int id) {
+        Request toUpdate = reqRepo.getById(id);
+        toUpdate.setRequestToExpire();
+        reqRepo.update(toUpdate);
+    }
 
 
 }
