@@ -13,7 +13,7 @@ import com.g08.gig.persistence.real.user.UserTable;
 public class AppDbHelper extends SQLiteOpenHelper {
 
     public static final String DB_NAME = "gig.db";
-    public static final int DB_VERSION = 10;
+    public static final int DB_VERSION = 11;
 
     private static final TableSchema[] SCHEMA_TABLES = {
         new UserTable(), new ClientTable(), new ProTable(), new RequestTable(), new BidTable()
@@ -21,6 +21,12 @@ public class AppDbHelper extends SQLiteOpenHelper {
 
     public AppDbHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
+    }
+
+    @Override
+    public void onConfigure(SQLiteDatabase db){
+        super.onConfigure(db);
+        db.setForeignKeyConstraintsEnabled(true);
     }
 
     @Override
@@ -32,7 +38,8 @@ public class AppDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        for (TableSchema table : SCHEMA_TABLES) {
+        for (int i = SCHEMA_TABLES.length-1;i>=0; i--) {
+            TableSchema table = SCHEMA_TABLES[i];
             db.execSQL("DROP TABLE IF EXISTS " + table.getTableName());
         }
         onCreate(db);
