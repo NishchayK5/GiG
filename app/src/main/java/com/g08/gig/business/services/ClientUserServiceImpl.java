@@ -1,11 +1,13 @@
 package com.g08.gig.business.services;
 
+import com.g08.gig.business.constants.ValidationMessages;
 import com.g08.gig.business.validation.UserValidator;
 import com.g08.gig.business.validation.ValidationException;
 import com.g08.gig.models.Client;
 import com.g08.gig.models.User;
 import com.g08.gig.persistence.ClientRepository;
 import com.g08.gig.persistence.UserRepository;
+import com.g08.gig.util.Strings;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
@@ -28,15 +30,14 @@ public class ClientUserServiceImpl implements ClientUserService{
 
     @Override
     public Client addClient(String firstName, String lastName, String email, String password, String confirmPassword, String phone, String address) {
-        String trimmedEmail = safeTrim(email);
+        String trimmedEmail = Strings.safeTrim(email);
         if (trimmedEmail != null && userRepo.getByEmail(trimmedEmail) != null) {
-            throw new ValidationException("Email already exists. Please use a different one.", "email");
+            throw new ValidationException(ValidationMessages.EMAIL_ALREADY_EXISTS, "email");
         }
         validator.validate(firstName, lastName, email, phone, password, confirmPassword);
 
-        //encrypts the password using BCrypt before adding it to repository
         String hashedPassword = BCrypt.withDefaults().hashToString(BCRYPT_COST, password.trim().toCharArray());
-        User toCreate = new User(0, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), hashedPassword, "CLIENT");
+        User toCreate = new User(0, Strings.safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), hashedPassword, "CLIENT");
         User userToAdd = userRepo.add(toCreate);
         Client clientToAdd = new Client(userToAdd.getId(), userToAdd.getEmail(), userToAdd.getFirstName(), userToAdd.getLastName(), userToAdd.getPhoneNumber(), address.trim(), userToAdd.getPassword());
         return repo.add(clientToAdd);
@@ -48,9 +49,14 @@ public class ClientUserServiceImpl implements ClientUserService{
         Client existing = repo.getById(id);
         if (existing == null) return false;
 
-        Client updated = new Client(id, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), address.trim(), existing.getPassword());
+        Client updated = new Client(id, Strings.safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), address.trim(), existing.getPassword());
 
-        return repo.update(updated)&& userRepo.update(updated);
+        if (!repo.update(updated)) return false;
+        if (!userRepo.update(updated)) {
+            repo.update(existing);
+            return false;
+        }
+        return true;
     }
     @Override
     public Client getClientById(int id) {
@@ -61,11 +67,5 @@ public class ClientUserServiceImpl implements ClientUserService{
     @Override
     public boolean deleteClient(int id) {
         return repo.delete(id);
-    }
-
-    private String safeTrim(String s) {
-        if (s == null) return null;
-        String trimmed = s.trim();
-        return trimmed.isEmpty() ? null : trimmed;
     }
 }

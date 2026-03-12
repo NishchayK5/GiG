@@ -100,6 +100,7 @@
     <!-- Client profile (center view) -->
     <string name="profile_view">Profile view</string>
     <string name="profile_edit">Edit profile</string>
+    <string name="edit_profile_subtitle">Update your account details below.</string>
     <string name="logout">Logout</string>
     <string name="home_view">Home view</string>
     <string name="biddings_view">Current Bids</string>
@@ -127,6 +128,8 @@
     <string name="create_request_error_title_required">Please enter a title.</string>
     <string name="create_request_error_description_required">Please enter a description.</string>
     <string name="create_request_submitted">Request submitted</string>
+    <string name="request_deleted">Request deleted</string>
+    <string name="request_completed">Request Completed</string>
 
     <!-- Strings used for pro_client -->
     <string name="home_pro_text">PRO Home</string>
@@ -139,5 +142,6 @@
     <string name="reject">Reject</string>
     <string name="no_biddings">No requests to bid on.</string>
     <string name="no_biddings_hint">New client requests will appear here.</string>
+    <string name="no_bidding">No bidding</string>
 
 </resources>

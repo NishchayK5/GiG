@@ -1,14 +1,10 @@
 package com.g08.gig.presentation;
 
-import android.app.Dialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -17,15 +13,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
-
 import com.g08.gig.R;
 import com.g08.gig.models.Bid;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RequestDetailDialog extends DialogFragment {
+public class RequestDetailDialog extends BaseGigDialogFragment {
 
     private static final String ARG_TITLE = "title";
     private static final String ARG_BODY = "body";
@@ -57,29 +51,6 @@ public class RequestDetailDialog extends DialogFragment {
         args.putString(ARG_TIME, time);
         args.putBoolean(ARG_ACTIVE, isActive);
         dialog.setArguments(args);
-        return dialog;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Dialog dialog = getDialog();
-        if (dialog != null && dialog.getWindow() != null) {
-            dialog.getWindow().setLayout(
-                    (int) (getResources().getDisplayMetrics().widthPixels * 0.9),
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            );
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        }
-    }
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        }
         return dialog;
     }
 

@@ -1,8 +1,5 @@
 package com.g08.gig.business.services;
 
-/**
- * Result of a login attempt.
- */
 public final class LoginResult {
     private final boolean success;
     private final int userId;

@@ -1,8 +1,6 @@
 package com.g08.gig.presentation;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,11 +8,8 @@ import android.os.Looper;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.g08.gig.R;
+import com.g08.gig.session.SessionManager;
 
-/**
- * Splash screen shown when the app is opened. Displays the logo then navigates
- * to the appropriate home page if already logged in, or to the startup page otherwise.
- */
 public class SplashActivity extends AppCompatActivity {
 
     private static final long SPLASH_DELAY_MS = 2000L;
@@ -25,20 +20,17 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-            boolean isLoggedIn = prefs.getBoolean("IS_LOGGED_IN", false);
-
             Intent intent;
-            if (isLoggedIn) {
-                int userId = prefs.getInt("USER_ID", -1);
-                String userType = prefs.getString("USER_TYPE", "");
+            if (SessionManager.isLoggedIn(this)) {
+                int userId = SessionManager.getUserId(this);
+                String userType = SessionManager.getUserType(this);
 
-                if ("CLIENT".equals(userType)) {
+                if (SessionManager.USER_TYPE_CLIENT.equals(userType)) {
                     intent = new Intent(SplashActivity.this, ClientHome.class);
                 } else {
                     intent = new Intent(SplashActivity.this, ProHome.class);
                 }
-                intent.putExtra("USER_ID", userId);
+                intent.putExtra(SessionManager.KEY_USER_ID, userId);
             } else {
                 intent = new Intent(SplashActivity.this, StartUp.class);
             }

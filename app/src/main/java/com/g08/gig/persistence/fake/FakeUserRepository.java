@@ -4,6 +4,7 @@ import com.g08.gig.persistence.UserRepository;
 import com.g08.gig.models.User;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Collections;
 import java.util.List;
 
@@ -63,7 +64,7 @@ public class FakeUserRepository implements UserRepository {
     @Override
     public User getByEmail(String email) {
         for (User user : users) {
-            if (user.getEmail().equals(email)) return user;
+            if (Objects.equals(user.getEmail(), email)) return user;
         }
         return null;
     }

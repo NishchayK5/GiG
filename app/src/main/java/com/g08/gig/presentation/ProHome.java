@@ -1,8 +1,6 @@
 package com.g08.gig.presentation;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,11 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.g08.gig.R;
 import com.g08.gig.application.GiGApp;
+import com.g08.gig.session.SessionManager;
 import com.g08.gig.business.services.BidService;
 import com.g08.gig.business.services.ClientUserService;
 import com.g08.gig.business.services.ProUserService;
 import com.g08.gig.business.services.RequestService;
-import com.g08.gig.models.Bid;
 import com.g08.gig.models.Pro;
 import com.g08.gig.models.Request;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -32,6 +30,7 @@ public class ProHome extends AppCompatActivity {
     private BiddingAdapter biddingAdapter;
     private BiddingAdapter bidsAdapter;
     private View emptyBiddingsView;
+    private View emptyBidsView;
     private View homeContent;
     private View biddingsViewContent;
     private View appointmentViewContent;
@@ -42,7 +41,7 @@ public class ProHome extends AppCompatActivity {
 
     private ProUserService proUserService;
     private List<Request> availableRequests = new ArrayList<>();
-    private List<Request> bidRequests = new ArrayList<>(); // add this
+    private List<Request> bidRequests = new ArrayList<>();
 
 
     @Override
@@ -50,28 +49,36 @@ public class ProHome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_pro);
 
-        emptyBiddingsView = findViewById(R.id.emptyBiddingsView);
-        homeContent = findViewById(R.id.homeContent);
-        biddingsViewContent = findViewById(R.id.biddingsViewContent);
-        appointmentViewContent = findViewById(R.id.appointmentViewContent);
-        profileViewContent = findViewById(R.id.profileViewContent);
-
-        RecyclerView biddingsList = findViewById(R.id.biddingsList);
-        RecyclerView bidsList = findViewById(R.id.bidsList);
-
         requestService = ((GiGApp) getApplication()).getRequestService();
         bidService = ((GiGApp) getApplication()).getBidService();
         proUserService = ((GiGApp) getApplication()).getProUserService();
 
-        int userId = getIntent().getIntExtra("USER_ID", -1);
-        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-        prefs.edit().putInt("USER_ID", userId).apply();
+        int userId = getIntent().getIntExtra(SessionManager.KEY_USER_ID, -1);
+        if (userId != -1) {
+            SessionManager.setUserId(this, userId);
+        }
 
-        biddingAdapter = new BiddingAdapter(request -> showBiddingDetail(request, userId));
+        bindViews();
+        setupBiddingsList();
+        setupBidsList();
+        setupBottomNav();
+        setupProfileAndLogout(userId);
+    }
 
+    private void bindViews() {
+        emptyBiddingsView = findViewById(R.id.emptyBiddingsView);
+        emptyBidsView = findViewById(R.id.emptyBidsView);
+        homeContent = findViewById(R.id.homeContent);
+        biddingsViewContent = findViewById(R.id.biddingsViewContent);
+        appointmentViewContent = findViewById(R.id.appointmentViewContent);
+        profileViewContent = findViewById(R.id.profileViewContent);
+    }
+
+    private void setupBiddingsList() {
+        RecyclerView biddingsList = findViewById(R.id.biddingsList);
+        biddingAdapter = new BiddingAdapter(request -> showBiddingDetail(request, SessionManager.getUserId(this)));
         biddingsList.setLayoutManager(new LinearLayoutManager(this));
         biddingsList.setAdapter(biddingAdapter);
-
         biddingAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -83,14 +90,36 @@ public class ProHome extends AppCompatActivity {
                 updateEmptyState();
             }
         });
-        bidsAdapter = new BiddingAdapter(request -> {}); // no click action for now
+        loadRequests();
+        updateEmptyState();
+    }
+
+    private void setupBidsList() {
+        RecyclerView bidsList = findViewById(R.id.bidsList);
+        bidsAdapter = new BiddingAdapter(request -> {});
         bidsList.setLayoutManager(new LinearLayoutManager(this));
         bidsList.setAdapter(bidsAdapter);
+        bidsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                updateEmptyBidsState();
+            }
 
-        loadRequests();
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                updateEmptyBidsState();
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                updateEmptyBidsState();
+            }
+        });
         loadBids();
+        updateEmptyBidsState();
+    }
 
-
+    private void setupBottomNav() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
         bottomNav.setSelectedItemId(R.id.nav_home);
         bottomNav.setOnItemSelectedListener(item -> {
@@ -109,22 +138,19 @@ public class ProHome extends AppCompatActivity {
             }
             if (id == R.id.nav_profile) {
                 showView(profileViewContent);
+                updateProfileViews(SessionManager.getUserId(this));
                 return true;
             }
             return false;
         });
+    }
 
+    private void setupProfileAndLogout(int userId) {
+        updateProfileViews(userId);
+        LinearLayout profileEditTile = findViewById(R.id.profileEditTile);
+        profileEditTile.setOnClickListener(v -> NavigationHelper.startEditProfile(this, SessionManager.getUserId(this), false));
         LinearLayout profileLogoutTile = findViewById(R.id.profileLogoutTile);
-
-        profileLogoutTile.setOnClickListener(v -> {
-            SharedPreferences logoutPrefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-            logoutPrefs.edit().clear().apply();
-
-            Intent intent = new Intent(this, StartUp.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-        });
+        profileLogoutTile.setOnClickListener(v -> NavigationHelper.logout(this));
     }
 
     private void showView(View visibleView) {
@@ -134,18 +160,16 @@ public class ProHome extends AppCompatActivity {
         profileViewContent.setVisibility(visibleView == profileViewContent ? View.VISIBLE : View.GONE);
     }
     private void loadBids() {
-        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-        int userId = prefs.getInt("USER_ID", -1);
-        List<Bid> myBids = bidService.getAllByPro(proUserService.getProById(userId));
-        List<Request> result = new ArrayList<>();
-        for (Bid bid : myBids) {
-            if (bid != null && bid.getRequest() != null) {
-                Request r = bid.getRequest();
-                r.setBidCost(bid.getCost());
-                result.add(r);
-            }
-        }
-        bidsAdapter.submitList(result);
+        int userId = SessionManager.getUserId(this);
+        Pro pro = proUserService.getProById(userId);
+        List<Request> requestsWithCosts = bidService.getRequestsWithBidCostsByPro(pro);
+        bidsAdapter.submitList(new ArrayList<>(requestsWithCosts));
+    }
+
+    private void updateProfileViews(int userId) {
+        if (userId == -1) return;
+        Pro pro = proUserService.getProById(userId);
+        ProfileViewBinder.bind(this, pro);
     }
 
 
@@ -159,6 +183,11 @@ public class ProHome extends AppCompatActivity {
     private void updateEmptyState() {
         boolean isEmpty = biddingAdapter.getItemCount() == 0;
         emptyBiddingsView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+    }
+
+    private void updateEmptyBidsState() {
+        boolean isEmpty = bidsAdapter.getItemCount() == 0;
+        emptyBidsView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
     }
 
     private void showBiddingDetail(Request request, int userId) {
