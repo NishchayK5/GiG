@@ -51,7 +51,7 @@ public class GiGApp extends Application {
 
         dbHelper = new AppDbHelper(getApplicationContext());
 
-        final boolean FAKE_REPO = false;
+        final boolean FAKE_REPO = true;
 
         if(!FAKE_REPO) {
             userRepo = new SqlUserRepository(dbHelper);
@@ -64,8 +64,8 @@ public class GiGApp extends Application {
             userRepo = new FakeUserRepository();
             clientRepo = new FakeClientRepository(userRepo);
             proRepo = new FakeProRepository(userRepo);
-            reqRepo = new FakeRequestRepository();
             bidRepo = new FakeBidRepository();
+            reqRepo = new FakeRequestRepository(bidRepo);
         }
 
         clientUserService = new ClientUserServiceImpl(clientRepo, userRepo);
