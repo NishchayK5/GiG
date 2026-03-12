@@ -12,7 +12,7 @@ public class LoginValidator {
         if (email == null || email.isEmpty()) {
             throw new ValidationException(ValidationMessages.EMAIL_REQUIRED, "email");
         }
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(email.trim().toLowerCase()).matches()) {
             throw new ValidationException(ValidationMessages.EMAIL_VALID_ADDRESS, "email");
         }
         if (password == null || password.isEmpty()) {

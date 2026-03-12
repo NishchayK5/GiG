@@ -40,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
 
         loginValidator.validate(email, password);
 
-        User user = userRepository.getByEmail(email.trim());
+        User user = userRepository.getByEmail(email.trim().toLowerCase());
         if (user == null) {
             return LoginResult.failure();
         }

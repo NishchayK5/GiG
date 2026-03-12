@@ -41,17 +41,17 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/btnNotification"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="end|center_vertical"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/notification"
-                android:scaleType="centerInside"
-                android:padding="12dp"
-                app:srcCompat="@android:drawable/ic_popup_reminder"
-                app:tint="@color/main_cust_color" />
+<!--            <ImageButton-->
+<!--                android:id="@+id/btnNotification"-->
+<!--                android:layout_width="48dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:layout_gravity="end|center_vertical"-->
+<!--                android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--                android:contentDescription="@string/notification"-->
+<!--                android:scaleType="centerInside"-->
+<!--                android:padding="12dp"-->
+<!--                app:srcCompat="@android:drawable/ic_popup_reminder"-->
+<!--                app:tint="@color/main_cust_color" />-->
         </FrameLayout>
 
         <!-- Switcher: requests (home) or profile -->

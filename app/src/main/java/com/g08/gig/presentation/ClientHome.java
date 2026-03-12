@@ -191,6 +191,11 @@ public class ClientHome extends AppCompatActivity {
         Client client = clientUserService.getClientById(userId);
         ProfileViewBinder.bind(this, client);
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateProfileViews(SessionManager.getUserId(this));
+    }
 
     public void setRequests(List<Request> current, List<Request> past) {
         currentRequests = current != null ? new ArrayList<>(current) : new ArrayList<>();

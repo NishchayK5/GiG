@@ -27,6 +27,8 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
     private static final String ARG_ACTIVE = "active";
     private static final String ARG_REQUEST_ID = "request_id";
 
+    private static final int MAX_LINES = 1;
+
     public interface OnRequestActionListener {
         void onDeleteRequest(int requestId);
         void onCompleteRequest(int requestId);
@@ -84,7 +86,32 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
 
 
         titleView.setText(args.getString(ARG_TITLE, ""));
-        bodyView.setText(args.getString(ARG_BODY, ""));
+
+        String body = args.getString(ARG_BODY, "");
+        bodyView.setText(body);
+        bodyView.setMaxLines(MAX_LINES);
+        bodyView.setEllipsize(android.text.TextUtils.TruncateAt.END);
+
+        TextView showMoreButton = view.findViewById(R.id.dialogShowMoreButton);
+
+        bodyView.post(() -> {
+            if (bodyView.getLayout() != null && bodyView.getLayout().getLineCount() >= MAX_LINES) {
+                showMoreButton.setVisibility(View.VISIBLE);
+            }
+        });
+
+        showMoreButton.setOnClickListener(v -> {
+            if (bodyView.getMaxLines() == MAX_LINES) {
+                bodyView.setMaxLines(Integer.MAX_VALUE);
+                bodyView.setEllipsize(null);
+                showMoreButton.setText("Show less");
+            } else {
+                bodyView.setMaxLines(MAX_LINES);
+                bodyView.setEllipsize(android.text.TextUtils.TruncateAt.END);
+                showMoreButton.setText("Show more");
+            }
+        });
+
         timeView.setText(args.getString(ARG_TIME, ""));
 
         boolean isActive = args.getBoolean(ARG_ACTIVE, true);
@@ -94,6 +121,11 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
         } else {
             statusView.setText(R.string.request_detail_status_closed);
             setStatusBackground(statusView, ContextCompat.getColor(requireContext(), R.color.grey));
+        }
+
+        if (!isActive) {
+            deleteButton.setVisibility(View.GONE);
+            completeButton.setVisibility(View.GONE);
         }
 
         bidsContainer.removeAllViews();

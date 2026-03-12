@@ -33,7 +33,7 @@ public class ProHome extends AppCompatActivity {
     private View emptyBidsView;
     private View homeContent;
     private View biddingsViewContent;
-    private View appointmentViewContent;
+    //private View appointmentViewContent;
     private View profileViewContent;
 
     private RequestService requestService;
@@ -70,7 +70,7 @@ public class ProHome extends AppCompatActivity {
         emptyBidsView = findViewById(R.id.emptyBidsView);
         homeContent = findViewById(R.id.homeContent);
         biddingsViewContent = findViewById(R.id.biddingsViewContent);
-        appointmentViewContent = findViewById(R.id.appointmentViewContent);
+        //appointmentViewContent = findViewById(R.id.appointmentViewContent);
         profileViewContent = findViewById(R.id.profileViewContent);
     }
 
@@ -132,10 +132,10 @@ public class ProHome extends AppCompatActivity {
                 showView(biddingsViewContent);
                 return true;
             }
-            if (id == R.id.nav_appointment) {
-                showView(appointmentViewContent);
-                return true;
-            }
+//            if (id == R.id.nav_appointment) {
+//                showView(appointmentViewContent);
+//                return true;
+//            }
             if (id == R.id.nav_profile) {
                 showView(profileViewContent);
                 updateProfileViews(SessionManager.getUserId(this));
@@ -156,7 +156,7 @@ public class ProHome extends AppCompatActivity {
     private void showView(View visibleView) {
         homeContent.setVisibility(visibleView == homeContent ? View.VISIBLE : View.GONE);
         biddingsViewContent.setVisibility(visibleView == biddingsViewContent ? View.VISIBLE : View.GONE);
-        appointmentViewContent.setVisibility(visibleView == appointmentViewContent ? View.VISIBLE : View.GONE);
+        //appointmentViewContent.setVisibility(visibleView == appointmentViewContent ? View.VISIBLE : View.GONE);
         profileViewContent.setVisibility(visibleView == profileViewContent ? View.VISIBLE : View.GONE);
     }
     private void loadBids() {
@@ -172,6 +172,11 @@ public class ProHome extends AppCompatActivity {
         ProfileViewBinder.bind(this, pro);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateProfileViews(SessionManager.getUserId(this));
+    }
 
 
     private void loadRequests() {

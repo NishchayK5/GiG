@@ -10,8 +10,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.g08.gig.R;
 import com.g08.gig.application.GiGApp;
 import com.g08.gig.business.profile.ProfileLoader;
+import com.g08.gig.business.services.ClientUserService;
+import com.g08.gig.business.services.ProUserService;
+import com.g08.gig.models.Client;
+import com.g08.gig.models.Pro;
 import com.g08.gig.models.User;
 import com.g08.gig.session.SessionManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -21,6 +28,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private EditText lastNameInput;
     private EditText emailInput;
     private EditText phoneInput;
+    private ClientUserService clientUserService;
+    private ProUserService proUserService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +38,10 @@ public class EditProfileActivity extends AppCompatActivity {
 
         int userId = getIntent().getIntExtra(SessionManager.KEY_USER_ID, -1);
         boolean isClient = getIntent().getBooleanExtra(EXTRA_IS_CLIENT, true);
+        clientUserService = ((GiGApp) getApplication()).getClientUserService();
+        proUserService = ((GiGApp) getApplication()).getProUserService();
+
+
 
         firstNameInput = findViewById(R.id.firstNameInput);
         lastNameInput = findViewById(R.id.lastNameInput);
@@ -46,6 +59,27 @@ public class EditProfileActivity extends AppCompatActivity {
                 phoneInput.setText(user.getPhoneNumber());
             }
         }
+
+        Button saveButton = findViewById(R.id.saveButton);
+        saveButton.setOnClickListener(v -> {
+            try {
+                if (user instanceof Pro pro) {
+                    proUserService.updatePro(userId, emailInput.getText().toString(), firstNameInput.getText().toString(), lastNameInput.getText().toString(), phoneInput.getText().toString(), pro.getSkillSet(), pro.getCityOfOperation());
+                } else if (user instanceof Client client) {
+                    clientUserService.updateClient(userId, firstNameInput.getText().toString(), lastNameInput.getText().toString(), emailInput.getText().toString(), phoneInput.getText().toString(), client.getAddress());
+                }
+                finish();
+            } catch (com.g08.gig.business.validation.ValidationException ex) {
+            Map<String, EditText> fieldMap = new HashMap<>();
+            fieldMap.put("fname", firstNameInput);
+            fieldMap.put("lname", lastNameInput);
+            fieldMap.put("email", emailInput);
+            fieldMap.put("phone", phoneInput);
+            ValidationErrorBinder.setValidationError(fieldMap, ex.getField(), ex.getMessage(), emailInput);
+        }
+        });
+
+
 
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> finish());

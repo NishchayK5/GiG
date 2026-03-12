@@ -83,6 +83,7 @@
     <string name="home_client_button">GIG Client</string>
     <string name="home_pro_button">GIG Pro</string>
     <string name="home_register_as">Register as a...</string>
+    <string name="save_button">Save</string>
 
 
     <!-- Strings used for home_client -->

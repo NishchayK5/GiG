@@ -8,7 +8,6 @@ public class Request {
     private String body;
     private boolean isActive;
     private LocalDateTime timeOfRequest;
-
     private double bidCost;
 
 

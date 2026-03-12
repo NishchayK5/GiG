@@ -66,7 +66,7 @@ public class SqlUserRepository implements UserRepository {
         Cursor c = db.query(
                 UserTable.TABLE_USER,
                 new String[]{UserTable.COL_USER_ID, UserTable.COL_USER_EMAIL, UserTable.COL_USER_FIRST_NAME, UserTable.COL_USER_LAST_NAME, UserTable.COL_USER_PHONE, UserTable.COL_USER_PASSWORD, UserTable.COL_USER_ROLE},
-                UserTable.COL_USER_EMAIL + "=?",
+                "LOWER(" + UserTable.COL_USER_EMAIL + ")=?",
                 new String[]{email.trim()},
                 null, null, null
         );

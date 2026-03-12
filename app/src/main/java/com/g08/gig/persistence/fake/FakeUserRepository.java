@@ -63,7 +63,7 @@ public class FakeUserRepository implements UserRepository {
     @Override
     public User getByEmail(String email) {
         for (User user : users) {
-            if (Objects.equals(user.getEmail(), email)) return user;
+            if (user.getEmail() != null && user.getEmail().equalsIgnoreCase(email)) return user;
         }
         return null;
     }

@@ -32,13 +32,13 @@ public class ProUserServiceImpl implements ProUserService {
     @Override
     public Pro addPro(String firstName, String lastName, String email, String phone, String password, String confirmPassword, String[] skillSet, String cityOfOperation) {
         String trimmedEmail = Strings.safeTrim(email);
-        if (trimmedEmail != null && userRepo.getByEmail(trimmedEmail) != null) {
+        if (trimmedEmail != null && userRepo.getByEmail(trimmedEmail.toLowerCase()) != null) {
             throw new ValidationException(ValidationMessages.EMAIL_ALREADY_EXISTS, "email");
         }
         validator.validate(firstName, lastName, email, phone, password, confirmPassword);
 
         String hashedPassword = BCrypt.withDefaults().hashToString(BCRYPT_COST, password.trim().toCharArray());
-        User toCreate = new User(0, Strings.safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), hashedPassword, "PRO");
+        User toCreate = new User(0, Strings.safeTrim(email).toLowerCase(), firstName.trim(), lastName.trim(), phone.trim(), hashedPassword, "PRO");
         User userToAdd = userRepo.add(toCreate);
         Pro proToAdd = new Pro(userToAdd.getId(), userToAdd.getEmail(), userToAdd.getFirstName(), userToAdd.getLastName(), userToAdd.getPhoneNumber(), userToAdd.getPassword(), skillSet, cityOfOperation.trim());
         return repo.add(proToAdd);
@@ -51,7 +51,7 @@ public class ProUserServiceImpl implements ProUserService {
         Pro existing = repo.getById(id);
         if (existing == null) return false;
 
-        Pro updated = new Pro(id, Strings.safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), existing.getPassword(), skillSet, cityOfOperation.trim());
+        Pro updated = new Pro(id, Strings.safeTrim(email).toLowerCase(), firstName.trim(), lastName.trim(), phone.trim(), existing.getPassword(), skillSet, cityOfOperation.trim());
 
         return repo.update(updated);
     }
