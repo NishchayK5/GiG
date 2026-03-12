@@ -53,12 +53,7 @@ public class ProUserServiceImpl implements ProUserService {
 
         Pro updated = new Pro(id, Strings.safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), existing.getPassword(), skillSet, cityOfOperation.trim());
 
-        if (!repo.update(updated)) return false;
-        if (!userRepo.update(updated)) {
-            repo.update(existing);
-            return false;
-        }
-        return true;
+        return repo.update(updated);
     }
 
     @Override

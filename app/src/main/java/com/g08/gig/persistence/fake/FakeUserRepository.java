@@ -40,7 +40,6 @@ public class FakeUserRepository implements UserRepository {
         } else if (getById(id) != null) {
             return null;
         }
-
         User stored = new User(id, user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(), user.getPassword(), user.getRole());
         users.add(stored);
         return stored;

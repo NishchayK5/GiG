@@ -62,8 +62,8 @@ public class GiGApp extends Application {
         }
         else {
             userRepo = new FakeUserRepository();
-            clientRepo = new FakeClientRepository();
-            proRepo = new FakeProRepository();
+            clientRepo = new FakeClientRepository(userRepo);
+            proRepo = new FakeProRepository(userRepo);
             reqRepo = new FakeRequestRepository();
             bidRepo = new FakeBidRepository();
         }

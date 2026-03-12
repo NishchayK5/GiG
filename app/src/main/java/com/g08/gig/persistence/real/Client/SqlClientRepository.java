@@ -110,11 +110,11 @@ public class SqlClientRepository implements ClientRepository {
             userValues.put(UserTable.COL_USER_PASSWORD, client.getPassword());
 
             int rows = db.update(UserTable.TABLE_USER, userValues, UserTable.COL_USER_ID + "=?", new String[]{String.valueOf(client.getId())});
+
             if(rows==0) return false;
             ContentValues clientValues = new ContentValues();
-            clientValues.put(ClientTable.COL_CLIENT_ID, client.getId());
-            clientValues.put(ClientTable.COL_ADDRESS, client.getAddress());
 
+            clientValues.put(ClientTable.COL_ADDRESS, client.getAddress());
             int cRows = db.update(ClientTable.TABLE_CLIENT, clientValues, ClientTable.COL_CLIENT_ID + "=?", new  String[]{String.valueOf(client.getId())});
             if(cRows==0) return false;
             db.setTransactionSuccessful();
