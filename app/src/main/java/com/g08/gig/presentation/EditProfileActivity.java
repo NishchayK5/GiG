@@ -9,15 +9,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.g08.gig.R;
 import com.g08.gig.application.GiGApp;
-import com.g08.gig.business.services.ClientUserService;
-import com.g08.gig.business.services.ProUserService;
-import com.g08.gig.models.Client;
-import com.g08.gig.models.Pro;
+import com.g08.gig.business.profile.ProfileLoader;
 import com.g08.gig.models.User;
+import com.g08.gig.session.SessionManager;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    public static final String EXTRA_USER_ID = "USER_ID";
     public static final String EXTRA_IS_CLIENT = "IS_CLIENT";
 
     private EditText firstNameInput;
@@ -30,7 +27,7 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_profile);
 
-        int userId = getIntent().getIntExtra(EXTRA_USER_ID, -1);
+        int userId = getIntent().getIntExtra(SessionManager.KEY_USER_ID, -1);
         boolean isClient = getIntent().getBooleanExtra(EXTRA_IS_CLIENT, true);
 
         firstNameInput = findViewById(R.id.firstNameInput);
@@ -38,16 +35,8 @@ public class EditProfileActivity extends AppCompatActivity {
         emailInput = findViewById(R.id.emailInput);
         phoneInput = findViewById(R.id.phoneInput);
 
-        User user = null;
-        if (isClient) {
-            ClientUserService clientUserService = ((GiGApp) getApplication()).getClientUserService();
-            Client client = clientUserService.getClientById(userId);
-            user = client;
-        } else {
-            ProUserService proUserService = ((GiGApp) getApplication()).getProUserService();
-            Pro pro = proUserService.getProById(userId);
-            user = pro;
-        }
+        ProfileLoader loader = ((GiGApp) getApplication()).getProfileLoader(isClient);
+        User user = loader.getUserForEdit(userId);
 
         if (user != null) {
             firstNameInput.setText(user.getFirstName());

@@ -16,7 +16,6 @@ public class Pro extends User{
         this.cityOfOperation = cityOfOperation;
     }
 
-    //Getters and setters for the fields
     public String[] getSkillSet(){
         return skillSet;
     }

@@ -128,6 +128,8 @@
     <string name="create_request_error_title_required">Please enter a title.</string>
     <string name="create_request_error_description_required">Please enter a description.</string>
     <string name="create_request_submitted">Request submitted</string>
+    <string name="request_deleted">Request deleted</string>
+    <string name="request_completed">Request Completed</string>
 
     <!-- Strings used for pro_client -->
     <string name="home_pro_text">PRO Home</string>

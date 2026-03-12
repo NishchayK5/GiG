@@ -1,12 +1,10 @@
 package com.g08.gig.presentation;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -17,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.g08.gig.R;
 import com.g08.gig.application.GiGApp;
+import com.g08.gig.session.SessionManager;
 import com.g08.gig.business.services.BidService;
 import com.g08.gig.business.services.ClientUserService;
 import com.g08.gig.business.services.RequestService;
@@ -58,20 +57,30 @@ public class ClientHome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_client);
+
         requestService = ((GiGApp) getApplication()).getRequestService();
         bidService = ((GiGApp) getApplication()).getBidService();
         clientUserService = ((GiGApp) getApplication()).getClientUserService();
 
-        int userId = getIntent().getIntExtra("USER_ID", -1);
-        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-        prefs.edit().putInt("USER_ID", userId).apply();
+        int userId = getIntent().getIntExtra(SessionManager.KEY_USER_ID, -1);
+        if (userId != -1) {
+            SessionManager.setUserId(this, userId);
+        }
 
+        bindViews();
+        setupRequestListAndTabs();
+        setupBottomNav();
+        setupProfileAndLogout(userId);
+    }
 
+    private void bindViews() {
         emptyRequestsView = findViewById(R.id.emptyRequestsView);
         requestsList = findViewById(R.id.requestsList);
         requestsContent = findViewById(R.id.requestsContent);
         profileContent = findViewById(R.id.profileContent);
+    }
 
+    private void setupRequestListAndTabs() {
         requestAdapter = new RequestAdapter(this::showRequestDetail);
         requestsList.setLayoutManager(new LinearLayoutManager(this));
         requestsList.setAdapter(requestAdapter);
@@ -96,10 +105,11 @@ public class ClientHome extends AppCompatActivity {
         setupTabs();
         loadRequests();
         showListForCurrentTab();
+    }
 
+    private void setupBottomNav() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
         bottomNav.setSelectedItemId(R.id.nav_home);
-
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
@@ -117,28 +127,14 @@ public class ClientHome extends AppCompatActivity {
             }
             return false;
         });
+    }
 
+    private void setupProfileAndLogout(int userId) {
         updateProfileViews(userId);
-
         LinearLayout profileEditTile = findViewById(R.id.profileEditTile);
-        profileEditTile.setOnClickListener(v -> {
-            Intent editIntent = new Intent(this, EditProfileActivity.class);
-            editIntent.putExtra(EditProfileActivity.EXTRA_USER_ID, userId);
-            editIntent.putExtra(EditProfileActivity.EXTRA_IS_CLIENT, true);
-            startActivity(editIntent);
-        });
-
+        profileEditTile.setOnClickListener(v -> NavigationHelper.startEditProfile(this, SessionManager.getUserId(this), true));
         LinearLayout profileLogoutTile = findViewById(R.id.profileLogoutTile);
-
-        profileLogoutTile.setOnClickListener(v -> {
-            SharedPreferences logoutPrefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-            logoutPrefs.edit().clear().apply();
-
-            Intent intent = new Intent(this, StartUp.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-        });
+        profileLogoutTile.setOnClickListener(v -> NavigationHelper.logout(this));
     }
 
     private void setupTabs() {
@@ -160,28 +156,10 @@ public class ClientHome extends AppCompatActivity {
         });
     }
 
-    /**
-     * Temporary sample data so you can see the request cards in the UI.
-     * Remove or replace with repository data when ready.
-     */
     private void loadRequests() {
-        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-        int clientId = prefs.getInt("USER_ID", -1);
-
-        List<Request> allRequests = requestService.getRequestsByClient(clientId);
-
-        List<Request> current = new ArrayList<>();
-        List<Request> past = new ArrayList<>();
-
-        for (Request r : allRequests) {
-            if (r.getRequestStatus()) {
-                current.add(r);
-            } else {
-                past.add(r);
-            }
-        }
-
-        setRequests(current, past);
+        int clientId = SessionManager.getUserId(this);
+        Pair<List<Request>, List<Request>> currentAndPast = requestService.getRequestsByClientCurrentAndPast(clientId);
+        setRequests(currentAndPast.first, currentAndPast.second);
     }
 
     private void showListForCurrentTab() {
@@ -202,8 +180,7 @@ public class ClientHome extends AppCompatActivity {
     }
 
     private void showProfileView() {
-        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-        int userId = prefs.getInt("USER_ID", -1);
+        int userId = SessionManager.getUserId(this);
         updateProfileViews(userId);
         requestsContent.setVisibility(View.GONE);
         profileContent.setVisibility(View.VISIBLE);
@@ -212,13 +189,7 @@ public class ClientHome extends AppCompatActivity {
     private void updateProfileViews(int userId) {
         if (userId == -1) return;
         Client client = clientUserService.getClientById(userId);
-        if (client == null) return;
-        TextView profileFirstName = findViewById(R.id.profileFirstName);
-        TextView profileLastName = findViewById(R.id.profileLastName);
-        TextView profileEmail = findViewById(R.id.profileEmail);
-        profileFirstName.setText(client.getFirstName());
-        profileLastName.setText(client.getLastName());
-        profileEmail.setText(client.getEmail());
+        ProfileViewBinder.bind(this, client);
     }
 
     public void setRequests(List<Request> current, List<Request> past) {
@@ -246,14 +217,14 @@ public class ClientHome extends AppCompatActivity {
             public void onDeleteRequest(int requestId) {
                 requestService.removeRequest(requestId);
                 loadRequests();
-                Toast.makeText(ClientHome.this, "Request deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ClientHome.this, getString(R.string.request_deleted), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onCompleteRequest(int requestId) {
                 requestService.completeRequest(requestId);
                 loadRequests();
-                Toast.makeText(ClientHome.this, "Request Completed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ClientHome.this, getString(R.string.request_completed), Toast.LENGTH_SHORT).show();
             }
         });
         dialog.show(getSupportFragmentManager(), "request_detail");

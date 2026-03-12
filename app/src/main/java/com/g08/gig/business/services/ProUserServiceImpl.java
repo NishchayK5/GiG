@@ -1,11 +1,13 @@
 package com.g08.gig.business.services;
 
+import com.g08.gig.business.constants.ValidationMessages;
 import com.g08.gig.business.validation.UserValidator;
 import com.g08.gig.business.validation.ValidationException;
 import com.g08.gig.models.Pro;
 import com.g08.gig.models.User;
 import com.g08.gig.persistence.ProRepository;
 import com.g08.gig.persistence.UserRepository;
+import com.g08.gig.util.Strings;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
@@ -29,15 +31,14 @@ public class ProUserServiceImpl implements ProUserService {
 
     @Override
     public Pro addPro(String firstName, String lastName, String email, String phone, String password, String confirmPassword, String[] skillSet, String cityOfOperation) {
-        String trimmedEmail = safeTrim(email);
+        String trimmedEmail = Strings.safeTrim(email);
         if (trimmedEmail != null && userRepo.getByEmail(trimmedEmail) != null) {
-            throw new ValidationException("Email already exists. Please use a different one.", "email");
+            throw new ValidationException(ValidationMessages.EMAIL_ALREADY_EXISTS, "email");
         }
         validator.validate(firstName, lastName, email, phone, password, confirmPassword);
 
-        //encrypts the password using BCrypt before adding it to repository
         String hashedPassword = BCrypt.withDefaults().hashToString(BCRYPT_COST, password.trim().toCharArray());
-        User toCreate = new User(0, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), hashedPassword, "PRO");
+        User toCreate = new User(0, Strings.safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), hashedPassword, "PRO");
         User userToAdd = userRepo.add(toCreate);
         Pro proToAdd = new Pro(userToAdd.getId(), userToAdd.getEmail(), userToAdd.getFirstName(), userToAdd.getLastName(), userToAdd.getPhoneNumber(), userToAdd.getPassword(), skillSet, cityOfOperation.trim());
         return repo.add(proToAdd);
@@ -50,9 +51,14 @@ public class ProUserServiceImpl implements ProUserService {
         Pro existing = repo.getById(id);
         if (existing == null) return false;
 
-        Pro updated = new Pro(id, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), existing.getPassword(), skillSet, cityOfOperation.trim());
+        Pro updated = new Pro(id, Strings.safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), existing.getPassword(), skillSet, cityOfOperation.trim());
 
-        return repo.update(updated)&& userRepo.update(updated);
+        if (!repo.update(updated)) return false;
+        if (!userRepo.update(updated)) {
+            repo.update(existing);
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -63,12 +69,5 @@ public class ProUserServiceImpl implements ProUserService {
     @Override
     public Pro getProById(int id) {
         return repo.getById(id);
-    }
-
-
-    private String safeTrim(String s) {
-        if (s == null) return null;
-        String trimmed = s.trim();
-        return trimmed.isEmpty() ? null : trimmed;
     }
 }

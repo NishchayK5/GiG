@@ -23,7 +23,6 @@ public class User {
         this.password = password;
     }
 
-    // Getters and setters for the fields
     public int getId() {
         return id;
     }

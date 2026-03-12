@@ -16,6 +16,7 @@
         <activity
             android:name=".presentation.SplashActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Splash">
 
             <intent-filter>
@@ -27,14 +28,29 @@
         <activity
             android:name=".presentation.StartUp"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.G08" />
-        <activity android:name=".presentation.CreateClientUser" />
-        <activity android:name=".presentation.CreateProUser" />
-        <activity android:name=".presentation.Login" />
-        <activity android:name=".presentation.ClientHome" />
-        <activity android:name=".presentation.CreateRequest" />
-        <activity android:name=".presentation.ProHome" />
-        <activity android:name=".presentation.EditProfileActivity" />
+        <activity
+            android:name=".presentation.CreateClientUser"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.CreateProUser"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.Login"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.ClientHome"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.CreateRequest"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.ProHome"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.EditProfileActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 

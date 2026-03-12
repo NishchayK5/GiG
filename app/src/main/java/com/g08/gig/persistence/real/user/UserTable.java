@@ -2,9 +2,6 @@ package com.g08.gig.persistence.real.user;
 
 import com.g08.gig.persistence.real.TableSchema;
 
-/**
- * Schema definition for the users table.
- */
 public final class UserTable implements TableSchema {
 
     public static final String TABLE_USER = "users";

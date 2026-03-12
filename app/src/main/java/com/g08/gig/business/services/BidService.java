@@ -10,5 +10,5 @@ public interface BidService {
     Bid addBid(Pro pro, Request request, double cost);
     List<Bid> getAllByRequest(Request request);
     List<Bid> getAllByPro(Pro pro);
-
+    List<Request> getRequestsWithBidCostsByPro(Pro pro);
 }
