@@ -33,6 +33,7 @@ public class ProHome extends AppCompatActivity {
     private BiddingAdapter biddingAdapter;
     private BiddingAdapter bidsAdapter;
     private View emptyBiddingsView;
+    private View emptyBidsView;
     private View homeContent;
     private View biddingsViewContent;
     private View appointmentViewContent;
@@ -52,6 +53,7 @@ public class ProHome extends AppCompatActivity {
         setContentView(R.layout.home_pro);
 
         emptyBiddingsView = findViewById(R.id.emptyBiddingsView);
+        emptyBidsView = findViewById(R.id.emptyBidsView);
         homeContent = findViewById(R.id.homeContent);
         biddingsViewContent = findViewById(R.id.biddingsViewContent);
         appointmentViewContent = findViewById(R.id.appointmentViewContent);
@@ -88,8 +90,26 @@ public class ProHome extends AppCompatActivity {
         bidsList.setLayoutManager(new LinearLayoutManager(this));
         bidsList.setAdapter(bidsAdapter);
 
+        bidsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                updateEmptyBidsState();
+            }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                updateEmptyBidsState();
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                updateEmptyBidsState();
+            }
+        });
+
         loadRequests();
         loadBids();
+        updateEmptyBidsState();
 
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
@@ -183,6 +203,11 @@ public class ProHome extends AppCompatActivity {
     private void updateEmptyState() {
         boolean isEmpty = biddingAdapter.getItemCount() == 0;
         emptyBiddingsView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+    }
+
+    private void updateEmptyBidsState() {
+        boolean isEmpty = bidsAdapter.getItemCount() == 0;
+        emptyBidsView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
     }
 
     private void showBiddingDetail(Request request, int userId) {

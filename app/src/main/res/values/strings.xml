@@ -140,5 +140,6 @@
     <string name="reject">Reject</string>
     <string name="no_biddings">No requests to bid on.</string>
     <string name="no_biddings_hint">New client requests will appear here.</string>
+    <string name="no_bidding">No bidding</string>
 
 </resources>
