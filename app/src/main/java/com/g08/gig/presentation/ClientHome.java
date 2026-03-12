@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.g08.gig.R;
 import com.g08.gig.application.GiGApp;
 import com.g08.gig.business.services.BidService;
+import com.g08.gig.business.services.ClientUserService;
 import com.g08.gig.business.services.RequestService;
 import com.g08.gig.models.Client;
 import com.g08.gig.models.Request;
@@ -41,6 +43,7 @@ public class ClientHome extends AppCompatActivity {
     private List<Request> pastRequests = new ArrayList<>();
     private RequestService requestService;
     private BidService bidService;
+    private ClientUserService clientUserService;
 
     private final ActivityResultLauncher<Intent> createRequestLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -57,6 +60,8 @@ public class ClientHome extends AppCompatActivity {
         setContentView(R.layout.home_client);
         requestService = ((GiGApp) getApplication()).getRequestService();
         bidService = ((GiGApp) getApplication()).getBidService();
+        clientUserService = ((GiGApp) getApplication()).getClientUserService();
+
         int userId = getIntent().getIntExtra("USER_ID", -1);
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
         prefs.edit().putInt("USER_ID", userId).apply();
@@ -111,6 +116,16 @@ public class ClientHome extends AppCompatActivity {
                 return true;
             }
             return false;
+        });
+
+        updateProfileViews(userId);
+
+        LinearLayout profileEditTile = findViewById(R.id.profileEditTile);
+        profileEditTile.setOnClickListener(v -> {
+            Intent editIntent = new Intent(this, EditProfileActivity.class);
+            editIntent.putExtra(EditProfileActivity.EXTRA_USER_ID, userId);
+            editIntent.putExtra(EditProfileActivity.EXTRA_IS_CLIENT, true);
+            startActivity(editIntent);
         });
 
         LinearLayout profileLogoutTile = findViewById(R.id.profileLogoutTile);
@@ -187,8 +202,23 @@ public class ClientHome extends AppCompatActivity {
     }
 
     private void showProfileView() {
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        int userId = prefs.getInt("USER_ID", -1);
+        updateProfileViews(userId);
         requestsContent.setVisibility(View.GONE);
         profileContent.setVisibility(View.VISIBLE);
+    }
+
+    private void updateProfileViews(int userId) {
+        if (userId == -1) return;
+        Client client = clientUserService.getClientById(userId);
+        if (client == null) return;
+        TextView profileFirstName = findViewById(R.id.profileFirstName);
+        TextView profileLastName = findViewById(R.id.profileLastName);
+        TextView profileEmail = findViewById(R.id.profileEmail);
+        profileFirstName.setText(client.getFirstName());
+        profileLastName.setText(client.getLastName());
+        profileEmail.setText(client.getEmail());
     }
 
     public void setRequests(List<Request> current, List<Request> past) {

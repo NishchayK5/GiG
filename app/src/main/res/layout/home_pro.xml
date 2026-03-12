@@ -171,43 +171,104 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-<!--                        <com.google.android.material.card.MaterialCardView-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginBottom="12dp"-->
-<!--                            app:cardBackgroundColor="@color/white"-->
-<!--                            app:cardCornerRadius="12dp"-->
-<!--                            app:cardElevation="0dp"-->
-<!--                            app:strokeColor="@color/input_border_light_grey"-->
-<!--                            app:strokeWidth="1dp">-->
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="0dp"
+                            app:strokeColor="@color/input_border_light_grey"
+                            app:strokeWidth="1dp">
 
-<!--                            <LinearLayout-->
-<!--                                android:id="@+id/profileEditTile"-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:orientation="horizontal"-->
-<!--                                android:gravity="center_vertical"-->
-<!--                                android:padding="16dp"-->
-<!--                                android:minHeight="56dp"-->
-<!--                                android:background="?attr/selectableItemBackground">-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:padding="16dp">
 
-<!--                                <ImageView-->
-<!--                                    android:layout_width="28dp"-->
-<!--                                    android:layout_height="28dp"-->
-<!--                                    android:src="@android:drawable/ic_menu_edit"-->
-<!--                                    android:contentDescription="@null"-->
-<!--                                    app:tint="@color/main_cust_color_legacy" />-->
-<!--                                <TextView-->
-<!--                                    android:layout_width="0dp"-->
-<!--                                    android:layout_height="wrap_content"-->
-<!--                                    android:layout_weight="1"-->
-<!--                                    android:layout_marginStart="16dp"-->
-<!--                                    android:text="@string/profile_edit"-->
-<!--                                    android:textColor="@color/main_netural_color"-->
-<!--                                    android:textSize="16sp"-->
-<!--                                    android:textStyle="bold" />-->
-<!--                            </LinearLayout>-->
-<!--                        </com.google.android.material.card.MaterialCardView>-->
+                                <ImageView
+                                    android:id="@+id/profileAvatar"
+                                    android:layout_width="56dp"
+                                    android:layout_height="56dp"
+                                    android:contentDescription="@null"
+                                    android:padding="12dp"
+                                    android:background="@drawable/bg_avatar_circle"
+                                    app:srcCompat="@drawable/ic_person"
+                                    app:tint="@color/main_cust_color_legacy" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_marginStart="16dp"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/profileFirstName"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/main_netural_color"
+                                        android:textSize="18sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/profileLastName"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/main_netural_color"
+                                        android:textSize="18sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/profileEmail"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="2dp"
+                                        android:textColor="@color/grey"
+                                        android:textSize="14sp" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="0dp"
+                            app:strokeColor="@color/input_border_light_grey"
+                            app:strokeWidth="1dp">
+
+                            <LinearLayout
+                                android:id="@+id/profileEditTile"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:padding="16dp"
+                                android:minHeight="56dp"
+                                android:background="?attr/selectableItemBackground">
+
+                                <ImageView
+                                    android:layout_width="28dp"
+                                    android:layout_height="28dp"
+                                    android:src="@android:drawable/ic_menu_edit"
+                                    android:contentDescription="@null"
+                                    app:tint="@color/main_cust_color_legacy" />
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_marginStart="16dp"
+                                    android:text="@string/profile_edit"
+                                    android:textColor="@color/main_netural_color"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
 
 <!--                        <com.google.android.material.card.MaterialCardView-->
 <!--                            android:layout_width="match_parent"-->

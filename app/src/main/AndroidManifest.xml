@@ -34,7 +34,7 @@
         <activity android:name=".presentation.ClientHome" />
         <activity android:name=".presentation.CreateRequest" />
         <activity android:name=".presentation.ProHome" />
-
+        <activity android:name=".presentation.EditProfileActivity" />
 
     </application>
 

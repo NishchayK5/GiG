@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -109,9 +110,20 @@ public class ProHome extends AppCompatActivity {
             }
             if (id == R.id.nav_profile) {
                 showView(profileViewContent);
+                updateProfileViews(userId);
                 return true;
             }
             return false;
+        });
+
+        updateProfileViews(userId);
+
+        LinearLayout profileEditTile = findViewById(R.id.profileEditTile);
+        profileEditTile.setOnClickListener(v -> {
+            Intent editIntent = new Intent(this, EditProfileActivity.class);
+            editIntent.putExtra(EditProfileActivity.EXTRA_USER_ID, userId);
+            editIntent.putExtra(EditProfileActivity.EXTRA_IS_CLIENT, false);
+            startActivity(editIntent);
         });
 
         LinearLayout profileLogoutTile = findViewById(R.id.profileLogoutTile);
@@ -146,6 +158,18 @@ public class ProHome extends AppCompatActivity {
             }
         }
         bidsAdapter.submitList(result);
+    }
+
+    private void updateProfileViews(int userId) {
+        if (userId == -1) return;
+        Pro pro = proUserService.getProById(userId);
+        if (pro == null) return;
+        TextView profileFirstName = findViewById(R.id.profileFirstName);
+        TextView profileLastName = findViewById(R.id.profileLastName);
+        TextView profileEmail = findViewById(R.id.profileEmail);
+        profileFirstName.setText(pro.getFirstName());
+        profileLastName.setText(pro.getLastName());
+        profileEmail.setText(pro.getEmail());
     }
 
 
