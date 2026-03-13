@@ -1,6 +1,6 @@
 package com.g08.gig.business.validation;
 
-import android.util.Patterns;
+import java.util.regex.Pattern;
 
 import com.g08.gig.business.constants.ValidationMessages;
 
@@ -13,7 +13,8 @@ public class UserValidator {
     private static final int PHONE_MAX_DIGITS = 15;
 
     private static final int PASSWORD_LENGTH = 8;
-
+    private static final Pattern EMAIL_PATTERN =
+            Pattern.compile("[a-zA-Z0-9+._%-+]{1,256}@[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}(\\.[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25})+");
     public UserValidator() {
     }
 
@@ -53,18 +54,17 @@ public class UserValidator {
         }
     }
 
-    private void validateEmailFormat(String email) {
-        if (email == null || email.trim().isEmpty()) {
-            throw new ValidationException(ValidationMessages.EMAIL_REQUIRED, "email");
-        }
-        if (email.trim().length() > MAX_EMAIL_LENGTH) {
-            throw new ValidationException(ValidationMessages.EMAIL_MAX_LENGTH, "email");
-        }
-        if (!Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches()) {
-            throw new ValidationException(ValidationMessages.EMAIL_VALID_ADDRESS, "email");
-        }
+private void validateEmailFormat(String email) {
+    if (email == null || email.trim().isEmpty()) {
+        throw new ValidationException(ValidationMessages.EMAIL_REQUIRED, "email");
     }
-
+    if (email.trim().length() > MAX_EMAIL_LENGTH) {
+        throw new ValidationException(ValidationMessages.EMAIL_MAX_LENGTH, "email");
+    }
+    if (!EMAIL_PATTERN.matcher(email.trim().toLowerCase()).matches()) {
+        throw new ValidationException(ValidationMessages.EMAIL_INVALID_FORMAT, "email");
+    }
+}
     private void validatePhone(String phone) {
         if (phone == null || phone.trim().isEmpty()) {
             throw new ValidationException(ValidationMessages.PHONE_REQUIRED, "phone");
