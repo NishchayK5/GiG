@@ -2,6 +2,7 @@ package com.g08.gig.business.services;
 
 import com.g08.gig.business.validation.ValidationException;
 import com.g08.gig.models.Client;
+import com.g08.gig.models.Pro;
 import com.g08.gig.persistence.fake.FakeClientRepository;
 import com.g08.gig.persistence.fake.FakeUserRepository;
 
@@ -25,8 +26,8 @@ class ClientUserServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        repo = new FakeClientRepository();
         userRepo = new FakeUserRepository();
+        repo = new FakeClientRepository(userRepo);
         service = new ClientUserServiceImpl(repo, userRepo);
     }
 
@@ -177,5 +178,16 @@ class ClientUserServiceImplTest {
     void deleteClient_idNotExists_returnsFalse() {
         boolean result = service.deleteClient(999);
         assertFalse(result);
+    }
+
+    @Test
+    void clientByID() {
+        Client added = service.addClient("Alex", "Nguyen", "tech@quicklube.ca", "SecurePass1!",
+                "SecurePass1!", "2045551010", "Winnipeg");
+
+
+        Client newClient = service.getClientById(added.getId());
+        assertEquals(added.getFirstName(), newClient.getFirstName());
+
     }
 }

@@ -2,7 +2,6 @@ package com.g08.gig.presentation;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -13,9 +12,16 @@ import com.g08.gig.R;
 import com.g08.gig.application.GiGApp;
 import com.g08.gig.business.services.AuthService;
 import com.g08.gig.business.services.LoginResult;
+import com.g08.gig.business.validation.ValidationException;
+import com.g08.gig.session.SessionManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Login extends AppCompatActivity {
 
+    private EditText emailInput;
+    private EditText passwordInput;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,51 +30,44 @@ public class Login extends AppCompatActivity {
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> finish());
 
-        EditText emailInput = findViewById(R.id.emailInput);
-        EditText passwordInput = findViewById(R.id.passwordInput);
+        emailInput = findViewById(R.id.emailInput);
+        passwordInput = findViewById(R.id.passwordInput);
         Button loginButton = findViewById(R.id.loginbutton);
 
-        AuthService authService = ((GiGApp) getApplication()).getAuthService();
-
         loginButton.setOnClickListener(v -> {
-            String email = emailInput.getText() != null ? emailInput.getText().toString().trim() : "";
-            String password = passwordInput.getText() != null ? passwordInput.getText().toString().trim() : "";
-
-            emailInput.setError(null);
-            passwordInput.setError(null);
-
-            boolean hasError = false;
-            if (email.isEmpty()) {
-                emailInput.setError(getString(R.string.login_error_email_required));
-                hasError = true;
-            } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                emailInput.setError(getString(R.string.login_error_email_invalid));
-                hasError = true;
-            }
-            if (password.isEmpty()) {
-                passwordInput.setError(getString(R.string.login_error_password_required));
-                hasError = true;
-            }
-            if (hasError) {
-                if (emailInput.getError() != null) {
-                    emailInput.requestFocus();
+            try {
+                LoginResult result = attemptLogin();
+                if (result.isSuccess()) {
+                    onLoginSuccess(result);
                 } else {
-                    passwordInput.requestFocus();
+                    Toast.makeText(this, getString(R.string.login_error_invalid_credentials), Toast.LENGTH_SHORT).show();
                 }
-                return;
-            }
-
-            LoginResult result = authService.login(email, password);
-            if (result.isSuccess()) {
-                Intent intent = result.isClient()
-                        ? new Intent(Login.this, ClientHome.class)
-                        : new Intent(Login.this, ProHome.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            } else {
-                Toast.makeText(this, getString(R.string.login_error_invalid_credentials), Toast.LENGTH_SHORT).show();
+            } catch (ValidationException ex) {
+                Map<String, EditText> fieldMap = new HashMap<>();
+                fieldMap.put("email", emailInput);
+                fieldMap.put("password", passwordInput);
+                ValidationErrorBinder.setValidationError(fieldMap, ex.getField(), ex.getMessage(), emailInput);
             }
         });
+    }
+
+    private LoginResult attemptLogin() throws ValidationException {
+        String email = emailInput.getText() != null ? emailInput.getText().toString().trim() : "";
+        String password = passwordInput.getText() != null ? passwordInput.getText().toString().trim() : "";
+        emailInput.setError(null);
+        passwordInput.setError(null);
+        AuthService authService = ((GiGApp) getApplication()).getAuthService();
+        return authService.login(email, password);
+    }
+
+    private void onLoginSuccess(LoginResult result) {
+        SessionManager.setLoginResult(this, result.getUserId(), result.isClient());
+        Intent intent = result.isClient()
+                ? new Intent(Login.this, ClientHome.class)
+                : new Intent(Login.this, ProHome.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra(SessionManager.KEY_USER_ID, result.getUserId());
+        startActivity(intent);
+        finish();
     }
 }

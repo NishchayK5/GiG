@@ -7,48 +7,359 @@
     android:fitsSystemWindows="true">
 
     <LinearLayout
+        android:id="@+id/contentArea"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginTop="10dp">
-        <ImageView
-            android:id="@+id/imgLogobulb"
-            android:layout_width="139dp"
-            android:layout_height="152dp"
-            android:layout_marginTop="10dp"
-            app:srcCompat="@drawable/gig_bulb_logo" />
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNav"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <!-- Top nav: GIG icon left, GiG text center, notification icon right (same as client, legacy red) -->
+        <FrameLayout
+            android:id="@+id/topNavBar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@color/white">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="end">
-
-            <TextView
-                android:id="@+id/textPageName"
-                android:layout_width="272dp"
-                android:layout_height="22dp"
-                android:textColor="@color/main_pro_color"
-                android:gravity="right"
-                android:text="@string/home_pro_text"
-                android:textSize="20sp" />
+            <ImageView
+                android:id="@+id/imgLogobulb"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="start|center_vertical"
+                android:contentDescription="@string/app_name"
+                app:srcCompat="@drawable/gig_bulb_logo" />
 
             <TextView
-                android:id="@+id/profileInfo"
-                android:layout_width="2720dp"
-                android:layout_height="22dp"
-                android:textColor="@color/main_pro_color"
-                android:gravity="right"
-                android:text=""
-                android:textSize="18sp"
-                tools:text="Welcome, Client" />
+                android:id="@+id/topNavTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/app_name_gig"
+                android:textColor="@color/main_cust_color_legacy"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
+<!--            <ImageButton-->
+<!--                android:id="@+id/btnNotification"-->
+<!--                android:layout_width="48dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:layout_gravity="end|center_vertical"-->
+<!--                android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--                android:contentDescription="@string/notification"-->
+<!--                android:scaleType="centerInside"-->
+<!--                android:padding="12dp"-->
+<!--                app:srcCompat="@android:drawable/ic_popup_reminder"-->
+<!--                app:tint="@color/main_cust_color_legacy" />-->
+        </FrameLayout>
 
-        </LinearLayout>
+        <!-- Switcher: Home (list) | Biddings view | Appointment view | Profile view -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp">
 
+            <!-- Home: biddings list (only Pro home shows content) -->
+            <FrameLayout
+                android:id="@+id/homeContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/biddingsList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="16dp" />
+
+                <LinearLayout
+                    android:id="@+id/emptyBiddingsView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="24dp">
+
+                    <ImageView
+                        android:layout_width="180dp"
+                        android:layout_height="180dp"
+                        android:layout_marginBottom="16dp"
+                        android:contentDescription="@string/no_biddings"
+                        android:src="@drawable/empty_pro" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_biddings"
+                        android:textColor="@color/main_netural_color"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/no_biddings_hint"
+                        android:textColor="@color/grey"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/biddingsViewContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/biddings_view"
+                    android:textColor="@color/main_netural_color"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:padding="16dp" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/bidsList"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clipToPadding="false"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="16dp" />
+
+                    <LinearLayout
+                        android:id="@+id/emptyBidsView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="24dp">
+
+                        <ImageView
+                            android:layout_width="180dp"
+                            android:layout_height="180dp"
+                            android:layout_marginBottom="16dp"
+                            android:contentDescription="@string/no_bidding"
+                            android:src="@drawable/empty_pro" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/no_bidding"
+                            android:textColor="@color/main_netural_color"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- Appointment: center label -->
+<!--            <FrameLayout-->
+<!--                android:id="@+id/appointmentViewContent"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:visibility="gone">-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text="@string/appointment_view"-->
+<!--                    android:textColor="@color/main_netural_color"-->
+<!--                    android:textSize="18sp" />-->
+<!--            </FrameLayout>-->
+
+            <!-- Profile: list tiles -->
+            <FrameLayout
+                android:id="@+id/profileViewContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fillViewport="true"
+                    android:paddingHorizontal="16dp"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="24dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="0dp"
+                            app:strokeColor="@color/input_border_light_grey"
+                            app:strokeWidth="1dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:padding="16dp">
+
+                                <ImageView
+                                    android:id="@+id/profileAvatar"
+                                    android:layout_width="56dp"
+                                    android:layout_height="56dp"
+                                    android:contentDescription="@null"
+                                    android:padding="12dp"
+                                    android:background="@drawable/bg_avatar_circle"
+                                    app:srcCompat="@drawable/ic_person"
+                                    app:tint="@color/main_cust_color_legacy" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_marginStart="16dp"
+                                    android:orientation="vertical">
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal"
+                                        android:baselineAligned="false">
+
+                                        <TextView
+                                            android:id="@+id/profileFirstName"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:textColor="@color/main_netural_color"
+                                            android:textSize="18sp"
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/profileLastName"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="4dp"
+                                            android:textColor="@color/main_netural_color"
+                                            android:textSize="18sp"
+                                            android:textStyle="bold" />
+                                    </LinearLayout>
+
+                                    <TextView
+                                        android:id="@+id/profileEmail"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="2dp"
+                                        android:textColor="@color/grey"
+                                        android:textSize="14sp" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="0dp"
+                            app:strokeColor="@color/input_border_light_grey"
+                            app:strokeWidth="1dp">
+
+                            <LinearLayout
+                                android:id="@+id/profileEditTile"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:padding="16dp"
+                                android:minHeight="56dp"
+                                android:background="?attr/selectableItemBackground">
+
+                                <ImageView
+                                    android:layout_width="28dp"
+                                    android:layout_height="28dp"
+                                    android:src="@android:drawable/ic_menu_edit"
+                                    android:contentDescription="@null"
+                                    app:tint="@color/main_cust_color_legacy" />
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_marginStart="16dp"
+                                    android:text="@string/profile_edit"
+                                    android:textColor="@color/main_netural_color"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="0dp"
+                            app:strokeColor="@color/input_border_light_grey"
+                            app:strokeWidth="1dp">
+
+                            <LinearLayout
+                                android:id="@+id/profileLogoutTile"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:padding="16dp"
+                                android:minHeight="56dp"
+                                android:background="?attr/selectableItemBackground">
+
+                                <ImageView
+                                    android:layout_width="28dp"
+                                    android:layout_height="28dp"
+                                    android:src="@android:drawable/ic_lock_power_off"
+                                    android:contentDescription="@null"
+                                    app:tint="@color/main_cust_color_legacy" />
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_marginStart="16dp"
+                                    android:text="@string/logout"
+                                    android:textColor="@color/main_netural_color"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
+                </ScrollView>
+            </FrameLayout>
+        </FrameLayout>
     </LinearLayout>
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:itemIconTint="@color/main_cust_color_legacy"
+        app:itemTextColor="@color/main_cust_color_legacy"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_nav_pro"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

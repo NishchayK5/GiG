@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.recyclerview)
 
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
@@ -69,10 +70,19 @@ dependencies {
 
     testImplementation(libs.junit.jupiter)
 
+    testImplementation("org.mockito:mockito-core:5.12.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.12.0")
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.espresso.contrib)
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.rules)
+
+    testImplementation("androidx.test:core:1.5.0")
+    testImplementation("org.robolectric:robolectric:4.11.1")
+
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

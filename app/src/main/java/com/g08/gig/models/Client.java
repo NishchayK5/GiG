@@ -12,7 +12,6 @@ public class Client extends User{
         this.address = address;
     }
 
-    // Getters and setters for the fields
     public String getAddress(){
         return address;
     }

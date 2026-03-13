@@ -52,7 +52,7 @@ public class SqlClientRepository implements ClientRepository {
         String phoneNumber = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_PHONE));
         String password = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_PASSWORD));
         String address = c.getString(c.getColumnIndexOrThrow(ClientTable.COL_ADDRESS));
-        return new Client(id, email, firstName, lastName, phoneNumber, password, address);
+        return new Client(id, email, firstName, lastName, phoneNumber, address, password);
     }
     @Override
     public Client getById(int id){
@@ -83,24 +83,13 @@ public class SqlClientRepository implements ClientRepository {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
-            ContentValues values= new ContentValues();
-            values.put(UserTable.COL_USER_EMAIL, client.getEmail());
-            values.put(UserTable.COL_USER_FIRST_NAME, client.getFirstName());
-            values.put(UserTable.COL_USER_LAST_NAME, client.getLastName());
-            values.put(UserTable.COL_USER_PHONE, client.getPhoneNumber());
-            values.put(UserTable.COL_USER_PASSWORD, client.getPassword());
-
-            long insertResult = db.insert(UserTable.TABLE_USER, null, values);
-            if (insertResult == -1) return null;
-            int userID = (int) insertResult;
             ContentValues clientValues = new ContentValues();
-            clientValues.put(ClientTable.COL_CLIENT_ID, userID);
+            clientValues.put(ClientTable.COL_CLIENT_ID, client.getId());
             clientValues.put(ClientTable.COL_ADDRESS, client.getAddress());
             long result = db.insert(ClientTable.TABLE_CLIENT, null, clientValues);
             if(result == -1) return null;
             db.setTransactionSuccessful();
-            return getById(userID);
-
+            return getById(client.getId());
         } finally {
             db.endTransaction();
         }
@@ -121,11 +110,11 @@ public class SqlClientRepository implements ClientRepository {
             userValues.put(UserTable.COL_USER_PASSWORD, client.getPassword());
 
             int rows = db.update(UserTable.TABLE_USER, userValues, UserTable.COL_USER_ID + "=?", new String[]{String.valueOf(client.getId())});
+
             if(rows==0) return false;
             ContentValues clientValues = new ContentValues();
-            clientValues.put(ClientTable.COL_CLIENT_ID, client.getId());
-            clientValues.put(ClientTable.COL_ADDRESS, client.getAddress());
 
+            clientValues.put(ClientTable.COL_ADDRESS, client.getAddress());
             int cRows = db.update(ClientTable.TABLE_CLIENT, clientValues, ClientTable.COL_CLIENT_ID + "=?", new  String[]{String.valueOf(client.getId())});
             if(cRows==0) return false;
             db.setTransactionSuccessful();

@@ -8,7 +8,7 @@ public final class ProTable implements TableSchema {
     public static final String COL_PRO_CITY_LOCATION = "cityOfOperation";
 
     @Override
-    public String getTableName(){return TABLE_PRO;};
+    public String getTableName(){return TABLE_PRO;}
 
     @Override
     public String getCreateSql(){

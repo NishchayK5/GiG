@@ -1,4 +1,5 @@
 package com.g08.gig.business.services;
+import com.g08.gig.business.validation.ValidationException;
 
 import com.g08.gig.models.Client;
 import com.g08.gig.models.Pro;
@@ -29,9 +30,11 @@ class AuthServiceImplTest {
 
     @BeforeEach
     void setUp() {
+
         userRepo = new FakeUserRepository();
-        clientRepo = new FakeClientRepository();
-        proRepo = new FakeProRepository();
+        clientRepo = new FakeClientRepository(userRepo);
+        proRepo = new FakeProRepository(userRepo);
+
         authService = new AuthServiceImpl(userRepo, clientRepo, proRepo);
         clientService = new ClientUserServiceImpl(clientRepo, userRepo);
         proService = new ProUserServiceImpl(proRepo, userRepo);

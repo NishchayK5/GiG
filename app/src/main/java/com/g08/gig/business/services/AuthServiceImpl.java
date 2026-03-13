@@ -1,5 +1,7 @@
 package com.g08.gig.business.services;
 
+import com.g08.gig.business.validation.LoginValidator;
+import com.g08.gig.business.validation.ValidationException;
 import com.g08.gig.models.Client;
 import com.g08.gig.models.Pro;
 import com.g08.gig.models.User;
@@ -14,34 +16,41 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final ClientRepository clientRepository;
     private final ProRepository proRepository;
+    private final LoginValidator loginValidator;
 
     public AuthServiceImpl(UserRepository userRepository,
                            ClientRepository clientRepository,
                            ProRepository proRepository) {
+        this(userRepository, clientRepository, proRepository, new LoginValidator());
+    }
+    public AuthServiceImpl(UserRepository userRepository,
+                           ClientRepository clientRepository,
+                           ProRepository proRepository,
+                           LoginValidator loginValidator) {
         this.userRepository = userRepository;
         this.clientRepository = clientRepository;
         this.proRepository = proRepository;
+        this.loginValidator = loginValidator;
     }
 
     @Override
     public LoginResult login(String email, String password) {
-        if (email == null || email.trim().isEmpty() || password == null) {
+        try {
+            loginValidator.validate(email, password);
+        } catch (ValidationException e) {
             return LoginResult.failure();
         }
 
-        //checks if user email exists in system
-        User user = userRepository.getByEmail(email.trim());
+        User user = userRepository.getByEmail(email.trim().toLowerCase());
         if (user == null) {
             return LoginResult.failure();
         }
 
-        //checks if password is stored in system
         String storedHash = user.getPassword();
         if (storedHash == null || storedHash.isEmpty()) {
             return LoginResult.failure();
         }
 
-        //verifies that the entered password is correct, uses BCrypt to check the encrypted password in our database
         BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), storedHash.toCharArray());
         if (!result.verified) {
             return LoginResult.failure();

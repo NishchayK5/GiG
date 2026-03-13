@@ -6,16 +6,21 @@ public class Request {
     private Client client;
     private String title;
     private String body;
+    private boolean isActive;
     private LocalDateTime timeOfRequest;
+    private double bidCost;
 
-    public Request(int id, Client client, String title, String body, LocalDateTime timeOfRequest) {
+
+    public Request(int id, Client client, String title, String body, LocalDateTime timeOfRequest, boolean isActive) {
         this.id = id;
         this.client = client;
         this.title = title;
         this.body = body;
         this.timeOfRequest = timeOfRequest;
+        this.isActive = isActive;
     }
 
+    //getters and setters for the object
     public int getId() {
         return id;
     }
@@ -55,4 +60,12 @@ public class Request {
     public void setTimeOfRequest(LocalDateTime timeOfRequest) {
         this.timeOfRequest = timeOfRequest;
     }
+
+    // Changes the status of the request to expired/completed
+    public void setRequestToExpire(){
+        isActive = false;
+    }
+    public boolean getRequestStatus(){return isActive;}
+    public double getBidCost() { return bidCost; }
+    public void setBidCost(double bidCost) { this.bidCost = bidCost; }
 }

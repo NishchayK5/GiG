@@ -9,10 +9,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class FakeProRepositoryTest {
 
     private FakeProRepository repo;
+    private FakeUserRepository userRepo;
 
     @BeforeEach
     void setUp() {
-        repo = new FakeProRepository();
+        userRepo = new FakeUserRepository();
+        repo = new FakeProRepository(userRepo);
     }
 
     @Test
@@ -54,9 +56,22 @@ class FakeProRepositoryTest {
 
     @Test
     void update_modifiesExistingPro() {
-        Pro added = repo.add(new Pro(0, "old@x.com", "Old", "Name", "555", "p", new String[]{"A"}, "City1"));
-        Pro updated = new Pro(added.getId(), "new@x.com", "New", "Name", "999", "p2", new String[]{"A", "B"}, "City2");
+        Pro added = repo.add(new Pro(0, "old@x.com", "Old", "Name", "5555555555", "p", new String[]{"A"}, "City1"));
+
+        userRepo.add(new Pro(
+                added.getId(),
+                added.getEmail(),
+                added.getFirstName(),
+                added.getLastName(),
+                added.getPhoneNumber(),
+                added.getPassword(),
+                added.getSkillSet(),
+                added.getCityOfOperation()
+        ));
+
+        Pro updated = new Pro(added.getId(), "new@x.com", "New", "Name", "9999999999", "p2", new String[]{"A", "B"}, "City2");
         assertTrue(repo.update(updated));
+
         Pro found = repo.getById(added.getId());
         assertEquals("new@x.com", found.getEmail());
         assertArrayEquals(new String[]{"A", "B"}, found.getSkillSet());

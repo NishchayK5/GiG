@@ -9,10 +9,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class FakeClientRepositoryTest {
 
     private FakeClientRepository repo;
+    private FakeUserRepository userRepo;
 
     @BeforeEach
     void setUp() {
-        repo = new FakeClientRepository();
+        userRepo = new FakeUserRepository();
+        repo = new FakeClientRepository(userRepo);
     }
 
     @Test
@@ -43,9 +45,21 @@ class FakeClientRepositoryTest {
 
     @Test
     void update_modifiesExistingClient() {
-        Client added = repo.add(new Client(0, "old@x.com", "Old", "Name", "555", "Old St", "p"));
-        Client updated = new Client(added.getId(), "new@x.com", "New", "Name", "999", "New St", "p2");
+        Client added = repo.add(new Client(0, "old@x.com", "Old", "Name", "5555555555", "Old St", "p"));
+
+        userRepo.add(new Client(
+                added.getId(),
+                added.getEmail(),
+                added.getFirstName(),
+                added.getLastName(),
+                added.getPhoneNumber(),
+                added.getAddress(),
+                added.getPassword()
+        ));
+
+        Client updated = new Client(added.getId(), "new@x.com", "New", "Name", "9999999999", "New St", "p2");
         assertTrue(repo.update(updated));
+
         Client found = repo.getById(added.getId());
         assertEquals("new@x.com", found.getEmail());
         assertEquals("New St", found.getAddress());
