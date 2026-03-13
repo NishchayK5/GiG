@@ -13,6 +13,7 @@ import com.g08.gig.business.services.RequestServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 class FakeBidRepositoryTest {
@@ -46,6 +47,25 @@ class FakeBidRepositoryTest {
     @Test
     void add_nullBid_returnsNull() {
         assertNull(bidRepo.add(null));
+    }
+
+    @Test
+    void add_bidWithExistingId_returnsNull() {
+        Request request = requestService.addRequest(CLIENT, "Oil Change", "Need oil");
+        Bid first = bidService.addBid(PRO1, request, 75.00);
+        Bid duplicate = new Bid(first.getId(), PRO1, request, 50.00, LocalDateTime.now());
+        assertNull(bidRepo.add(duplicate));
+        assertEquals(1, bidRepo.getAll().size());
+    }
+
+    @Test
+    void delete_unknownId_returnsFalse() {
+        assertFalse(bidRepo.delete(999));
+    }
+
+    @Test
+    void getById_unknownId_returnsNull() {
+        assertNull(bidRepo.getById(999));
     }
 
     @Test

@@ -95,6 +95,22 @@ class FakeClientRepositoryTest {
     }
 
     @Test
+    void add_clientWithExistingId_returnsNull() {
+        Client first = repo.add(new Client(0, "a@a.com", "A", "A", "555", "Addr", "p"));
+        assertNotNull(first);
+        Client duplicate = new Client(first.getId(), "b@b.com", "B", "B", "555", "Addr2", "p");
+        assertNull(repo.add(duplicate));
+        assertEquals(1, repo.getAll().size());
+    }
+
+    @Test
+    void update_returnsFalseWhenUserNotInUserRepo() {
+        Client added = repo.add(new Client(0, "x@x.com", "X", "Y", "555", "Addr", "p"));
+        Client updated = new Client(added.getId(), "new@x.com", "New", "Y", "999", "New Addr", "p");
+        assertFalse(repo.update(updated));
+    }
+
+    @Test
     void getAll_initiallyEmpty() {
         assertTrue(repo.getAll().isEmpty());
     }

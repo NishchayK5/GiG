@@ -59,6 +59,19 @@ class FakeUserRepositoryTest {
     }
 
     @Test
+    void getByEmail_userWithNullEmail_skipsThatUser() {
+        repo.add(new User(0, null, "A", "B", "555", "p", "USER"));
+        assertNull(repo.getByEmail("anything@x.com"));
+    }
+
+    @Test
+    void getByEmail_ignoresCase() {
+        repo.add(new User(0, "user@test.com", "U", "U", "555", "p", "USER"));
+        assertNotNull(repo.getByEmail("USER@TEST.COM"));
+        assertEquals("user@test.com", repo.getByEmail("USER@TEST.COM").getEmail());
+    }
+
+    @Test
     void update_modifiesExistingUser() {
         User added = repo.add(new User(0, "old@x.com", "Old", "Name", "555", "p", "USER"));
         User updated = new User(added.getId(), "new@x.com", "New", "Name", "999", "p2", "USER");
