@@ -77,6 +77,12 @@ class AuthServiceImplTest {
     }
 
     @Test
+    void login_invalidEmailFormat_returnsFailure() {
+        LoginResult result = authService.login("notanemail", PASSWORD);
+        assertFalse(result.isSuccess());
+    }
+
+    @Test
     void login_wrongPassword_returnsFailure() {
         Client added = clientService.addClient("Sarah", "Martinez", CLIENT_EMAIL, PASSWORD, PASSWORD,
                 "2045552233", "452 Oak Street, Winnipeg");

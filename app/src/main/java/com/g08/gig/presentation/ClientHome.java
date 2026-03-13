@@ -25,7 +25,8 @@ import com.g08.gig.models.Request;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 
-import java.time.format.DateTimeFormatter;
+import com.g08.gig.util.DateFormats;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,9 +60,9 @@ public class ClientHome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_client);
 
-        requestService = ((GiGApp) getApplication()).getRequestService();
-        bidService = ((GiGApp) getApplication()).getBidService();
-        clientUserService = ((GiGApp) getApplication()).getClientUserService();
+        requestService = GiGApp.get(this).getRequestService();
+        bidService = GiGApp.get(this).getBidService();
+        clientUserService = GiGApp.get(this).getClientUserService();
 
         int userId = getIntent().getIntExtra(SessionManager.KEY_USER_ID, -1);
         if (userId != -1) {
@@ -207,7 +208,7 @@ public class ClientHome extends AppCompatActivity {
     private void showRequestDetail(Request request) {
         String time = "";
         if (request.getTimeOfRequest() != null) {
-            time = request.getTimeOfRequest().format(DateTimeFormatter.ofPattern("MMM d, yyyy · h:mm a"));
+            time = request.getTimeOfRequest().format(DateFormats.REQUEST_TIME);
         }
 
         RequestDetailDialog dialog = RequestDetailDialog.newInstance(

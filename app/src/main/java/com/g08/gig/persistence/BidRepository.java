@@ -2,7 +2,7 @@ package com.g08.gig.persistence;
 
 import com.g08.gig.models.Bid;
 import com.g08.gig.models.Pro;
-import com.g08.gig.models. Request;
+import com.g08.gig.models.Request;
 
 import java.util.List;
 

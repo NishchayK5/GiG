@@ -29,8 +29,8 @@ public class CreateRequest extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_request);
 
-        requestService = ((GiGApp) getApplication()).getRequestService();
-        clientUserService = ((GiGApp) getApplication()).getClientUserService();
+        requestService = GiGApp.get(this).getRequestService();
+        clientUserService = GiGApp.get(this).getClientUserService();
 
         requestTitleInput = findViewById(R.id.requestTitleInput);
         requestDescriptionInput = findViewById(R.id.requestDescriptionInput);

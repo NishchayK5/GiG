@@ -77,10 +77,24 @@ class RequestServiceImplTest {
     }
 
     @Test
+    void addRequest_nullTitle_throwsValidationException() {
+        assertThrows(ValidationException.class, () ->
+                service.addRequest(client, null, "Valid body"));
+        verify(repo, never()).add(any());
+    }
+
+    @Test
     void addRequest_blankTitle_throwsValidationException() {
         assertThrows(ValidationException.class, () ->
                 service.addRequest(client, "   ", "Valid body"));
 
+        verify(repo, never()).add(any());
+    }
+
+    @Test
+    void addRequest_nullBody_throwsValidationException() {
+        assertThrows(ValidationException.class, () ->
+                service.addRequest(client, "Valid title", null));
         verify(repo, never()).add(any());
     }
 
@@ -193,5 +207,15 @@ class RequestServiceImplTest {
         service.removeRequest(9);
 
         verify(repo).delete(9);
+    }
+
+    @Test
+    void completeRequest_idNotFound_throwsWhenRepoReturnsNull() {
+        when(repo.getById(999)).thenReturn(null);
+
+        assertThrows(NullPointerException.class, () -> service.completeRequest(999));
+
+        verify(repo).getById(999);
+        verify(repo, never()).update(any(Request.class));
     }
 }
