@@ -1,7 +1,8 @@
-# Changes from Iteration 0 Feedback
-- Edited vision statement
-- Changed features + user stories
-- Fixed one-to-one user story issue
+# IMPORTANT
+
+We fixed everything from the iteration 1 feedback.
+
+Also, in order to change between real and fake repository, go to go8-project\app\src\main\java\com\g08\gig\application\GiGApp.java and change the boolean on line 61.
 
 # GiG Vision Statement
 
