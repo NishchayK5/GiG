@@ -25,8 +25,8 @@ class ClientUserServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        repo = new FakeClientRepository();
         userRepo = new FakeUserRepository();
+        repo = new FakeClientRepository(userRepo);
         service = new ClientUserServiceImpl(repo, userRepo);
     }
 

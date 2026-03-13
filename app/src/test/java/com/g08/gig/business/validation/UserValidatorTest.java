@@ -134,7 +134,7 @@ class UserValidatorTest {
     void validate_emailNoAtSign_throwsInvalidFormat() {
         ValidationException e = assertThrows(ValidationException.class, () ->
                 validator.validate(VALID_FIRST, VALID_LAST, "invalid-email", VALID_PHONE));
-        assertEquals("Email must be a valid format.", e.getMessage());
+        assertEquals("Please enter a valid email address.", e.getMessage());
     }
 
     @Test

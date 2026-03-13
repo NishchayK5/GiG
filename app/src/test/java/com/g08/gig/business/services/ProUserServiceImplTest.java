@@ -26,8 +26,9 @@ class ProUserServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        repo = new FakeProRepository();
+
         FakeUserRepository userRepo = new FakeUserRepository();
+        repo = new FakeProRepository(userRepo);
         service = new ProUserServiceImpl(repo, userRepo);
     }
 
