@@ -51,6 +51,7 @@ public class GiGApp extends Application {
 
         dbHelper = new AppDbHelper(getApplicationContext());
 
+        // Set to true to use stub repositories and false for SQL implementation
         final boolean FAKE_REPO = false;
 
         if(!FAKE_REPO) {

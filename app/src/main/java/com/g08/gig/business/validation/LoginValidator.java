@@ -3,7 +3,6 @@ package com.g08.gig.business.validation;
 import android.util.Patterns;
 
 import com.g08.gig.business.constants.ValidationMessages;
-
 public class LoginValidator {
     public LoginValidator(){
     }

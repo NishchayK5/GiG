@@ -20,6 +20,7 @@ public class Request {
         this.isActive = isActive;
     }
 
+    //getters and setters for the object
     public int getId() {
         return id;
     }
@@ -60,6 +61,7 @@ public class Request {
         this.timeOfRequest = timeOfRequest;
     }
 
+    // Changes the status of the request to expired/completed
     public void setRequestToExpire(){
         isActive = false;
     }

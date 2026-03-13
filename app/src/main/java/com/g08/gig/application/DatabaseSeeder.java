@@ -31,7 +31,6 @@ public final class DatabaseSeeder {
     private static void seedRequests(RequestService requestService, ClientRepository clientRepo) {
         Client placeholderClient = clientRepo.getById(1);
         if (placeholderClient == null) return;
-
         requestService.addRequest(placeholderClient, "Brake pad replacement",
                 "My 2019 Honda Civic needs new front brake pads. There's a grinding noise when I stop.");
         requestService.addRequest(placeholderClient, "Oil change needed",
