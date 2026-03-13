@@ -1,6 +1,7 @@
 package com.g08.gig.business.services;
 
 import com.g08.gig.business.validation.LoginValidator;
+import com.g08.gig.business.validation.ValidationException;
 import com.g08.gig.models.Client;
 import com.g08.gig.models.Pro;
 import com.g08.gig.models.User;
@@ -34,7 +35,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResult login(String email, String password) {
-        loginValidator.validate(email, password);
+        try {
+            loginValidator.validate(email, password);
+        } catch (ValidationException e) {
+            return LoginResult.failure();
+        }
 
         User user = userRepository.getByEmail(email.trim().toLowerCase());
         if (user == null) {

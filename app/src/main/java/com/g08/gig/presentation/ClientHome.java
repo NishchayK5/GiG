@@ -2,7 +2,8 @@ package com.g08.gig.presentation;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Pair;
+import com.g08.gig.util.Pair;
+
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;

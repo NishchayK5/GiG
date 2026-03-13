@@ -1,7 +1,6 @@
 package com.g08.gig.business.services;
 
-import android.util.Pair;
-
+import com.g08.gig.util.Pair;
 import com.g08.gig.business.validation.ValidationException;
 import com.g08.gig.models.Client;
 import com.g08.gig.models.Request;
