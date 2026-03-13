@@ -1,5 +1,7 @@
 package com.g08.gig.business.validation;
 
+import android.util.Patterns;
+
 import com.g08.gig.business.constants.ValidationMessages;
 
 public class UserValidator {
@@ -7,7 +9,8 @@ public class UserValidator {
     private static final int MAX_FIRST_NAME_LENGTH = 60;
     private static final int MAX_LAST_NAME_LENGTH = 60;
     private static final int MAX_EMAIL_LENGTH = 255;
-    private static final int PHONE_LENGTH = 10;
+    private static final int PHONE_MIN_DIGITS = 10;
+    private static final int PHONE_MAX_DIGITS = 15;
 
     private static final int PASSWORD_LENGTH = 8;
 
@@ -57,8 +60,8 @@ public class UserValidator {
         if (email.trim().length() > MAX_EMAIL_LENGTH) {
             throw new ValidationException(ValidationMessages.EMAIL_MAX_LENGTH, "email");
         }
-        if (!email.trim().contains("@")) {
-            throw new ValidationException(ValidationMessages.EMAIL_INVALID_FORMAT, "email");
+        if (!Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches()) {
+            throw new ValidationException(ValidationMessages.EMAIL_VALID_ADDRESS, "email");
         }
     }
 
@@ -67,11 +70,13 @@ public class UserValidator {
             throw new ValidationException(ValidationMessages.PHONE_REQUIRED, "phone");
         }
         String trimmed = phone.trim();
-        if (!trimmed.matches("\\d+")) {
+        if (!trimmed.matches("\\+?\\d+")) {
             throw new ValidationException(ValidationMessages.PHONE_DIGITS_ONLY, "phone");
         }
-        if (trimmed.length() != PHONE_LENGTH) {
-            throw new ValidationException(ValidationMessages.PHONE_EXACT_LENGTH, "phone");
+        String digitsOnly = trimmed.replaceAll("\\D", "");
+        int len = digitsOnly.length();
+        if (len < PHONE_MIN_DIGITS || len > PHONE_MAX_DIGITS) {
+            throw new ValidationException(ValidationMessages.PHONE_DIGIT_RANGE, "phone");
         }
     }
 

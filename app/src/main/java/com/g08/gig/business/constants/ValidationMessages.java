@@ -20,8 +20,8 @@ public final class ValidationMessages {
     public static final String EMAIL_VALID_ADDRESS = "Please enter a valid email address.";
 
     public static final String PHONE_REQUIRED = "Phone number is required.";
-    public static final String PHONE_DIGITS_ONLY = "Phone number must contain only digits.";
-    public static final String PHONE_EXACT_LENGTH = "Phone number must be exactly 10 digits long.";
+    public static final String PHONE_DIGITS_ONLY = "Phone number must contain only digits, with an optional + at the start.";
+    public static final String PHONE_DIGIT_RANGE = "Phone number must be 10 to 15 digits.";
 
     public static final String PASSWORD_REQUIRED = "Password is required.";
     public static final String CONFIRM_PASSWORD_REQUIRED = "Confirm password is required.";
