@@ -117,6 +117,7 @@
     <string name="request_detail_close">Close</string>
     <string name="request_detail_delete">Delete</string>
     <string name="request_detail_complete">Complete</string>
+    <string name="request_detail_no_bids">No bids yet</string>
 
     <!-- Create request form -->
     <string name="create_request_title">New request</string>
