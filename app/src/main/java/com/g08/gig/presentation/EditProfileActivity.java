@@ -2,6 +2,7 @@ package com.g08.gig.presentation;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -28,6 +29,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private EditText lastNameInput;
     private EditText emailInput;
     private EditText phoneInput;
+    private EditText addressInput;
+    private EditText cityInput;
     private ClientUserService clientUserService;
     private ProUserService proUserService;
 
@@ -41,12 +44,18 @@ public class EditProfileActivity extends AppCompatActivity {
         clientUserService = ((GiGApp) getApplication()).getClientUserService();
         proUserService = ((GiGApp) getApplication()).getProUserService();
 
-
-
         firstNameInput = findViewById(R.id.firstNameInput);
         lastNameInput = findViewById(R.id.lastNameInput);
         emailInput = findViewById(R.id.emailInput);
         phoneInput = findViewById(R.id.phoneInput);
+        cityInput = findViewById(R.id.cityInput);
+        addressInput = findViewById(R.id.addressInput);
+
+        if(isClient) {
+            cityInput.setVisibility(View.GONE);
+        } else {
+            addressInput.setVisibility(View.GONE);
+        }
 
         ProfileLoader loader = ((GiGApp) getApplication()).getProfileLoader(isClient);
         User user = loader.getUserForEdit(userId);
@@ -58,25 +67,33 @@ public class EditProfileActivity extends AppCompatActivity {
             if (user.getPhoneNumber() != null) {
                 phoneInput.setText(user.getPhoneNumber());
             }
+
+            if(user instanceof Pro pro) {
+                cityInput.setText(pro.getCityOfOperation());
+            } else if (user instanceof Client client) {
+                addressInput.setText(client.getAddress());
+            }
+
+
         }
 
         Button saveButton = findViewById(R.id.saveButton);
         saveButton.setOnClickListener(v -> {
             try {
                 if (user instanceof Pro pro) {
-                    proUserService.updatePro(userId, emailInput.getText().toString(), firstNameInput.getText().toString(), lastNameInput.getText().toString(), phoneInput.getText().toString(), pro.getSkillSet(), pro.getCityOfOperation());
+                    proUserService.updatePro(userId, emailInput.getText().toString(), firstNameInput.getText().toString(), lastNameInput.getText().toString(), phoneInput.getText().toString(), pro.getSkillSet(), cityInput.getText().toString());
                 } else if (user instanceof Client client) {
-                    clientUserService.updateClient(userId, firstNameInput.getText().toString(), lastNameInput.getText().toString(), emailInput.getText().toString(), phoneInput.getText().toString(), client.getAddress());
+                    clientUserService.updateClient(userId, firstNameInput.getText().toString(), lastNameInput.getText().toString(), emailInput.getText().toString(), phoneInput.getText().toString(), addressInput.getText().toString());
                 }
                 finish();
             } catch (com.g08.gig.business.validation.ValidationException ex) {
-            Map<String, EditText> fieldMap = new HashMap<>();
-            fieldMap.put("fname", firstNameInput);
-            fieldMap.put("lname", lastNameInput);
-            fieldMap.put("email", emailInput);
-            fieldMap.put("phone", phoneInput);
-            ValidationErrorBinder.setValidationError(fieldMap, ex.getField(), ex.getMessage(), emailInput);
-        }
+                Map<String, EditText> fieldMap = new HashMap<>();
+                fieldMap.put("fname", firstNameInput);
+                fieldMap.put("lname", lastNameInput);
+                fieldMap.put("email", emailInput);
+                fieldMap.put("phone", phoneInput);
+                ValidationErrorBinder.setValidationError(fieldMap, ex.getField(), ex.getMessage(), emailInput);
+            }
         });
 
 
