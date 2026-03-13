@@ -27,10 +27,10 @@ public class SqlProRepository implements ProRepository{
                 "users." + UserTable.COL_USER_FIRST_NAME + ", "+
                 "users." + UserTable.COL_USER_LAST_NAME + ", "+
                 "users." + UserTable.COL_USER_PHONE + ", "+
-                "pro." + ProTable.COL_PRO_CITY_LOCATION+", "+
+                "pros." + ProTable.COL_PRO_CITY_LOCATION+", "+
                 "users." + UserTable.COL_USER_PASSWORD +  " FROM "
                 + UserTable.TABLE_USER + " JOIN "+ ProTable.TABLE_PRO +
-                " ON clients." + ClientTable.COL_CLIENT_ID + " = users." + UserTable.COL_USER_ID + ";";
+                " ON pros." + ProTable.COL_PRO_ID + " = users." + UserTable.COL_USER_ID + ";";
         Cursor c = db.rawQuery(SQL_statement, null);
         List<Pro> result = new ArrayList<>();
         try {
