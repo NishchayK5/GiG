@@ -18,14 +18,35 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/requestCardTitle"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/main_netural_color"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="Brake pad replacement" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/requestCardTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/main_netural_color"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="Brake pad replacement" />
+
+            <TextView
+                android:id="@+id/requestCardBidPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:text="$150.00" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/requestCardBody"
@@ -46,32 +67,5 @@
             android:textColor="@color/main_cust_color_legacy"
             android:textSize="12sp"
             tools:text="Jun 15, 2025 · 10:30 AM" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btnReject"
-                style="@style/Widget.G08.Button.Outlined"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="6dp"
-                android:text="@string/reject"
-                android:textColor="@color/main_netural_color"
-                android:textSize="14sp" />
-
-            <Button
-                android:id="@+id/btnBid"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/bid"
-                android:textSize="14sp"
-                app:backgroundTint="@color/main_cust_color_legacy" />
-        </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

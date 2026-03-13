@@ -1,18 +1,20 @@
 package com.g08.gig.business.validation;
 
-/**
- * Validates user input (format, length, required fields).
- * Does not check persistence (e.g. email uniqueness); that belongs in the service layer.
- */
+import java.util.regex.Pattern;
+
+import com.g08.gig.business.constants.ValidationMessages;
+
 public class UserValidator {
 
     private static final int MAX_FIRST_NAME_LENGTH = 60;
     private static final int MAX_LAST_NAME_LENGTH = 60;
     private static final int MAX_EMAIL_LENGTH = 255;
-    private static final int PHONE_LENGTH = 10;
+    private static final int PHONE_MIN_DIGITS = 10;
+    private static final int PHONE_MAX_DIGITS = 15;
 
     private static final int PASSWORD_LENGTH = 8;
-
+    private static final Pattern EMAIL_PATTERN =
+            Pattern.compile("[a-zA-Z0-9+._%-+]{1,256}@[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}(\\.[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25})+");
     public UserValidator() {
     }
 
@@ -23,9 +25,6 @@ public class UserValidator {
         validatePhone(phone);
     }
 
-    /**
-     * Used for new user registration; validates profile fields plus password confirmation.
-     */
     public void validate(String firstName, String lastName, String email, String phone, String password, String confirmPassword) {
         validate(firstName, lastName, email, phone);
         validatePasswordAndConfirmation(password, confirmPassword);
@@ -33,55 +32,66 @@ public class UserValidator {
 
     private void validateFirstName(String firstName) {
         if (firstName == null || firstName.trim().isEmpty()) {
-            throw new ValidationException("First name is required.", "fname");
+            throw new ValidationException(ValidationMessages.FIRST_NAME_REQUIRED, "fname");
         }
         if (firstName.trim().length() > MAX_FIRST_NAME_LENGTH) {
-            throw new ValidationException("First name must be 60 characters or less.", "fname");
+            throw new ValidationException(ValidationMessages.FIRST_NAME_MAX_LENGTH, "fname");
+        }
+        if (!firstName.trim().matches("[a-zA-Z \\-']+")) {
+            throw new ValidationException(ValidationMessages.FIRST_NAME_LETTERS_ONLY, "fname");
         }
     }
 
     private void validateLastName(String lastName) {
         if (lastName == null || lastName.trim().isEmpty()) {
-            throw new ValidationException("Last name is required.", "lname");
+            throw new ValidationException(ValidationMessages.LAST_NAME_REQUIRED, "lname");
         }
         if (lastName.trim().length() > MAX_LAST_NAME_LENGTH) {
-            throw new ValidationException("Last name must be 60 characters or less.", "lname");
+            throw new ValidationException(ValidationMessages.LAST_NAME_MAX_LENGTH, "lname");
+        }
+        if (!lastName.trim().matches("[a-zA-Z \\-']+")) {
+            throw new ValidationException(ValidationMessages.LAST_NAME_LETTERS_ONLY, "lname");
         }
     }
 
-    private void validateEmailFormat(String email) {
-        if (email == null || email.trim().isEmpty()) {
-            throw new ValidationException("Email is required.", "email");
-        }
-        if (email.trim().length() > MAX_EMAIL_LENGTH) {
-            throw new ValidationException("Email must be 255 characters or less.", "email");
-        }
-        if (!email.trim().contains("@")) {
-            throw new ValidationException("Email must be a valid format.", "email");
-        }
+private void validateEmailFormat(String email) {
+    if (email == null || email.trim().isEmpty()) {
+        throw new ValidationException(ValidationMessages.EMAIL_REQUIRED, "email");
     }
-
+    if (email.trim().length() > MAX_EMAIL_LENGTH) {
+        throw new ValidationException(ValidationMessages.EMAIL_MAX_LENGTH, "email");
+    }
+    if (!EMAIL_PATTERN.matcher(email.trim().toLowerCase()).matches()) {
+        throw new ValidationException(ValidationMessages.EMAIL_INVALID_FORMAT, "email");
+    }
+}
     private void validatePhone(String phone) {
         if (phone == null || phone.trim().isEmpty()) {
-            throw new ValidationException("Phone number is required.", "phone");
+            throw new ValidationException(ValidationMessages.PHONE_REQUIRED, "phone");
         }
-        if (phone.trim().length() != PHONE_LENGTH) {
-            throw new ValidationException("Phone number must be exactly 10 digits long.", "phone");
+        String trimmed = phone.trim();
+        if (!trimmed.matches("\\+?\\d+")) {
+            throw new ValidationException(ValidationMessages.PHONE_DIGITS_ONLY, "phone");
+        }
+        String digitsOnly = trimmed.replaceAll("\\D", "");
+        int len = digitsOnly.length();
+        if (len < PHONE_MIN_DIGITS || len > PHONE_MAX_DIGITS) {
+            throw new ValidationException(ValidationMessages.PHONE_DIGIT_RANGE, "phone");
         }
     }
 
     private void validatePasswordAndConfirmation(String password, String confirmPassword) {
         if (password == null || password.trim().isEmpty()) {
-            throw new ValidationException("Password is required.", "password");
+            throw new ValidationException(ValidationMessages.PASSWORD_REQUIRED, "password");
         }
         if (confirmPassword == null || confirmPassword.trim().isEmpty()) {
-            throw new ValidationException("Confirm password is required.", "confirmPassword");
+            throw new ValidationException(ValidationMessages.CONFIRM_PASSWORD_REQUIRED, "confirmPassword");
         }
         if (!password.trim().equals(confirmPassword.trim())) {
-            throw new ValidationException("Passwords must match.", "confirmPassword");
+            throw new ValidationException(ValidationMessages.PASSWORDS_MUST_MATCH, "confirmPassword");
         }
         if (password.trim().length() < PASSWORD_LENGTH) {
-            throw new ValidationException("Password must be at least 8 characters.", "password");
+            throw new ValidationException(ValidationMessages.PASSWORD_MIN_LENGTH, "password");
         }
     }
 }

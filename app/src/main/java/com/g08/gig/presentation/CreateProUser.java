@@ -4,11 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.g08.gig.R;
 import com.g08.gig.application.GiGApp;
 import com.g08.gig.business.services.ProUserService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class CreateProUser extends AppCompatActivity {
     private EditText firstNameInput;
@@ -64,11 +68,14 @@ public class CreateProUser extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             } catch (com.g08.gig.business.validation.ValidationException ex) {
-                EditText errorField = getErrorFieldForMessage(ex.getField());
-                if (errorField != null) {
-                    errorField.setError(ex.getMessage());
-                    errorField.requestFocus();
-                }
+                Map<String, EditText> fieldMap = new HashMap<>();
+                fieldMap.put("fname", firstNameInput);
+                fieldMap.put("lname", lastNameInput);
+                fieldMap.put("email", emailInput);
+                fieldMap.put("phone", phoneInput);
+                fieldMap.put("password", passwordInput);
+                fieldMap.put("confirmPassword", confirmPassword);
+                ValidationErrorBinder.setValidationError(fieldMap, ex.getField(), ex.getMessage(), emailInput);
             }
         });
     }
@@ -82,17 +89,6 @@ public class CreateProUser extends AppCompatActivity {
         phoneInput.setError(null);
         cityInput.setError(null);
         qualificationsInput.setError(null);
-    }
-
-    private EditText getErrorFieldForMessage(String field) {
-        if (field == null) return emailInput;
-        if (field.startsWith("fname")) return firstNameInput;
-        if (field.startsWith("lname")) return lastNameInput;
-        if (field.startsWith("email")) return emailInput;
-        if (field.startsWith("phone")) return phoneInput;
-        if (field.equals("password")) return passwordInput;
-        if (field.equals("confirmPassword")) return confirmPassword;
-        return emailInput;
     }
 
     private void clearInputs() {

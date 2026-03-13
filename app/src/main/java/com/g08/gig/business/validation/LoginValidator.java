@@ -1,25 +1,32 @@
 package com.g08.gig.business.validation;
 
-import android.util.Log;
 import android.util.Patterns;
 
-import com.g08.gig.R;
+import com.g08.gig.business.constants.ValidationMessages;
+
+
+import java.util.regex.Pattern;
 
 public class LoginValidator {
-    public LoginValidator(){
-    }
 
-    public void validate(String email, String password){
-        if (email.isEmpty()) {
-            throw new ValidationException("Email is required.", "email");
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            throw new ValidationException("Please enter a valid email address.", "email");
+    private static final Pattern EMAIL_PATTERN =
+            Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+
+    public void validate(String email, String password) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new ValidationException(ValidationMessages.EMAIL_REQUIRED, "email");
         }
 
-        if (password.isEmpty()) {
-            throw new ValidationException("Password is required.", "password");
+        if (password == null || password.trim().isEmpty()) {
+            throw new ValidationException(ValidationMessages.PASSWORD_REQUIRED, "password");
+        }
+
+        email = email.trim();
+        password = password.trim();
+
+        if (!EMAIL_PATTERN.matcher(email).matches()) {
+            throw new ValidationException(ValidationMessages.EMAIL_VALID_ADDRESS, "email");
         }
     }
-
-
 }
+

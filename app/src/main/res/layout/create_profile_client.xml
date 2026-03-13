@@ -54,17 +54,6 @@
             android:textColor="@color/grey"
             android:textSize="12sp" />
 
-<!--        <TextView-->
-<!--            android:id="@+id/sectionPersonal"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:text="@string/client_section_personal"-->
-<!--            android:textAlignment="textStart"-->
-<!--            android:textColor="@color/main_netural_color"-->
-<!--            android:textSize="15sp"-->
-<!--            android:textStyle="bold" />-->
-
         <EditText
             android:id="@+id/firstNameInput"
             android:layout_width="match_parent"
@@ -74,6 +63,7 @@
             android:hint="@string/user_first_name"
             android:importantForAutofill="no"
             android:inputType="textPersonName"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ -&apos;"
             android:layout_marginVertical="@dimen/button_vertical_margin"
             android:maxWidth="320dp"
             android:minHeight="48dp"
@@ -89,6 +79,7 @@
             android:hint="@string/user_last_name"
             android:importantForAutofill="no"
             android:inputType="textPersonName"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ -&apos;"
             android:layout_marginVertical="@dimen/button_vertical_margin"
             android:maxWidth="320dp"
             android:minHeight="48dp"
@@ -122,6 +113,8 @@
             android:hint="@string/user_phone_number"
             android:importantForAutofill="no"
             android:inputType="phone"
+            android:digits="0123456789+"
+            android:maxLength="16"
             android:layout_marginVertical="@dimen/button_vertical_margin"
             android:maxWidth="320dp"
             android:minHeight="48dp"
@@ -144,18 +137,6 @@
             android:padding="12dp"
             android:textColorHint="#666666"
             android:textSize="16sp" />
-
-
-<!--        <TextView-->
-<!--            android:id="@+id/sectionLogin"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="8dp"-->
-<!--            android:text="@string/client_section_login"-->
-<!--            android:textAlignment="textStart"-->
-<!--            android:textColor="@color/main_netural_color"-->
-<!--            android:textSize="15sp"-->
-<!--            android:textStyle="bold" />-->
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"

@@ -41,17 +41,17 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/btnNotification"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="end|center_vertical"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/notification"
-                android:scaleType="centerInside"
-                android:padding="12dp"
-                app:srcCompat="@android:drawable/ic_popup_reminder"
-                app:tint="@color/main_cust_color_legacy" />
+<!--            <ImageButton-->
+<!--                android:id="@+id/btnNotification"-->
+<!--                android:layout_width="48dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:layout_gravity="end|center_vertical"-->
+<!--                android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--                android:contentDescription="@string/notification"-->
+<!--                android:scaleType="centerInside"-->
+<!--                android:padding="12dp"-->
+<!--                app:srcCompat="@android:drawable/ic_popup_reminder"-->
+<!--                app:tint="@color/main_cust_color_legacy" />-->
         </FrameLayout>
 
         <!-- Switcher: Home (list) | Biddings view | Appointment view | Profile view -->
@@ -84,6 +84,13 @@
                     android:gravity="center"
                     android:padding="24dp">
 
+                    <ImageView
+                        android:layout_width="180dp"
+                        android:layout_height="180dp"
+                        android:layout_marginBottom="16dp"
+                        android:contentDescription="@string/no_biddings"
+                        android:src="@drawable/empty_pro" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -102,37 +109,76 @@
                 </LinearLayout>
             </FrameLayout>
 
-            <!-- Biddings: center label -->
-            <FrameLayout
+            <LinearLayout
                 android:id="@+id/biddingsViewContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:orientation="vertical"
                 android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:text="@string/biddings_view"
                     android:textColor="@color/main_netural_color"
-                    android:textSize="18sp" />
-            </FrameLayout>
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:padding="16dp" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/bidsList"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clipToPadding="false"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="16dp" />
+
+                    <LinearLayout
+                        android:id="@+id/emptyBidsView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="24dp">
+
+                        <ImageView
+                            android:layout_width="180dp"
+                            android:layout_height="180dp"
+                            android:layout_marginBottom="16dp"
+                            android:contentDescription="@string/no_bidding"
+                            android:src="@drawable/empty_pro" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/no_bidding"
+                            android:textColor="@color/main_netural_color"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </FrameLayout>
+            </LinearLayout>
 
             <!-- Appointment: center label -->
-            <FrameLayout
-                android:id="@+id/appointmentViewContent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone">
+<!--            <FrameLayout-->
+<!--                android:id="@+id/appointmentViewContent"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:visibility="gone">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/appointment_view"
-                    android:textColor="@color/main_netural_color"
-                    android:textSize="18sp" />
-            </FrameLayout>
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text="@string/appointment_view"-->
+<!--                    android:textColor="@color/main_netural_color"-->
+<!--                    android:textSize="18sp" />-->
+<!--            </FrameLayout>-->
 
             <!-- Profile: list tiles -->
             <FrameLayout
@@ -153,6 +199,75 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="0dp"
+                            app:strokeColor="@color/input_border_light_grey"
+                            app:strokeWidth="1dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:padding="16dp">
+
+                                <ImageView
+                                    android:id="@+id/profileAvatar"
+                                    android:layout_width="56dp"
+                                    android:layout_height="56dp"
+                                    android:contentDescription="@null"
+                                    android:padding="12dp"
+                                    android:background="@drawable/bg_avatar_circle"
+                                    app:srcCompat="@drawable/ic_person"
+                                    app:tint="@color/main_cust_color_legacy" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_marginStart="16dp"
+                                    android:orientation="vertical">
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal"
+                                        android:baselineAligned="false">
+
+                                        <TextView
+                                            android:id="@+id/profileFirstName"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:textColor="@color/main_netural_color"
+                                            android:textSize="18sp"
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/profileLastName"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="4dp"
+                                            android:textColor="@color/main_netural_color"
+                                            android:textSize="18sp"
+                                            android:textStyle="bold" />
+                                    </LinearLayout>
+
+                                    <TextView
+                                        android:id="@+id/profileEmail"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="2dp"
+                                        android:textColor="@color/grey"
+                                        android:textSize="14sp" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
 
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="match_parent"
@@ -186,44 +301,6 @@
                                     android:layout_weight="1"
                                     android:layout_marginStart="16dp"
                                     android:text="@string/profile_edit"
-                                    android:textColor="@color/main_netural_color"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
-                            app:cardBackgroundColor="@color/white"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="0dp"
-                            app:strokeColor="@color/input_border_light_grey"
-                            app:strokeWidth="1dp">
-
-                            <LinearLayout
-                                android:id="@+id/profileSettingsTile"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical"
-                                android:padding="16dp"
-                                android:minHeight="56dp"
-                                android:background="?attr/selectableItemBackground">
-
-                                <ImageView
-                                    android:layout_width="28dp"
-                                    android:layout_height="28dp"
-                                    android:src="@android:drawable/ic_menu_preferences"
-                                    android:contentDescription="@null"
-                                    app:tint="@color/main_cust_color_legacy" />
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:layout_marginStart="16dp"
-                                    android:text="@string/action_settings"
                                     android:textColor="@color/main_netural_color"
                                     android:textSize="16sp"
                                     android:textStyle="bold" />

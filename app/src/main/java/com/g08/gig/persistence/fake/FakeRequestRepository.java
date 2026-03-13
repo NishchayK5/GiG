@@ -1,6 +1,9 @@
 package com.g08.gig.persistence.fake;
 
+import com.g08.gig.models.Bid;
+import com.g08.gig.models.Pro;
 import com.g08.gig.models.Request;
+import com.g08.gig.persistence.BidRepository;
 import com.g08.gig.persistence.RequestRepository;
 
 import java.util.ArrayList;
@@ -11,10 +14,11 @@ public class FakeRequestRepository implements RequestRepository {
 
     private final List<Request> requests;
     private int nextId;
-
-    public FakeRequestRepository() {
+    private final BidRepository bidRepo;
+    public FakeRequestRepository(BidRepository bidRepo) {
         requests = new ArrayList<>();
         nextId = 1;
+        this.bidRepo = bidRepo;
     }
 
     @Override
@@ -50,6 +54,7 @@ public class FakeRequestRepository implements RequestRepository {
     public boolean delete(int id){
         for(int i = 0; i<requests.size(); i++){
             if(requests.get(i).getId()==id) {
+                deleteAllBidsForRequest(id);  //deletes all bids for the request
                 requests.remove(i);
                 return true;
             }
@@ -77,5 +82,30 @@ public class FakeRequestRepository implements RequestRepository {
             }
         }
         return result;
+    }
+
+    @Override
+    public boolean update(Request request) {
+        if(request==null){ return false;}
+
+        for(int i = 0; i<requests.size(); i++){
+            if (requests.get(i).getId() == request.getId()) {
+                Request updated = new Request(request.getId(), request.getClient(), request.getTitle(), request.getBody(), request.getTimeOfRequest(), request.getRequestStatus());
+                requests.set(i, updated);
+                return true;
+            }
+        }
+        return false;
+    }
+    //this function mimics on delete cascade
+    private void deleteAllBidsForRequest(int requestId){
+        Request request = getById(requestId);
+        if(request == null) return;
+
+        List<Bid> bidsForRequest = bidRepo.getAllByRequest(request);
+
+        for(Bid bid: bidsForRequest){
+            bidRepo.delete(bid.getId());
+        }
     }
 }

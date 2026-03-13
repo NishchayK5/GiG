@@ -8,6 +8,8 @@ public class Request {
     private String body;
     private boolean isActive;
     private LocalDateTime timeOfRequest;
+    private double bidCost;
+
 
     public Request(int id, Client client, String title, String body, LocalDateTime timeOfRequest, boolean isActive) {
         this.id = id;
@@ -18,6 +20,7 @@ public class Request {
         this.isActive = isActive;
     }
 
+    //getters and setters for the object
     public int getId() {
         return id;
     }
@@ -58,8 +61,11 @@ public class Request {
         this.timeOfRequest = timeOfRequest;
     }
 
+    // Changes the status of the request to expired/completed
     public void setRequestToExpire(){
         isActive = false;
     }
     public boolean getRequestStatus(){return isActive;}
+    public double getBidCost() { return bidCost; }
+    public void setBidCost(double bidCost) { this.bidCost = bidCost; }
 }

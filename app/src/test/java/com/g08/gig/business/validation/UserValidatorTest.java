@@ -172,13 +172,13 @@ class UserValidatorTest {
     void validate_phoneNotTenDigits_tooShort_throws() {
         ValidationException e = assertThrows(ValidationException.class, () ->
                 validator.validate(VALID_FIRST, VALID_LAST, VALID_EMAIL, "123"));
-        assertEquals("Phone number must be exactly 10 digits long.", e.getMessage());
+        assertEquals("Phone number must be 10 to 15 digits.", e.getMessage());
     }
 
     @Test
-    void validate_phoneNotTenDigits_tooLong_throws() {
+    void validate_phoneNotFifteenDigits_tooLong_throws() {
         assertThrows(ValidationException.class, () ->
-                validator.validate(VALID_FIRST, VALID_LAST, VALID_EMAIL, "12345678901"));
+                validator.validate(VALID_FIRST, VALID_LAST, VALID_EMAIL, "1234567890123456"));
     }
 
     @Test
@@ -226,6 +226,6 @@ class UserValidatorTest {
     @Test
     void validate_sixArg_passwordsMatchWithWhitespace_doesNotThrow() {
         assertDoesNotThrow(() -> validator.validate(VALID_FIRST, VALID_LAST, VALID_EMAIL, VALID_PHONE,
-                "  pass  ", "  pass  "));
+                "  password1234  ", "  password1234  "));
     }
 }

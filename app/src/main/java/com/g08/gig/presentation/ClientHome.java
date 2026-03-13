@@ -1,10 +1,11 @@
 package com.g08.gig.presentation;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import com.g08.gig.util.Pair;
+
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -15,13 +16,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.g08.gig.R;
 import com.g08.gig.application.GiGApp;
+import com.g08.gig.session.SessionManager;
+import com.g08.gig.business.services.BidService;
+import com.g08.gig.business.services.ClientUserService;
 import com.g08.gig.business.services.RequestService;
 import com.g08.gig.models.Client;
 import com.g08.gig.models.Request;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,19 +42,14 @@ public class ClientHome extends AppCompatActivity {
     private List<Request> currentRequests = new ArrayList<>();
     private List<Request> pastRequests = new ArrayList<>();
     private RequestService requestService;
+    private BidService bidService;
+    private ClientUserService clientUserService;
 
     private final ActivityResultLauncher<Intent> createRequestLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if (result.getResultCode() != RESULT_OK || result.getData() == null) return;
-                String title = result.getData().getStringExtra(CreateRequest.EXTRA_REQUEST_TITLE);
-                String body = result.getData().getStringExtra(CreateRequest.EXTRA_REQUEST_BODY);
-                if (title == null || body == null) return;
-                int newId = 100 + currentRequests.size() + pastRequests.size();
-                Client placeholderClient = new Client(1, "client@email.com", "Sarah", "Martinez",
-                        "2045552233", "452 Oak Street, Winnipeg", null);
-                currentRequests.add(0, new Request(newId, placeholderClient, title, body, LocalDateTime.now(), true));
-                setRequests(currentRequests, pastRequests);
+                if (result.getResultCode() != RESULT_OK) return;
+                loadRequests();
                 Toast.makeText(this, R.string.create_request_submitted, Toast.LENGTH_SHORT).show();
             }
     );
@@ -59,19 +58,31 @@ public class ClientHome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_client);
+
         requestService = ((GiGApp) getApplication()).getRequestService();
-        int clientId = getIntent().getIntExtra("USER_ID", -1);
+        bidService = ((GiGApp) getApplication()).getBidService();
+        clientUserService = ((GiGApp) getApplication()).getClientUserService();
 
-        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-        prefs.edit().putInt("USER_ID", clientId).apply();
+        int userId = getIntent().getIntExtra(SessionManager.KEY_USER_ID, -1);
+        if (userId != -1) {
+            SessionManager.setUserId(this, userId);
+        }
 
+        bindViews();
+        setupRequestListAndTabs();
+        setupBottomNav();
+        setupProfileAndLogout(userId);
+    }
 
+    private void bindViews() {
         emptyRequestsView = findViewById(R.id.emptyRequestsView);
         requestsList = findViewById(R.id.requestsList);
         requestsContent = findViewById(R.id.requestsContent);
         profileContent = findViewById(R.id.profileContent);
+    }
 
-        requestAdapter = new RequestAdapter();
+    private void setupRequestListAndTabs() {
+        requestAdapter = new RequestAdapter(this::showRequestDetail);
         requestsList.setLayoutManager(new LinearLayoutManager(this));
         requestsList.setAdapter(requestAdapter);
 
@@ -95,10 +106,11 @@ public class ClientHome extends AppCompatActivity {
         setupTabs();
         loadRequests();
         showListForCurrentTab();
+    }
 
+    private void setupBottomNav() {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
         bottomNav.setSelectedItemId(R.id.nav_home);
-
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
@@ -116,6 +128,14 @@ public class ClientHome extends AppCompatActivity {
             }
             return false;
         });
+    }
+
+    private void setupProfileAndLogout(int userId) {
+        updateProfileViews(userId);
+        LinearLayout profileEditTile = findViewById(R.id.profileEditTile);
+        profileEditTile.setOnClickListener(v -> NavigationHelper.startEditProfile(this, SessionManager.getUserId(this), true));
+        LinearLayout profileLogoutTile = findViewById(R.id.profileLogoutTile);
+        profileLogoutTile.setOnClickListener(v -> NavigationHelper.logout(this));
     }
 
     private void setupTabs() {
@@ -137,28 +157,10 @@ public class ClientHome extends AppCompatActivity {
         });
     }
 
-    /**
-     * Temporary sample data so you can see the request cards in the UI.
-     * Remove or replace with repository data when ready.
-     */
     private void loadRequests() {
-        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-        int clientId = prefs.getInt("USER_ID", -1);
-
-        List<Request> allRequests = requestService.getRequestsByClient(clientId);
-
-        List<Request> current = new ArrayList<>();
-        List<Request> past = new ArrayList<>();
-
-        for (Request r : allRequests) {
-            if (r.getRequestStatus()) {
-                current.add(r);
-            } else {
-                past.add(r);
-            }
-        }
-
-        setRequests(current, past);
+        int clientId = SessionManager.getUserId(this);
+        Pair<List<Request>, List<Request>> currentAndPast = requestService.getRequestsByClientCurrentAndPast(clientId);
+        setRequests(currentAndPast.first, currentAndPast.second);
     }
 
     private void showListForCurrentTab() {
@@ -179,26 +181,58 @@ public class ClientHome extends AppCompatActivity {
     }
 
     private void showProfileView() {
+        int userId = SessionManager.getUserId(this);
+        updateProfileViews(userId);
         requestsContent.setVisibility(View.GONE);
         profileContent.setVisibility(View.VISIBLE);
     }
 
-    /**
-     * Call this when you have requests from a repository.
-     * Split into current (active) and past (completed/cancelled) as needed.
-     */
+    private void updateProfileViews(int userId) {
+        if (userId == -1) return;
+        Client client = clientUserService.getClientById(userId);
+        ProfileViewBinder.bind(this, client);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateProfileViews(SessionManager.getUserId(this));
+    }
+
     public void setRequests(List<Request> current, List<Request> past) {
         currentRequests = current != null ? new ArrayList<>(current) : new ArrayList<>();
         pastRequests = past != null ? new ArrayList<>(past) : new ArrayList<>();
         showListForCurrentTab();
     }
 
-    /**
-     * Single list: all treated as current. Use setRequests(current, past) when you have split data.
-     */
-    public void setRequests(List<Request> requests) {
-        currentRequests = requests != null ? new ArrayList<>(requests) : new ArrayList<>();
-        pastRequests = new ArrayList<>();
-        showListForCurrentTab();
+    private void showRequestDetail(Request request) {
+        String time = "";
+        if (request.getTimeOfRequest() != null) {
+            time = request.getTimeOfRequest().format(DateTimeFormatter.ofPattern("MMM d, yyyy · h:mm a"));
+        }
+
+        RequestDetailDialog dialog = RequestDetailDialog.newInstance(
+                request.getId(),
+                request.getTitle(),
+                request.getBody(),
+                time,
+                request.getRequestStatus()
+        );
+        dialog.setBids(bidService.getAllByRequest(request));
+        dialog.setActionListener(new RequestDetailDialog.OnRequestActionListener() {
+            @Override
+            public void onDeleteRequest(int requestId) {
+                requestService.removeRequest(requestId);
+                loadRequests();
+                Toast.makeText(ClientHome.this, getString(R.string.request_deleted), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCompleteRequest(int requestId) {
+                requestService.completeRequest(requestId);
+                loadRequests();
+                Toast.makeText(ClientHome.this, getString(R.string.request_completed), Toast.LENGTH_SHORT).show();
+            }
+        });
+        dialog.show(getSupportFragmentManager(), "request_detail");
     }
 }
