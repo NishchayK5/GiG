@@ -99,6 +99,15 @@ class FakeUserRepositoryTest {
     }
 
     @Test
+    void add_whenIdAlreadyExists_returnsNull() {
+        User first = repo.add(new User(0, "a@a.com", "A", "A", "555", "p", "USER"));
+        assertNotNull(first);
+        User duplicate = new User(first.getId(), "b@b.com", "B", "B", "555", "p", "USER");
+        assertNull(repo.add(duplicate));
+        assertEquals(1, repo.getAll().size());
+    }
+
+    @Test
     void getAll_initiallyEmpty() {
         assertTrue(repo.getAll().isEmpty());
     }

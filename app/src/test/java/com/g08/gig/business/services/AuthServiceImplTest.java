@@ -1,4 +1,5 @@
 package com.g08.gig.business.services;
+import com.g08.gig.business.validation.LoginValidator;
 import com.g08.gig.business.validation.ValidationException;
 
 import com.g08.gig.models.Client;
@@ -157,6 +158,46 @@ class AuthServiceImplTest {
         // No corresponding Client or Pro with this id
 
         LoginResult result = authService.login("old.account@email.com", PASSWORD);
+
+        assertFalse(result.isSuccess());
+    }
+
+    @Test
+    void login_userWithNullPassword_returnsFailure() {
+        User userWithNullPassword = new User(0, "nopass@test.com", "No", "Pass", "2045550000", null, "USER");
+        User added = userRepo.add(userWithNullPassword);
+        assertNotNull(added);
+        assertNull(added.getPassword());
+
+        LoginResult result = authService.login("nopass@test.com", "any");
+
+        assertFalse(result.isSuccess());
+    }
+
+    @Test
+    void login_userWithEmptyPassword_returnsFailure() {
+        User userWithEmptyPassword = new User(0, "emptypass@test.com", "Empty", "Pass", "2045550001", "", "USER");
+        User added = userRepo.add(userWithEmptyPassword);
+        assertNotNull(added);
+
+        LoginResult result = authService.login("emptypass@test.com", "any");
+
+        assertFalse(result.isSuccess());
+    }
+
+    @Test
+    void login_withCustomLoginValidator_usesValidatorAndReturnsFailureWhenValidationThrows() {
+        LoginValidator failingValidator = new LoginValidator() {
+            @Override
+            public void validate(String email, String password) {
+                throw new ValidationException("Invalid", "email");
+            }
+        };
+        AuthServiceImpl authWithValidator = new AuthServiceImpl(userRepo, clientRepo, proRepo, failingValidator);
+        clientService.addClient("Sarah", "Martinez", CLIENT_EMAIL, PASSWORD, PASSWORD,
+                "2045552233", "452 Oak Street, Winnipeg");
+
+        LoginResult result = authWithValidator.login(CLIENT_EMAIL, PASSWORD);
 
         assertFalse(result.isSuccess());
     }

@@ -44,6 +44,11 @@ class FakeBidRepositoryTest {
     // ==================== addBid ====================
 
     @Test
+    void add_nullBid_returnsNull() {
+        assertNull(bidRepo.add(null));
+    }
+
+    @Test
     void addBid_validInputs_returnsNonNull() {
         Request request = requestService.addRequest(CLIENT, "Oil Change", "Need oil");
         Bid result = bidService.addBid(PRO1, request, 75.00);
