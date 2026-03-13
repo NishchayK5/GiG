@@ -37,9 +37,9 @@ class RequestServiceImplTest {
         client = new Client(
                 1,
                 "client@email.com",
-                "Sarah",
-                "Jones",
-                "2045551111",
+                "Dayaveer",
+                "Gill",
+                "2041111111",
                 "123 Main St",
                 "hashedPass"
         );
@@ -133,27 +133,9 @@ class RequestServiceImplTest {
         when(repo.getByClient(1)).thenReturn(List.of(current1, current2, past1));
 
         Pair<List<Request>, List<Request>> result = service.getRequestsByClientCurrentAndPast(1);
-        //Pair<List<Request>, List<Request>> result = service.getRequestsByClientCurrentAndPast(1);
-
-
 
         assertNotNull(result);
-        System.out.println("first is null? " + (result.first == null));
-        System.out.println("second is null? " + (result.second == null));
 
-        if (result.first != null) {
-            System.out.println("first size = " + result.first.size());
-            for (Request r : result.first) {
-                System.out.println("first item title = " + r.getTitle());
-            }
-        }
-
-        if (result.second != null) {
-            System.out.println("second size = " + result.second.size());
-            for (Request r : result.second) {
-                System.out.println("second item title = " + r.getTitle());
-            }
-        }
         assertNotNull(result.first);
         assertNotNull(result.second);
 

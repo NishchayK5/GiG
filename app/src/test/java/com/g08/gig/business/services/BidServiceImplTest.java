@@ -39,19 +39,19 @@ class BidServiceImplTest {
         Client client = new Client(
                 1,
                 "client@email.com",
-                "Sarah",
-                "Jones",
-                "2045551111",
+                "Dayaveer",
+                "Gill",
+                "2041111111",
                 "123 Main",
-                "pass"
+                "hashed"
         );
 
         pro = new Pro(
                 2,
                 "pro@email.com",
-                "Marcus",
-                "Lee",
-                "2045559999",
+                "Izzy",
+                "Elskamp",
+                "2042222222",
                 "pass",
                 new String[]{"Brakes", "Oil Change"},
                 "Winnipeg"

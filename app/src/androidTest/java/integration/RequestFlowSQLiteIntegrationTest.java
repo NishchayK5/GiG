@@ -31,17 +31,6 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-/**
- * Integration tests across all major architectural seams:
- *   Business logic layer  ->  SQLite persistence layer
- *
- * Runs on a real device or emulator via:
- *   ./gradlew connectedAndroidTest
- *
- * A private test database ("gig_test.db") is created fresh before every
- * test and deleted after, so state never leaks between runs and the
- * production database on the device is never touched.
- */
 @RunWith(AndroidJUnit4.class)
 public class RequestFlowSQLiteIntegrationTest {
 
@@ -60,15 +49,15 @@ public class RequestFlowSQLiteIntegrationTest {
     private BidServiceImpl        bidService;
     private AuthServiceImpl       authService;
 
-    // ── Shared test data ──────────────────────────────────────────────────────
+    // ==================== testData ====================
 
-    private static final String CLIENT_EMAIL   = "integration.client@test.com";
-    private static final String PRO_EMAIL      = "integration.pro@test.com";
+    private static final String CLIENT_EMAIL   = "client@gmail.com";
+    private static final String PRO_EMAIL      = "pro@test.com";
     private static final String VALID_PASSWORD = "SecurePass1!";
     private static final String CLIENT_PHONE   = "2041111111";
     private static final String PRO_PHONE      = "2042222222";
 
-    // ── Setup / Teardown ──────────────────────────────────────────────────────
+    // ==================== setUp ====================
 
     @Before
     public void setUp() {
@@ -99,14 +88,12 @@ public class RequestFlowSQLiteIntegrationTest {
         ctx.deleteDatabase(AppDbHelper.DB_NAME);
     }
 
-    // =========================================================================
-    //  SEAM 1 — ClientUserService -> SqlUserRepository + SqlClientRepository
-    // =========================================================================
+    // ==================== client user service testing ====================
 
     @Test
     public void addClient_persistsToSQLiteAndCanBeRetrieved() {
         Client added = clientService.addClient(
-                "Sarah", "Jones", CLIENT_EMAIL, VALID_PASSWORD, VALID_PASSWORD,
+                "Dayaveer", "Gill", CLIENT_EMAIL, VALID_PASSWORD, VALID_PASSWORD,
                 CLIENT_PHONE, "123 Main St, Winnipeg");
 
         assertNotNull(added);
@@ -115,8 +102,8 @@ public class RequestFlowSQLiteIntegrationTest {
         Client fromDb = clientRepo.getById(added.getId());
         assertNotNull("Client must be persisted in SQLite", fromDb);
         assertEquals(CLIENT_EMAIL, fromDb.getEmail());
-        assertEquals("Sarah", fromDb.getFirstName());
-        assertEquals("Jones", fromDb.getLastName());
+        assertEquals("Dayaveer", fromDb.getFirstName());
+        assertEquals("Gill", fromDb.getLastName());
         assertEquals(CLIENT_PHONE, fromDb.getPhoneNumber());
         assertEquals("123 Main St, Winnipeg", fromDb.getAddress());
     }
@@ -124,7 +111,7 @@ public class RequestFlowSQLiteIntegrationTest {
     @Test
     public void addClient_passwordIsHashedInDatabase() {
         Client added = clientService.addClient(
-                "Sarah", "Jones", CLIENT_EMAIL, VALID_PASSWORD, VALID_PASSWORD,
+                "Dayaveer", "Gill", CLIENT_EMAIL, VALID_PASSWORD, VALID_PASSWORD,
                 CLIENT_PHONE, "123 Main St");
 
         Client fromDb = clientRepo.getById(added.getId());
@@ -136,26 +123,26 @@ public class RequestFlowSQLiteIntegrationTest {
     @Test
     public void updateClient_changesArePersisted() {
         Client added = clientService.addClient(
-                "Sarah", "Jones", CLIENT_EMAIL, VALID_PASSWORD, VALID_PASSWORD,
+                "Dayaveer", "Gill", CLIENT_EMAIL, VALID_PASSWORD, VALID_PASSWORD,
                 CLIENT_PHONE, "Old Address");
 
         boolean result = clientService.updateClient(
-                added.getId(), "Sarah", "Jones-Smith",
-                "updated.client@test.com", "2043333333", "New Address");
+                added.getId(), "Dayaveer", "Gill-New",
+                "client1@gmail.com", "2041111112", "New Address");
 
         assertTrue(result);
         Client fromDb = clientRepo.getById(added.getId());
         assertNotNull(fromDb);
-        assertEquals("updated.client@test.com", fromDb.getEmail());
-        assertEquals("Jones-Smith", fromDb.getLastName());
+        assertEquals("client1@gmail.com", fromDb.getEmail());
+        assertEquals("Gill-New", fromDb.getLastName());
         assertEquals("New Address", fromDb.getAddress());
-        assertEquals("2043333333", fromDb.getPhoneNumber());
+        assertEquals("2041111112", fromDb.getPhoneNumber());
     }
 
     @Test
     public void deleteClient_removesFromSQLite() {
         Client added = clientService.addClient(
-                "Sarah", "Jones", CLIENT_EMAIL, VALID_PASSWORD, VALID_PASSWORD,
+                "Dayaveer", "Gill", CLIENT_EMAIL, VALID_PASSWORD, VALID_PASSWORD,
                 CLIENT_PHONE, "123 Main St");
         int id = added.getId();
 
@@ -163,14 +150,12 @@ public class RequestFlowSQLiteIntegrationTest {
         assertNull("Client must no longer exist in the database", clientRepo.getById(id));
     }
 
-    // =========================================================================
-    //  SEAM 2 — ProUserService -> SqlUserRepository + SqlProRepository
-    // =========================================================================
+    // ==================== pro user service testing ====================
 
     @Test
     public void addPro_persistsToSQLiteAndCanBeRetrieved() {
         Pro added = proService.addPro(
-                "Marcus", "Lee", PRO_EMAIL, PRO_PHONE,
+                "Izzy", "Elskamp", PRO_EMAIL, PRO_PHONE,
                 VALID_PASSWORD, VALID_PASSWORD,
                 new String[]{"Oil Change", "Brakes"}, "Winnipeg");
 
@@ -180,14 +165,14 @@ public class RequestFlowSQLiteIntegrationTest {
         Pro fromDb = proRepo.getById(added.getId());
         assertNotNull("Pro must be persisted in SQLite", fromDb);
         assertEquals(PRO_EMAIL, fromDb.getEmail());
-        assertEquals("Marcus", fromDb.getFirstName());
+        assertEquals("Izzy", fromDb.getFirstName());
         assertEquals("Winnipeg", fromDb.getCityOfOperation());
     }
 
     @Test
     public void addPro_passwordIsHashedInDatabase() {
         Pro added = proService.addPro(
-                "Marcus", "Lee", PRO_EMAIL, PRO_PHONE,
+                "Izzy", "Elskamp", PRO_EMAIL, PRO_PHONE,
                 VALID_PASSWORD, VALID_PASSWORD,
                 new String[]{"Oil Change"}, "Winnipeg");
 
@@ -200,26 +185,24 @@ public class RequestFlowSQLiteIntegrationTest {
     @Test
     public void updatePro_changesArePersisted() {
         Pro added = proService.addPro(
-                "Marcus", "Lee", PRO_EMAIL, PRO_PHONE,
+                "Izzy", "Elskamp", PRO_EMAIL, PRO_PHONE,
                 VALID_PASSWORD, VALID_PASSWORD,
                 new String[]{"Oil Change"}, "Winnipeg");
 
         boolean result = proService.updatePro(
-                added.getId(), "updated.pro@test.com",
-                "Marcus", "Lee-Updated", "2044444444",
+                added.getId(), "pro1@gmail.com",
+                "Izzy", "Elskamp-New", "2044444444",
                 new String[]{"Brakes", "AC"}, "Brandon");
 
         assertTrue(result);
         Pro fromDb = proRepo.getById(added.getId());
         assertNotNull(fromDb);
-        assertEquals("updated.pro@test.com", fromDb.getEmail());
-        assertEquals("Lee-Updated", fromDb.getLastName());
+        assertEquals("pro1@gmail.com", fromDb.getEmail());
+        assertEquals("Elskamp-New", fromDb.getLastName());
         assertEquals("Brandon", fromDb.getCityOfOperation());
     }
 
-    // =========================================================================
-    //  SEAM 3 — RequestService -> SqlRequestRepository
-    // =========================================================================
+    // ==================== service request testing ====================
 
     @Test
     public void addRequest_persistsToSQLiteAndCanBeRetrieved() {
@@ -251,7 +234,7 @@ public class RequestFlowSQLiteIntegrationTest {
     public void getRequestsByClient_returnsOnlyThatClientsRequests() {
         Client client1 = addTestClient();
         Client client2 = clientService.addClient(
-                "Second", "Client", "second.client@test.com", VALID_PASSWORD, VALID_PASSWORD,
+                "Adejare", "Taiwo", "client2@gmail.com", VALID_PASSWORD, VALID_PASSWORD,
                 "2045555555", "200 Oak Ave");
 
         requestService.addRequest(client1, "Client1 Request A", "Body A");
@@ -311,9 +294,7 @@ public class RequestFlowSQLiteIntegrationTest {
         assertEquals("Check engine light on", all.get(0).getBody());
     }
 
-    // =========================================================================
-    //  SEAM 4 — BidService -> SqlBidRepository
-    // =========================================================================
+    // ==================== bid testing ====================
 
     @Test
     public void addBid_persistsToSQLiteAndCanBeRetrieved() {
@@ -339,7 +320,7 @@ public class RequestFlowSQLiteIntegrationTest {
         Pro     pro     = addTestPro();
         Request request = requestService.addRequest(client, "Oil Change", "Need oil");
         Pro     pro2    = proService.addPro(
-                "Second", "Pro", "second.pro@test.com", "2046666666",
+                "Nishchay", "Kathuria", "pro2@gmail.com", "2046666666",
                 VALID_PASSWORD, VALID_PASSWORD, new String[]{"Oil Change"}, "Winnipeg");
 
         bidService.addBid(pro,  request, 80.00);
@@ -353,7 +334,7 @@ public class RequestFlowSQLiteIntegrationTest {
         Client  client = addTestClient();
         Pro     pro1   = addTestPro();
         Pro     pro2   = proService.addPro(
-                "Other", "Pro", "other.pro@test.com", "2047777777",
+                "Other", "Pro", "other.pro@gmail.com", "2047777777",
                 VALID_PASSWORD, VALID_PASSWORD, new String[]{"AC Repair"}, "Winnipeg");
 
         Request req1 = requestService.addRequest(client, "Brakes",    "Need pads");
@@ -409,14 +390,11 @@ public class RequestFlowSQLiteIntegrationTest {
         assertEquals(199.99, bids.get(0).getCost(), 0.001);
     }
 
-    // =========================================================================
-    //  SEAM 5 — AuthService -> SqlUserRepository + SqlClientRepo / SqlProRepo
-    // =========================================================================
 
     @Test
     public void login_clientWithCorrectCredentials_succeeds() {
         clientService.addClient(
-                "Sarah", "Jones", CLIENT_EMAIL, VALID_PASSWORD, VALID_PASSWORD,
+                "Dayaveer", "Gill", CLIENT_EMAIL, VALID_PASSWORD, VALID_PASSWORD,
                 CLIENT_PHONE, "123 Main St");
 
         LoginResult result = authService.login(CLIENT_EMAIL, VALID_PASSWORD);
@@ -429,7 +407,7 @@ public class RequestFlowSQLiteIntegrationTest {
     @Test
     public void login_proWithCorrectCredentials_succeeds() {
         proService.addPro(
-                "Marcus", "Lee", PRO_EMAIL, PRO_PHONE,
+                "Izzy", "Elskamp", PRO_EMAIL, PRO_PHONE,
                 VALID_PASSWORD, VALID_PASSWORD, new String[]{"Brakes"}, "Winnipeg");
 
         LoginResult result = authService.login(PRO_EMAIL, VALID_PASSWORD);
@@ -442,7 +420,7 @@ public class RequestFlowSQLiteIntegrationTest {
     @Test
     public void login_wrongPassword_fails() {
         clientService.addClient(
-                "Sarah", "Jones", CLIENT_EMAIL, VALID_PASSWORD, VALID_PASSWORD,
+                "Dayaveer", "Gill", CLIENT_EMAIL, VALID_PASSWORD, VALID_PASSWORD,
                 CLIENT_PHONE, "123 Main St");
 
         assertFalse(authService.login(CLIENT_EMAIL, "WrongPassword1!").isSuccess());
@@ -456,7 +434,7 @@ public class RequestFlowSQLiteIntegrationTest {
     @Test
     public void login_emailIsCaseInsensitive() {
         clientService.addClient(
-                "Sarah", "Jones", CLIENT_EMAIL, VALID_PASSWORD, VALID_PASSWORD,
+                "Dayaveer", "Gill", CLIENT_EMAIL, VALID_PASSWORD, VALID_PASSWORD,
                 CLIENT_PHONE, "123 Main St");
 
         assertTrue("Login must succeed regardless of email case",
@@ -466,7 +444,7 @@ public class RequestFlowSQLiteIntegrationTest {
     @Test
     public void login_returnsCorrectUserId() {
         Client added = clientService.addClient(
-                "Sarah", "Jones", CLIENT_EMAIL, VALID_PASSWORD, VALID_PASSWORD,
+                "Dayaveer", "Gill", CLIENT_EMAIL, VALID_PASSWORD, VALID_PASSWORD,
                 CLIENT_PHONE, "123 Main St");
 
         LoginResult result = authService.login(CLIENT_EMAIL, VALID_PASSWORD);
@@ -475,9 +453,7 @@ public class RequestFlowSQLiteIntegrationTest {
         assertEquals(added.getId(), result.getUserId());
     }
 
-    // =========================================================================
-    //  SEAM 6 — FK ON DELETE CASCADE in SQLite
-    // =========================================================================
+    // ==================== cascade testing ====================
 
     @Test
     public void deleteRequest_cascadesAndRemovesAssociatedBids() {
@@ -513,9 +489,7 @@ public class RequestFlowSQLiteIntegrationTest {
                 bidRepo.getById(bidId));
     }
 
-    // =========================================================================
-    //  SEAM 7 — Database isolation (clean state per test)
-    // =========================================================================
+    // ==================== database testing ====================
 
     @Test
     public void freshDatabase_hasNoRecords() {
@@ -534,9 +508,7 @@ public class RequestFlowSQLiteIntegrationTest {
         assertEquals(3, clientRepo.getAll().size());
     }
 
-    // =========================================================================
-    //  Helpers
-    // =========================================================================
+    // ==================== helper ====================
 
     private Client addTestClient() {
         return clientService.addClient(

@@ -197,4 +197,16 @@ class ProUserServiceImplTest {
         boolean result = service.deletePro(999);
         assertFalse(result);
     }
+
+    @Test
+    void proByID() {
+        Pro added = service.addPro("Alex", "Nguyen", "tech@quicklube.ca", "2045551010",
+                "SecurePass1!", "SecurePass1!", new String[]{"Oil Change"}, "Winnipeg");
+
+
+        Pro newPro = service.getProById(added.getId());
+        assertEquals(added.getFirstName(), newPro.getFirstName());
+
+    }
 }
+
