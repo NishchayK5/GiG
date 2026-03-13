@@ -8,10 +8,8 @@ import android.os.Looper;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.g08.gig.R;
+import com.g08.gig.session.SessionManager;
 
-/**
- * Splash screen shown when the app is opened. Displays the logo then navigates to the universal home page.
- */
 public class SplashActivity extends AppCompatActivity {
 
     private static final long SPLASH_DELAY_MS = 2000L;
@@ -22,7 +20,23 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            startActivity(new Intent(SplashActivity.this, StartUp.class));
+            Intent intent;
+            if (SessionManager.isLoggedIn(this)) {
+                int userId = SessionManager.getUserId(this);
+                String userType = SessionManager.getUserType(this);
+
+                if (SessionManager.USER_TYPE_CLIENT.equals(userType)) {
+                    intent = new Intent(SplashActivity.this, ClientHome.class);
+                } else {
+                    intent = new Intent(SplashActivity.this, ProHome.class);
+                }
+                intent.putExtra(SessionManager.KEY_USER_ID, userId);
+            } else {
+                intent = new Intent(SplashActivity.this, StartUp.class);
+            }
+
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
             finish();
         }, SPLASH_DELAY_MS);
     }

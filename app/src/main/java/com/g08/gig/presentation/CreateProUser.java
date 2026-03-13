@@ -4,11 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.g08.gig.R;
 import com.g08.gig.application.GiGApp;
 import com.g08.gig.business.services.ProUserService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class CreateProUser extends AppCompatActivity {
     private EditText firstNameInput;
@@ -64,11 +68,14 @@ public class CreateProUser extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             } catch (com.g08.gig.business.validation.ValidationException ex) {
-                EditText errorField = getErrorFieldForMessage(ex.getMessage());
-                if (errorField != null) {
-                    errorField.setError(ex.getMessage());
-                    errorField.requestFocus();
-                }
+                Map<String, EditText> fieldMap = new HashMap<>();
+                fieldMap.put("fname", firstNameInput);
+                fieldMap.put("lname", lastNameInput);
+                fieldMap.put("email", emailInput);
+                fieldMap.put("phone", phoneInput);
+                fieldMap.put("password", passwordInput);
+                fieldMap.put("confirmPassword", confirmPassword);
+                ValidationErrorBinder.setValidationError(fieldMap, ex.getField(), ex.getMessage(), emailInput);
             }
         });
     }
@@ -82,17 +89,6 @@ public class CreateProUser extends AppCompatActivity {
         phoneInput.setError(null);
         cityInput.setError(null);
         qualificationsInput.setError(null);
-    }
-
-    private EditText getErrorFieldForMessage(String message) {
-        if (message == null) return emailInput;
-        if (message.startsWith("First name")) return firstNameInput;
-        if (message.startsWith("Last name")) return lastNameInput;
-        if (message.startsWith("Email")) return emailInput;
-        if (message.startsWith("Phone number")) return phoneInput;
-        if (message.equals("Password is required.")) return passwordInput;
-        if (message.equals("Confirm password is required.") || message.equals("Passwords must match.")) return confirmPassword;
-        return emailInput;
     }
 
     private void clearInputs() {

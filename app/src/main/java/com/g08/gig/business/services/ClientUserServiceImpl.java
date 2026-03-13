@@ -13,7 +13,7 @@ public class ClientUserServiceImpl implements ClientUserService{
 
     private static final int BCRYPT_COST = 12;
     private final ClientRepository repo;
-    public UserRepository userRepo;
+    private final UserRepository userRepo;
     private final UserValidator validator;
 
     public ClientUserServiceImpl(ClientRepository repo, UserRepository userRepo) {
@@ -29,14 +29,14 @@ public class ClientUserServiceImpl implements ClientUserService{
     @Override
     public Client addClient(String firstName, String lastName, String email, String password, String confirmPassword, String phone, String address) {
         String trimmedEmail = safeTrim(email);
-        if (trimmedEmail != null && userRepo.getByEmail(trimmedEmail) != null) {
-            throw new ValidationException("Email already exists. Please use a different one.");
+        if (trimmedEmail != null && userRepo.getByEmail(trimmedEmail.toLowerCase()) != null) {
+            throw new ValidationException("Email already exists. Please use a different one.", "email");
         }
         validator.validate(firstName, lastName, email, phone, password, confirmPassword);
 
         //encrypts the password using BCrypt before adding it to repository
         String hashedPassword = BCrypt.withDefaults().hashToString(BCRYPT_COST, password.trim().toCharArray());
-        User toCreate = new User(0, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), hashedPassword, "CLIENT");
+        User toCreate = new User(0, safeTrim(email).toLowerCase(), firstName.trim(), lastName.trim(), phone.trim(), hashedPassword, "CLIENT");
         User userToAdd = userRepo.add(toCreate);
         Client clientToAdd = new Client(userToAdd.getId(), userToAdd.getEmail(), userToAdd.getFirstName(), userToAdd.getLastName(), userToAdd.getPhoneNumber(), address.trim(), userToAdd.getPassword());
         return repo.add(clientToAdd);
@@ -48,10 +48,15 @@ public class ClientUserServiceImpl implements ClientUserService{
         Client existing = repo.getById(id);
         if (existing == null) return false;
 
-        Client updated = new Client(id, safeTrim(email), firstName.trim(), lastName.trim(), phone.trim(), address.trim(), existing.getPassword());
+        Client updated = new Client(id, safeTrim(email).toLowerCase(), firstName.trim(), lastName.trim(), phone.trim(), address.trim(), existing.getPassword());
 
-        return repo.update(updated)&& userRepo.update(updated);
+        return repo.update(updated);
     }
+    @Override
+    public Client getClientById(int id) {
+        return repo.getById(id);
+    }
+
 
     @Override
     public boolean deleteClient(int id) {

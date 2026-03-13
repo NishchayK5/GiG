@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">g08</string>
+    <string name="app_name_gig">GiG</string>
     <string name="splash_logo_content_description">App logo</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
@@ -82,13 +83,67 @@
     <string name="home_client_button">GIG Client</string>
     <string name="home_pro_button">GIG Pro</string>
     <string name="home_register_as">Register as a...</string>
+    <string name="save_button">Save</string>
 
 
     <!-- Strings used for home_client -->
     <string name="home_client_text">Client Home</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_new_request">New request</string>
+    <string name="nav_profile">Profile</string>
+    <string name="notification">Notifications</string>
+    <string name="no_requests">No requests</string>
+    <string name="no_requests_hint">Tap + to create a new request</string>
+    <string name="your_requests">Your requests</string>
+    <string name="tab_current_requests">Current requests</string>
+    <string name="tab_past_requests">Past requests</string>
+
+    <!-- Client profile (center view) -->
+    <string name="profile_view">Profile view</string>
+    <string name="profile_edit">Edit profile</string>
+    <string name="edit_profile_subtitle">Update your account details below.</string>
+    <string name="logout">Logout</string>
+    <string name="home_view">Home view</string>
+    <string name="biddings_view">Current Bids</string>
+    <string name="appointment_view">Appointment view</string>
+
+    <!-- Request detail dialog -->
+    <string name="request_detail_title">Request details</string>
+    <string name="request_detail_label_description">Description</string>
+    <string name="request_detail_label_posted">Posted</string>
+    <string name="request_detail_label_status">Status</string>
+    <string name="request_detail_status_active">Active</string>
+    <string name="request_detail_status_closed">Closed</string>
+    <string name="request_detail_close">Close</string>
+    <string name="request_detail_delete">Delete</string>
+    <string name="request_detail_complete">Complete</string>
+    <string name="request_detail_no_bids">No bids yet</string>
+
+    <!-- Create request form -->
+    <string name="create_request_title">New request</string>
+    <string name="create_request_subtitle">Describe what you need and we\'ll help you find a mechanic.</string>
+    <string name="create_request_field_title">Request title</string>
+    <string name="create_request_field_title_hint">e.g. Brake pad replacement</string>
+    <string name="create_request_field_description">Description</string>
+    <string name="create_request_field_description_hint">Describe your vehicle and the issue in detail…</string>
+    <string name="create_request_submit">Submit request</string>
+    <string name="create_request_error_title_required">Please enter a title.</string>
+    <string name="create_request_error_description_required">Please enter a description.</string>
+    <string name="create_request_submitted">Request submitted</string>
+    <string name="request_deleted">Request deleted</string>
+    <string name="request_completed">Request Completed</string>
 
     <!-- Strings used for pro_client -->
     <string name="home_pro_text">PRO Home</string>
-
+    <string name="nav_requests">Biddings</string>
+    <string name="nav_appointment">Appointment</string>
+    <string name="bid">Bid</string>
+    <string name="bid_amount_label">Bid amount ($)</string>
+    <string name="bid_amount_hint">e.g. 150.00</string>
+    <string name="bid_amount_required">Please enter a bid amount.</string>
+    <string name="reject">Reject</string>
+    <string name="no_biddings">No requests to bid on.</string>
+    <string name="no_biddings_hint">New client requests will appear here.</string>
+    <string name="no_bidding">No bidding</string>
 
 </resources>

@@ -1,7 +1,9 @@
 package com.g08.gig.persistence.fake;
 
 import com.g08.gig.models.Client;
+import com.g08.gig.models.User;
 import com.g08.gig.persistence.ClientRepository;
+import com.g08.gig.persistence.UserRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,11 +13,15 @@ public class FakeClientRepository implements ClientRepository {
 
     private final List<Client> clients;
     private int nextId;
+    private final UserRepository users;
 
-    public FakeClientRepository(){
+
+    public FakeClientRepository(UserRepository userRepo){
         clients = new ArrayList<>();
         nextId = 1;
+        users = userRepo;
     }
+
 
     @Override
     public List<Client> getAll() { return Collections.unmodifiableList(clients);}
@@ -49,7 +55,13 @@ public class FakeClientRepository implements ClientRepository {
         if(client == null) return false;
 
         for(int i = 0; i < clients.size(); i++){
-            if(clients.get(i).getId()==client.getId()){
+            if(clients.get(i).getId() == client.getId()){
+                //Checking if user exists
+                User existingUser = users.getById(client.getId());
+                if(existingUser == null) return false;
+                //if so, update the attributes
+                if(!users.update(client)) return false;
+                //Once successfully updated user repo, update clients repo.
                 Client updated = new Client(client.getId(), client.getEmail(), client.getFirstName(), client.getLastName(), client.getPhoneNumber(), client.getAddress(), client.getPassword());
                 clients.set(i, updated);
                 return true;
@@ -60,7 +72,7 @@ public class FakeClientRepository implements ClientRepository {
 
     @Override
     public boolean delete(int id){
-        for(int i = 0; i<clients.size();i++){
+        for(int i = 0; i<clients.size(); i++){
             if(clients.get(i).getId() == id){
                 clients.remove(i);
                 return true;
