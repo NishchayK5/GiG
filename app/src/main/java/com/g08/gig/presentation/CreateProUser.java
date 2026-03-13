@@ -34,7 +34,7 @@ public class CreateProUser extends AppCompatActivity {
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> finish());
 
-        proUserService = ((GiGApp) getApplication()).getProUserService();
+        proUserService = GiGApp.get(this).getProUserService();
 
         firstNameInput = findViewById(R.id.firstNameInput);
         lastNameInput = findViewById(R.id.lastNameInput);

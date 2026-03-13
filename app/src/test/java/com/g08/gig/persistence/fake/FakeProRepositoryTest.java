@@ -108,6 +108,22 @@ class FakeProRepositoryTest {
     }
 
     @Test
+    void add_proWithExistingId_returnsNull() {
+        Pro first = repo.add(new Pro(0, "a@a.com", "A", "A", "555", "p", null, "City"));
+        assertNotNull(first);
+        Pro duplicate = new Pro(first.getId(), "b@b.com", "B", "B", "555", "p", null, "City2");
+        assertNull(repo.add(duplicate));
+        assertEquals(1, repo.getAll().size());
+    }
+
+    @Test
+    void update_returnsFalseWhenUserNotInUserRepo() {
+        Pro added = repo.add(new Pro(0, "x@x.com", "X", "Y", "555", "p", null, "City"));
+        Pro updated = new Pro(added.getId(), "new@x.com", "New", "Y", "999", "p2", null, "City2");
+        assertFalse(repo.update(updated));
+    }
+
+    @Test
     void getAll_initiallyEmpty() {
         assertTrue(repo.getAll().isEmpty());
     }

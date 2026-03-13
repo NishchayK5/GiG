@@ -4,11 +4,9 @@ import com.g08.gig.models.Bid;
 import com.g08.gig.models.Pro;
 import com.g08.gig.models.Request;
 import com.g08.gig.persistence.BidRepository;
-import com.g08.gig.persistence.RequestRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class BidServiceImpl implements BidService {
@@ -46,9 +44,7 @@ public class BidServiceImpl implements BidService {
         List<Request> result = new ArrayList<>();
         for (Bid bid : bids) {
             if (bid != null && bid.getRequest() != null) {
-                Request r = bid.getRequest();
-                r.setBidCost(bid.getCost());
-                result.add(r);
+                result.add(new Request(bid.getRequest(), bid.getCost()));
             }
         }
         return result;

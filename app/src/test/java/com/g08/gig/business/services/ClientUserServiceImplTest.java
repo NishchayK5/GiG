@@ -160,6 +160,16 @@ class ClientUserServiceImplTest {
         assertFalse(result);
     }
 
+    @Test
+    void updateClient_clientExistsButUserRemoved_returnsFalse() {
+        Client added = service.addClient(VALID_FIRST, VALID_LAST, VALID_EMAIL, VALID_PASSWORD,
+                VALID_PASSWORD, VALID_PHONE, VALID_ADDRESS);
+        int id = added.getId();
+        userRepo.delete(id);
+        boolean result = service.updateClient(id, VALID_FIRST, VALID_LAST, VALID_EMAIL, VALID_PHONE, VALID_ADDRESS);
+        assertFalse(result);
+    }
+
     // --- deleteClient ---
 
     @Test
@@ -189,5 +199,11 @@ class ClientUserServiceImplTest {
         Client newClient = service.getClientById(added.getId());
         assertEquals(added.getFirstName(), newClient.getFirstName());
 
+    }
+
+    @Test
+    void getClientById_nonexistentId_returnsNull() {
+        Client result = service.getClientById(999);
+        assertNull(result);
     }
 }

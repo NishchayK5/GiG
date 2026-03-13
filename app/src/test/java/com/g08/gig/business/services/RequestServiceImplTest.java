@@ -77,10 +77,24 @@ class RequestServiceImplTest {
     }
 
     @Test
+    void addRequest_nullTitle_throwsValidationException() {
+        assertThrows(ValidationException.class, () ->
+                service.addRequest(client, null, "Valid body"));
+        verify(repo, never()).add(any());
+    }
+
+    @Test
     void addRequest_blankTitle_throwsValidationException() {
         assertThrows(ValidationException.class, () ->
                 service.addRequest(client, "   ", "Valid body"));
 
+        verify(repo, never()).add(any());
+    }
+
+    @Test
+    void addRequest_nullBody_throwsValidationException() {
+        assertThrows(ValidationException.class, () ->
+                service.addRequest(client, "Valid title", null));
         verify(repo, never()).add(any());
     }
 
@@ -149,6 +163,50 @@ class RequestServiceImplTest {
     }
 
     @Test
+    void getRequestsByClientCurrentAndPast_emptyList_returnsEmptyPairs() {
+        when(repo.getByClient(1)).thenReturn(List.of());
+
+        Pair<List<Request>, List<Request>> result = service.getRequestsByClientCurrentAndPast(1);
+
+        assertNotNull(result);
+        assertNotNull(result.first);
+        assertNotNull(result.second);
+        assertTrue(result.first.isEmpty());
+        assertTrue(result.second.isEmpty());
+        verify(repo).getByClient(1);
+    }
+
+    @Test
+    void getRequestsByClientCurrentAndPast_allCurrent_returnsAllInFirst() {
+        Request r1 = new Request(1, client, "A", "Body", LocalDateTime.now(), true);
+        Request r2 = new Request(2, client, "B", "Body", LocalDateTime.now(), true);
+        when(repo.getByClient(1)).thenReturn(List.of(r1, r2));
+
+        Pair<List<Request>, List<Request>> result = service.getRequestsByClientCurrentAndPast(1);
+
+        assertEquals(2, result.first.size());
+        assertTrue(result.second.isEmpty());
+        assertEquals("A", result.first.get(0).getTitle());
+        assertEquals("B", result.first.get(1).getTitle());
+        verify(repo).getByClient(1);
+    }
+
+    @Test
+    void getRequestsByClientCurrentAndPast_allPast_returnsAllInSecond() {
+        Request r1 = new Request(1, client, "Past A", "Body", LocalDateTime.now(), false);
+        Request r2 = new Request(2, client, "Past B", "Body", LocalDateTime.now(), false);
+        when(repo.getByClient(1)).thenReturn(List.of(r1, r2));
+
+        Pair<List<Request>, List<Request>> result = service.getRequestsByClientCurrentAndPast(1);
+
+        assertTrue(result.first.isEmpty());
+        assertEquals(2, result.second.size());
+        assertEquals("Past A", result.second.get(0).getTitle());
+        assertEquals("Past B", result.second.get(1).getTitle());
+        verify(repo).getByClient(1);
+    }
+
+    @Test
     void getRequestsByStatus_returnsRepoResults() {
         List<Request> activeRequests = List.of(
                 new Request(1, client, "Active", "Body", LocalDateTime.now(), true)
@@ -193,5 +251,15 @@ class RequestServiceImplTest {
         service.removeRequest(9);
 
         verify(repo).delete(9);
+    }
+
+    @Test
+    void completeRequest_idNotFound_throwsWhenRepoReturnsNull() {
+        when(repo.getById(999)).thenReturn(null);
+
+        assertThrows(NullPointerException.class, () -> service.completeRequest(999));
+
+        verify(repo).getById(999);
+        verify(repo, never()).update(any(Request.class));
     }
 }

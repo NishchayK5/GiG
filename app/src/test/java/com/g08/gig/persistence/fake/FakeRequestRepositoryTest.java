@@ -44,6 +44,35 @@ class FakeRequestRepositoryTest {
     // ==================== addRequest ====================
 
     @Test
+    void add_requestNull_returnsNull() {
+        assertNull(requestRepo.add(null));
+    }
+
+    @Test
+    void add_requestWithExistingId_returnsNull() {
+        Request first = service.addRequest(CLIENT, "Oil Change", "Body");
+        Request duplicate = new Request(first.getId(), first.getClient(), "Other", "Body2", first.getTimeOfRequest(), first.getRequestStatus());
+        assertNull(requestRepo.add(duplicate));
+        assertEquals(1, requestRepo.getAll().size());
+    }
+
+    @Test
+    void update_requestNull_returnsFalse() {
+        assertFalse(requestRepo.update(null));
+    }
+
+    @Test
+    void update_requestIdNotExists_returnsFalse() {
+        Request request = new Request(999, CLIENT, "Title", "Body", LocalDateTime.now(), true);
+        assertFalse(requestRepo.update(request));
+    }
+
+    @Test
+    void delete_unknownId_returnsFalse() {
+        assertFalse(requestRepo.delete(999));
+    }
+
+    @Test
     void addRequest_validInputs_returnsRequestWithGeneratedId() {
         Request result = service.addRequest(CLIENT, "Oil Change", "Need oil");
         assertNotNull(result);

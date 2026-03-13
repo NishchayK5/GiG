@@ -1,6 +1,7 @@
 package com.g08.gig.application;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.g08.gig.business.services.AuthService;
 import com.g08.gig.business.services.AuthServiceImpl;
@@ -44,6 +45,11 @@ public class GiGApp extends Application {
     private ProRepository proRepo;
     private RequestRepository reqRepo;
     private BidRepository bidRepo;
+
+    /** Returns the application instance for service access; avoids repeated cast in activities. */
+    public static GiGApp get(Context context) {
+        return (GiGApp) context.getApplicationContext();
+    }
 
     @Override
     public void onCreate() {

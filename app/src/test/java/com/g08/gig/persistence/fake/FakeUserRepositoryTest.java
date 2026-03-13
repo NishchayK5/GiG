@@ -59,6 +59,19 @@ class FakeUserRepositoryTest {
     }
 
     @Test
+    void getByEmail_userWithNullEmail_skipsThatUser() {
+        repo.add(new User(0, null, "A", "B", "555", "p", "USER"));
+        assertNull(repo.getByEmail("anything@x.com"));
+    }
+
+    @Test
+    void getByEmail_ignoresCase() {
+        repo.add(new User(0, "user@test.com", "U", "U", "555", "p", "USER"));
+        assertNotNull(repo.getByEmail("USER@TEST.COM"));
+        assertEquals("user@test.com", repo.getByEmail("USER@TEST.COM").getEmail());
+    }
+
+    @Test
     void update_modifiesExistingUser() {
         User added = repo.add(new User(0, "old@x.com", "Old", "Name", "555", "p", "USER"));
         User updated = new User(added.getId(), "new@x.com", "New", "Name", "999", "p2", "USER");
@@ -96,6 +109,15 @@ class FakeUserRepositoryTest {
     @Test
     void add_returnsNullWhenUserNull() {
         assertNull(repo.add(null));
+    }
+
+    @Test
+    void add_whenIdAlreadyExists_returnsNull() {
+        User first = repo.add(new User(0, "a@a.com", "A", "A", "555", "p", "USER"));
+        assertNotNull(first);
+        User duplicate = new User(first.getId(), "b@b.com", "B", "B", "555", "p", "USER");
+        assertNull(repo.add(duplicate));
+        assertEquals(1, repo.getAll().size());
     }
 
     @Test

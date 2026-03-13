@@ -81,36 +81,35 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         Bundle args = getArguments();
         if (args == null) {
             dismiss();
             return;
         }
-
         int requestId = args.getInt(ARG_REQUEST_ID, -1);
+        bindHeader(view, args);
+        bindDescription(view, args);
+        bindStatus(view, args);
+        bindBids(view);
+        bindListeners(view, requestId);
+    }
 
+    private void bindHeader(View view, Bundle args) {
         TextView titleView = view.findViewById(R.id.dialogRequestTitle);
+        titleView.setText(args.getString(ARG_TITLE, ""));
+    }
+
+    private void bindDescription(View view, Bundle args) {
         TextView bodyView = view.findViewById(R.id.dialogRequestBody);
         TextView timeView = view.findViewById(R.id.dialogRequestTime);
-        TextView statusView = view.findViewById(R.id.dialogRequestStatus);
-        ImageButton closeIcon = view.findViewById(R.id.dialogCloseIcon);
-        Button deleteButton = view.findViewById(R.id.dialogDeleteButton);
-        Button completeButton = view.findViewById(R.id.dialogCompleteButton);
-        LinearLayout bidsContainer = view.findViewById(R.id.dialogBidsContainer);
-        View bidsEmptyView = view.findViewById(R.id.dialogBidsEmptyView);
-
-
-        titleView.setText(args.getString(ARG_TITLE, ""));
-
         String body = args.getString(ARG_BODY, "");
         bodyView.setText(body);
         bodyView.setMaxLines(MAX_LINES_COLLAPSED);
         bodyView.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        timeView.setText(args.getString(ARG_TIME, ""));
 
         TextView showMoreButton = view.findViewById(R.id.dialogShowMoreButton);
         ScrollView scrollView = view.findViewById(R.id.dialogScrollView);
-
         bodyView.getViewTreeObserver().addOnGlobalLayoutListener(new android.view.ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -147,9 +146,12 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
                 showMoreButton.setText("Show more");
             }
         });
+    }
 
-        timeView.setText(args.getString(ARG_TIME, ""));
-
+    private void bindStatus(View view, Bundle args) {
+        TextView statusView = view.findViewById(R.id.dialogRequestStatus);
+        Button deleteButton = view.findViewById(R.id.dialogDeleteButton);
+        Button completeButton = view.findViewById(R.id.dialogCompleteButton);
         boolean isActive = args.getBoolean(ARG_ACTIVE, true);
         if (isActive) {
             statusView.setText(R.string.request_detail_status_active);
@@ -157,13 +159,14 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
         } else {
             statusView.setText(R.string.request_detail_status_closed);
             setStatusBackground(statusView, ContextCompat.getColor(requireContext(), R.color.grey));
-        }
-
-        if (!isActive) {
             deleteButton.setVisibility(View.GONE);
             completeButton.setVisibility(View.GONE);
         }
+    }
 
+    private void bindBids(View view) {
+        LinearLayout bidsContainer = view.findViewById(R.id.dialogBidsContainer);
+        View bidsEmptyView = view.findViewById(R.id.dialogBidsEmptyView);
         bidsContainer.removeAllViews();
         for (Bid bid : bids) {
             View bidRow = LayoutInflater.from(requireContext()).inflate(R.layout.bid_row, bidsContainer, false);
@@ -176,16 +179,19 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
         boolean hasBids = !bids.isEmpty();
         bidsEmptyView.setVisibility(hasBids ? View.GONE : View.VISIBLE);
         bidsContainer.setVisibility(hasBids ? View.VISIBLE : View.GONE);
+    }
 
+    private void bindListeners(View view, int requestId) {
+        ImageButton closeIcon = view.findViewById(R.id.dialogCloseIcon);
+        Button deleteButton = view.findViewById(R.id.dialogDeleteButton);
+        Button completeButton = view.findViewById(R.id.dialogCompleteButton);
         closeIcon.setOnClickListener(v -> dismiss());
-
         deleteButton.setOnClickListener(v -> {
             if (actionListener != null) {
                 actionListener.onDeleteRequest(requestId);
             }
             dismiss();
         });
-
         completeButton.setOnClickListener(v -> {
             if (actionListener != null) {
                 actionListener.onCompleteRequest(requestId);

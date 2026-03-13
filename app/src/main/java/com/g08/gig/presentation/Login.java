@@ -56,7 +56,7 @@ public class Login extends AppCompatActivity {
         String password = passwordInput.getText() != null ? passwordInput.getText().toString().trim() : "";
         emailInput.setError(null);
         passwordInput.setError(null);
-        AuthService authService = ((GiGApp) getApplication()).getAuthService();
+        AuthService authService = GiGApp.get(this).getAuthService();
         return authService.login(email, password);
     }
 
