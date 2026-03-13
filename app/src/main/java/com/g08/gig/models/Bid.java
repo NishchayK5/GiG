@@ -17,6 +17,7 @@ public class Bid {
         this.timeOfBid = timeOfBid;
     }
 
+    //getters and setters for the object
     public int getId() {
         return id;
     }

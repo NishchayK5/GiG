@@ -39,6 +39,7 @@ public class BidServiceImpl implements BidService {
         return bidRepo.getAllByPro(pro);
     }
 
+    // returns all the requests on which bid has been placed by the Pro
     @Override
     public List<Request> getRequestsWithBidCostsByPro(Pro pro) {
         List<Bid> bids = bidRepo.getAllByPro(pro);

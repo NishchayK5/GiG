@@ -34,10 +34,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResult login(String email, String password) {
-        if (email == null || email.trim().isEmpty() || password == null) {
-            return LoginResult.failure();
-        }
-
         loginValidator.validate(email, password);
 
         User user = userRepository.getByEmail(email.trim().toLowerCase());
