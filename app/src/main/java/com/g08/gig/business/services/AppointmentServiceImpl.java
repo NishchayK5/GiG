@@ -1,13 +1,13 @@
 package com.g08.gig.business.services;
 
 import com.g08.gig.models.Appointment;
+import com.g08.gig.models.Bid;
 import com.g08.gig.models.Client;
 import com.g08.gig.models.Pro;
 import com.g08.gig.models.Request;
 import com.g08.gig.persistence.AppointmentRepository;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 public class AppointmentServiceImpl implements AppointmentService{
@@ -17,7 +17,9 @@ public class AppointmentServiceImpl implements AppointmentService{
     public AppointmentServiceImpl(AppointmentRepository apptRepo) { this.apptRepo = apptRepo; };
     @Override
     public Appointment addAppt(LocalDateTime appointmentStart, LocalDateTime appointmentEnd, Pro pro, Client client, Request request) {
-        return null;
+
+        Appointment toCreate = new Appointment(0, appointmentStart, appointmentEnd, pro, client, request);
+        return apptRepo.add(toCreate);
     }
 
     @Override
@@ -32,6 +34,6 @@ public class AppointmentServiceImpl implements AppointmentService{
 
     @Override
     public Appointment getApptById(int id) {
-        return null;
+        return apptRepo.getById(id);
     }
 }
