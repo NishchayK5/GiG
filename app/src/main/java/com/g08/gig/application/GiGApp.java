@@ -3,6 +3,8 @@ package com.g08.gig.application;
 import android.app.Application;
 import android.content.Context;
 
+import com.g08.gig.business.services.AppointmentService;
+import com.g08.gig.business.services.AppointmentServiceImpl;
 import com.g08.gig.business.services.AuthService;
 import com.g08.gig.business.services.AuthServiceImpl;
 import com.g08.gig.business.services.BidService;
@@ -42,14 +44,14 @@ public class GiGApp extends Application {
     private AuthService authService;
     private BidService bidService;
     private RequestService reqService;
+    private AppointmentService apptService;
     private AppDbHelper dbHelper;
     private UserRepository userRepo;
     private ClientRepository clientRepo;
     private ProRepository proRepo;
     private RequestRepository reqRepo;
     private BidRepository bidRepo;
-
-    private AppointmentRepository appointmentRepo;
+    private AppointmentRepository apptRepo;
 
     /** Returns the application instance for service access; avoids repeated cast in activities. */
     public static GiGApp get(Context context) {
@@ -71,7 +73,7 @@ public class GiGApp extends Application {
             proRepo = new SqlProRepository(dbHelper);
             reqRepo = new SqlRequestRepository(dbHelper, clientRepo);
             bidRepo = new SqlBidRepository(dbHelper, proRepo, reqRepo);
-            appointmentRepo = new SqlAppointmentRepository(dbHelper, clientRepo, proRepo, reqRepo);
+            apptRepo = new SqlAppointmentRepository(dbHelper, clientRepo, proRepo, reqRepo);
         }
         else {
             userRepo = new FakeUserRepository();
@@ -79,7 +81,7 @@ public class GiGApp extends Application {
             proRepo = new FakeProRepository(userRepo);
             bidRepo = new FakeBidRepository();
             reqRepo = new FakeRequestRepository(bidRepo);
-            appointmentRepo = new FakeAppointmentRepository();
+            apptRepo = new FakeAppointmentRepository();
         }
 
         clientUserService = new ClientUserServiceImpl(clientRepo, userRepo);
@@ -87,6 +89,7 @@ public class GiGApp extends Application {
         authService = new AuthServiceImpl(userRepo, clientRepo, proRepo);
         reqService = new RequestServiceImpl(reqRepo);
         bidService = new BidServiceImpl(bidRepo);
+        apptService = new AppointmentServiceImpl(apptRepo);
 
         if (FAKE_REPO) {
             DatabaseSeeder.seed(clientUserService, proUserService, reqService, clientRepo);
@@ -108,6 +111,8 @@ public class GiGApp extends Application {
     public RequestService getRequestService() { return reqService; }
 
     public BidService getBidService() { return bidService; }
+
+    public AppointmentService getApptService() { return apptService; }
 
     public ProfileLoader getProfileLoader(boolean isClient) {
         return isClient
