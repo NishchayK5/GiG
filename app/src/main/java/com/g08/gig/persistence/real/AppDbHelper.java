@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.g08.gig.persistence.real.Appointment.AppointmentTable;
 import com.g08.gig.persistence.real.Bid.BidTable;
 import com.g08.gig.persistence.real.Client.ClientTable;
 import com.g08.gig.persistence.real.Pro.ProTable;
@@ -13,10 +14,10 @@ import com.g08.gig.persistence.real.user.UserTable;
 public class AppDbHelper extends SQLiteOpenHelper {
 
     public static final String DB_NAME = "gig.db";
-    public static final int DB_VERSION = 11;
+    public static final int DB_VERSION = 14;
 
     private static final TableSchema[] SCHEMA_TABLES = {
-        new UserTable(), new ClientTable(), new ProTable(), new RequestTable(), new BidTable()
+        new UserTable(), new ClientTable(), new ProTable(), new RequestTable(), new BidTable(), new AppointmentTable()
     };
 
     public AppDbHelper(Context context) {

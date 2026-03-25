@@ -8,13 +8,15 @@ public class Appointment {
     private LocalDateTime appointmentEnd;
     private Pro pro;
     private Client client;
+    private Request request;
 
-    public Appointment(int id, LocalDateTime appointmentStart, LocalDateTime appointmentEnd, Pro pro, Client client) {
+    public Appointment(int id, LocalDateTime appointmentStart, LocalDateTime appointmentEnd, Pro pro, Client client, Request request) {
         this.id = id;
         this.appointmentStart = appointmentStart;
         this.appointmentEnd = appointmentEnd;
         this.pro = pro;
         this.client = client;
+        this.request = request;
     }
 
     //getters and setters
@@ -56,5 +58,11 @@ public class Appointment {
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    public Request getRequest(){ return request; }
+
+    public void setRequest(Request request){
+        this.request = request;
     }
 }

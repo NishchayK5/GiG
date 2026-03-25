@@ -16,17 +16,20 @@ import com.g08.gig.business.profile.ProProfileLoader;
 import com.g08.gig.business.profile.ProfileLoader;
 import com.g08.gig.business.services.RequestService;
 import com.g08.gig.business.services.RequestServiceImpl;
+import com.g08.gig.persistence.AppointmentRepository;
 import com.g08.gig.persistence.BidRepository;
 import com.g08.gig.persistence.ClientRepository;
 import com.g08.gig.persistence.ProRepository;
 import com.g08.gig.persistence.RequestRepository;
 import com.g08.gig.persistence.UserRepository;
+import com.g08.gig.persistence.fake.FakeAppointmentRepository;
 import com.g08.gig.persistence.fake.FakeBidRepository;
 import com.g08.gig.persistence.fake.FakeClientRepository;
 import com.g08.gig.persistence.fake.FakeProRepository;
 import com.g08.gig.persistence.fake.FakeRequestRepository;
 import com.g08.gig.persistence.fake.FakeUserRepository;
 import com.g08.gig.persistence.real.AppDbHelper;
+import com.g08.gig.persistence.real.Appointment.SqlAppointmentRepository;
 import com.g08.gig.persistence.real.Bid.SqlBidRepository;
 import com.g08.gig.persistence.real.Client.SqlClientRepository;
 import com.g08.gig.persistence.real.Pro.SqlProRepository;
@@ -45,6 +48,8 @@ public class GiGApp extends Application {
     private ProRepository proRepo;
     private RequestRepository reqRepo;
     private BidRepository bidRepo;
+
+    private AppointmentRepository appointmentRepo;
 
     /** Returns the application instance for service access; avoids repeated cast in activities. */
     public static GiGApp get(Context context) {
@@ -66,6 +71,7 @@ public class GiGApp extends Application {
             proRepo = new SqlProRepository(dbHelper);
             reqRepo = new SqlRequestRepository(dbHelper, clientRepo);
             bidRepo = new SqlBidRepository(dbHelper, proRepo, reqRepo);
+            appointmentRepo = new SqlAppointmentRepository(dbHelper, clientRepo, proRepo, reqRepo);
         }
         else {
             userRepo = new FakeUserRepository();
@@ -73,6 +79,7 @@ public class GiGApp extends Application {
             proRepo = new FakeProRepository(userRepo);
             bidRepo = new FakeBidRepository();
             reqRepo = new FakeRequestRepository(bidRepo);
+            appointmentRepo = new FakeAppointmentRepository();
         }
 
         clientUserService = new ClientUserServiceImpl(clientRepo, userRepo);
