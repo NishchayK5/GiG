@@ -9,15 +9,16 @@ import com.g08.gig.persistence.real.Bid.BidTable;
 import com.g08.gig.persistence.real.Client.ClientTable;
 import com.g08.gig.persistence.real.Pro.ProTable;
 import com.g08.gig.persistence.real.Request.RequestTable;
+import com.g08.gig.persistence.real.Review.ReviewTable;
 import com.g08.gig.persistence.real.user.UserTable;
 
 public class AppDbHelper extends SQLiteOpenHelper {
 
     public static final String DB_NAME = "gig.db";
-    public static final int DB_VERSION = 14;
+    public static final int DB_VERSION = 15;
 
     private static final TableSchema[] SCHEMA_TABLES = {
-        new UserTable(), new ClientTable(), new ProTable(), new RequestTable(), new BidTable(), new AppointmentTable()
+        new UserTable(), new ClientTable(), new ProTable(), new RequestTable(), new BidTable(), new AppointmentTable(), new ReviewTable()
     };
 
     public AppDbHelper(Context context) {
