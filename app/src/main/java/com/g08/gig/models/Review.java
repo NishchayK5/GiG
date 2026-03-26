@@ -3,13 +3,15 @@ package com.g08.gig.models;
 public class Review {
     private int id;
     private Client reviewer;
+    private Pro pro;
     private String title;
     private String body;
     private int stars;
 
-    public Review(int id, Client reviewer, String title, String body, int stars) {
+    public Review(int id, Client reviewer, Pro pro, String title, String body, int stars) {
         this.id = id;
         this.reviewer = reviewer;
+        this.pro = pro;
         this.title = title;
         this.body = body;
         this.stars = stars;
@@ -30,6 +32,10 @@ public class Review {
     public void setReviewer(Client reviewer) {
         this.reviewer = reviewer;
     }
+
+    public Pro getPro() { return pro;}
+
+    public void setPro(Pro pro) { this.pro = pro;}
 
     public String getTitle() {
         return title;
