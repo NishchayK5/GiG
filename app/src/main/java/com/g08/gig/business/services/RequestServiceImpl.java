@@ -70,6 +70,7 @@ public class RequestServiceImpl implements RequestService {
     public List<Request> getRequestsByStatus(boolean status) {
         return reqRepo.getAllWithStatus(status);
     }
+
     @Override
     public void completeRequest(int id) {
         Request toUpdate = reqRepo.getById(id);

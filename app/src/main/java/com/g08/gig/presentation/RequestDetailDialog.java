@@ -1,5 +1,6 @@
 package com.g08.gig.presentation;
 
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,6 +38,8 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
     public interface OnRequestActionListener {
         void onDeleteRequest(int requestId);
         void onCompleteRequest(int requestId);
+        /** Client accepts this bid: create appointment and typically complete the request. */
+        void onAcceptBid(Bid bid);
     }
 
     private OnRequestActionListener actionListener;
@@ -165,20 +168,52 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
     }
 
     private void bindBids(View view) {
+        Bundle args = getArguments();
+        boolean requestIsActive = args == null || args.getBoolean(ARG_ACTIVE, true);
+
         LinearLayout bidsContainer = view.findViewById(R.id.dialogBidsContainer);
         View bidsEmptyView = view.findViewById(R.id.dialogBidsEmptyView);
+        TextView bidsProfileHint = view.findViewById(R.id.dialogBidsProfileHint);
         bidsContainer.removeAllViews();
         for (Bid bid : bids) {
+            final Bid bidForRow = bid;
             View bidRow = LayoutInflater.from(requireContext()).inflate(R.layout.bid_row, bidsContainer, false);
             TextView bidderName = bidRow.findViewById(R.id.bidRowName);
             TextView bidCost = bidRow.findViewById(R.id.bidRowCost);
-            bidderName.setText(bid.getPro().getFirstName() + " " + bid.getPro().getLastName());
-            bidCost.setText(String.format("$%.2f", bid.getCost()));
+            Button acceptButton = bidRow.findViewById(R.id.bidRowAcceptButton);
+            if (bidForRow.getPro() != null) {
+                bidderName.setText(bidForRow.getPro().getFirstName() + " " + bidForRow.getPro().getLastName());
+                final int proId = bidForRow.getPro().getId();
+                bidderName.setOnClickListener(v -> {
+                    Intent i = new Intent(requireContext(), ProPublicDetailActivity.class);
+                    i.putExtra(ProPublicDetailActivity.EXTRA_PRO_ID, proId);
+                    startActivity(i);
+                });
+            } else {
+                bidderName.setText("");
+                bidderName.setOnClickListener(null);
+                bidderName.setClickable(false);
+            }
+            bidCost.setText(String.format("$%.2f", bidForRow.getCost()));
+
+            boolean canAccept = requestIsActive
+                    && bidForRow.getPro() != null
+                    && bidForRow.getRequest() != null;
+            acceptButton.setVisibility(canAccept ? View.VISIBLE : View.GONE);
+            acceptButton.setOnClickListener(v -> {
+                if (actionListener != null) {
+                    actionListener.onAcceptBid(bidForRow);
+                }
+                dismiss();
+            });
             bidsContainer.addView(bidRow);
         }
         boolean hasBids = !bids.isEmpty();
         bidsEmptyView.setVisibility(hasBids ? View.GONE : View.VISIBLE);
         bidsContainer.setVisibility(hasBids ? View.VISIBLE : View.GONE);
+        if (bidsProfileHint != null) {
+            bidsProfileHint.setVisibility(hasBids ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void bindListeners(View view, int requestId) {
@@ -193,10 +228,10 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
             dismiss();
         });
         completeButton.setOnClickListener(v -> {
+            dismiss();
             if (actionListener != null) {
                 actionListener.onCompleteRequest(requestId);
             }
-            dismiss();
         });
     }
 

@@ -17,11 +17,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.g08.gig.R;
 import com.g08.gig.application.GiGApp;
 import com.g08.gig.session.SessionManager;
+import com.g08.gig.business.services.AppointmentService;
 import com.g08.gig.business.services.BidService;
 import com.g08.gig.business.services.ClientUserService;
 import com.g08.gig.business.services.RequestService;
+import com.g08.gig.models.Bid;
 import com.g08.gig.models.Client;
 import com.g08.gig.models.Request;
+
+import java.time.LocalDateTime;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -45,6 +49,7 @@ public class ClientHome extends AppCompatActivity {
     private RequestService requestService;
     private BidService bidService;
     private ClientUserService clientUserService;
+    private AppointmentService appointmentService;
 
     private final ActivityResultLauncher<Intent> createRequestLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -63,11 +68,15 @@ public class ClientHome extends AppCompatActivity {
         requestService = GiGApp.get(this).getRequestService();
         bidService = GiGApp.get(this).getBidService();
         clientUserService = GiGApp.get(this).getClientUserService();
+        appointmentService = GiGApp.get(this).getApptService();
 
         int userId = getIntent().getIntExtra(SessionManager.KEY_USER_ID, -1);
         if (userId != -1) {
             SessionManager.setUserId(this, userId);
         }
+
+        getSupportFragmentManager().setFragmentResultListener("complete_review_done", this,
+                (requestKey, bundle) -> loadRequests());
 
         bindViews();
         setupRequestListAndTabs();
@@ -229,9 +238,29 @@ public class ClientHome extends AppCompatActivity {
 
             @Override
             public void onCompleteRequest(int requestId) {
-                requestService.completeRequest(requestId);
+                CompleteRequestReviewDialog.newInstance(requestId)
+                        .show(getSupportFragmentManager(), "complete_review");
+            }
+
+            @Override
+            public void onAcceptBid(Bid bid) {
+                if (bid == null || bid.getPro() == null || bid.getRequest() == null) {
+                    return;
+                }
+                int clientUserId = SessionManager.getUserId(ClientHome.this);
+                Client client = clientUserService.getClientById(clientUserId);
+                if (client == null) {
+                    return;
+                }
+                Request req = bid.getRequest();
+                LocalDateTime start = req.getTimeOfRequest() != null
+                        ? req.getTimeOfRequest()
+                        : LocalDateTime.now();
+                LocalDateTime end = start.plusHours(1);
+                appointmentService.addAppt(start, end, bid.getPro(), client, req);
+                requestService.completeRequest(req.getId());
                 loadRequests();
-                Toast.makeText(ClientHome.this, getString(R.string.request_completed), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ClientHome.this, R.string.bid_accepted_toast, Toast.LENGTH_SHORT).show();
             }
         });
         dialog.show(getSupportFragmentManager(), "request_detail");

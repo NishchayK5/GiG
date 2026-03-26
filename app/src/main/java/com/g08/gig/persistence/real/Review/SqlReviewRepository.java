@@ -11,7 +11,6 @@ import com.g08.gig.persistence.ClientRepository;
 import com.g08.gig.persistence.ProRepository;
 import com.g08.gig.persistence.ReviewRepository;
 import com.g08.gig.persistence.real.AppDbHelper;
-import com.g08.gig.persistence.real.Request.RequestTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,7 @@ public class SqlReviewRepository implements ReviewRepository {
         Cursor c = db.query(ReviewTable.TABLE_REVIEW,
                 new String[]{ReviewTable.COL_REVIEW_ID, ReviewTable.COL_REVIEW_CLIENT_ID, ReviewTable.COL_REVIEW_PRO_ID, ReviewTable.COL_REVIEW_TITLE, ReviewTable.COL_REVIEW_BODY, ReviewTable.COL_REVIEW_STAR_RATING},
                 null, null,null, null,
-                ReviewTable.COL_REVIEW_ID + "DESC");
+                ReviewTable.COL_REVIEW_ID + " DESC");
         List<Review> result = new ArrayList<>();
         try{
             while (c.moveToNext()){
@@ -105,8 +104,8 @@ public class SqlReviewRepository implements ReviewRepository {
     public boolean delete(int id){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         int rows = db.delete(ReviewTable.TABLE_REVIEW,
-                ReviewTable.TABLE_REVIEW +"=?",
-                new String[]{String.valueOf(id)} );
+                ReviewTable.COL_REVIEW_ID + "=?",
+                new String[]{String.valueOf(id)});
         return rows > 0;
     }
 

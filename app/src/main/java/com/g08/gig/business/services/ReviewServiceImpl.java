@@ -5,7 +5,6 @@ import com.g08.gig.models.Pro;
 import com.g08.gig.models.Review;
 import com.g08.gig.persistence.ReviewRepository;
 
-import java.util.Collections;
 import java.util.List;
 
 public class ReviewServiceImpl implements ReviewService {
@@ -13,7 +12,7 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewServiceImpl(ReviewRepository reviewRepo) { this.reviewRepo = reviewRepo; }
     @Override
     public Review addReview(Client reviewer, Pro pro, String title, String body, int stars) {
-        Review toCreate = new Review(1, reviewer, pro, title, body, stars);
+        Review toCreate = new Review(0, reviewer, pro, title, body, stars);
 
         return reviewRepo.add(toCreate);
     }

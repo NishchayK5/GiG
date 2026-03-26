@@ -37,7 +37,7 @@ public class SqlAppointmentRepository implements AppointmentRepository{
         Cursor c = db.query(AppointmentTable.TABLE_APPOINTMENT,
                 new String[]{AppointmentTable.COL_APPOINTMENT_ID, AppointmentTable.COL_APPOINTMENT_CLIENT_ID, AppointmentTable.COL_APPOINTMENT_PRO_ID, AppointmentTable.COL_APPOINTMENT_START_TIME, AppointmentTable.COL_APPOINTMENT_END_TIME, AppointmentTable.COL_APPOINTMENT_REQUEST_ID},
                 null, null, null, null,
-                AppointmentTable.COL_APPOINTMENT_ID + "DESC");
+                AppointmentTable.COL_APPOINTMENT_ID + " DESC");
 
         List<Appointment> result = new ArrayList<>();
         try{

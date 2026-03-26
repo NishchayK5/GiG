@@ -147,6 +147,16 @@
         android:textSize="13sp"
         android:textStyle="bold" />
 
+    <TextView
+        android:id="@+id/dialogBidsProfileHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/request_detail_bids_profile_hint"
+        android:textColor="@color/grey"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
     <LinearLayout
         android:id="@+id/dialogBidsEmptyView"
         android:layout_width="match_parent"

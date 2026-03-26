@@ -1,7 +1,6 @@
 package com.g08.gig.business.services;
 
 import com.g08.gig.models.Appointment;
-import com.g08.gig.models.Bid;
 import com.g08.gig.models.Client;
 import com.g08.gig.models.Pro;
 import com.g08.gig.models.Request;
@@ -14,7 +13,7 @@ public class AppointmentServiceImpl implements AppointmentService{
 
     private final AppointmentRepository apptRepo;
 
-    public AppointmentServiceImpl(AppointmentRepository apptRepo) { this.apptRepo = apptRepo; };
+    public AppointmentServiceImpl(AppointmentRepository apptRepo) { this.apptRepo = apptRepo; }
     @Override
     public Appointment addAppt(LocalDateTime appointmentStart, LocalDateTime appointmentEnd, Pro pro, Client client, Request request) {
 
