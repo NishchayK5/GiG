@@ -3,6 +3,8 @@ package com.g08.gig.application;
 import android.app.Application;
 import android.content.Context;
 
+import com.g08.gig.business.services.AppointmentService;
+import com.g08.gig.business.services.AppointmentServiceImpl;
 import com.g08.gig.business.services.AuthService;
 import com.g08.gig.business.services.AuthServiceImpl;
 import com.g08.gig.business.services.BidService;
@@ -16,6 +18,8 @@ import com.g08.gig.business.profile.ProProfileLoader;
 import com.g08.gig.business.profile.ProfileLoader;
 import com.g08.gig.business.services.RequestService;
 import com.g08.gig.business.services.RequestServiceImpl;
+import com.g08.gig.business.services.ReviewService;
+import com.g08.gig.business.services.ReviewServiceImpl;
 import com.g08.gig.persistence.AppointmentRepository;
 import com.g08.gig.persistence.BidRepository;
 import com.g08.gig.persistence.ClientRepository;
@@ -45,6 +49,8 @@ public class GiGApp extends Application {
     private AuthService authService;
     private BidService bidService;
     private RequestService reqService;
+    private AppointmentService apptService;
+    private ReviewService reviewService;
     private AppDbHelper dbHelper;
     private UserRepository userRepo;
     private ClientRepository clientRepo;
@@ -92,6 +98,8 @@ public class GiGApp extends Application {
         authService = new AuthServiceImpl(userRepo, clientRepo, proRepo);
         reqService = new RequestServiceImpl(reqRepo);
         bidService = new BidServiceImpl(bidRepo);
+        apptService = new AppointmentServiceImpl(appointmentRepo);
+        reviewService = new ReviewServiceImpl(reviewRepo);
 
         if (FAKE_REPO) {
             DatabaseSeeder.seed(clientUserService, proUserService, reqService, clientRepo);
@@ -113,6 +121,10 @@ public class GiGApp extends Application {
     public RequestService getRequestService() { return reqService; }
 
     public BidService getBidService() { return bidService; }
+
+    public AppointmentService getApptService(){ return apptService; }
+
+    public ReviewService getReviewService() { return reviewService; }
 
     public ProfileLoader getProfileLoader(boolean isClient) {
         return isClient
