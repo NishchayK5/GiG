@@ -259,6 +259,7 @@ public class ClientHome extends AppCompatActivity {
                         : LocalDateTime.now();
                 LocalDateTime end = start.plusHours(1);
                 appointmentService.addAppt(start, end, bid.getPro(), client, req);
+                bidService.acceptBid(bid);
                 loadRequests();
                 Toast.makeText(ClientHome.this, R.string.bid_accepted_toast, Toast.LENGTH_SHORT).show();
             }

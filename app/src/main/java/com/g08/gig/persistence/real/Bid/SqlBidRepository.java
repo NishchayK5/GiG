@@ -11,6 +11,7 @@ import com.g08.gig.persistence.BidRepository;
 import com.g08.gig.persistence.ProRepository;
 import com.g08.gig.persistence.RequestRepository;
 import com.g08.gig.persistence.real.AppDbHelper;
+import com.g08.gig.persistence.real.Request.RequestTable;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class SqlBidRepository implements BidRepository {
     @Override
     public List<Bid> getAll(){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor c = db.query(BidTable.TABLE_BID, new String[]{BidTable.COL_BID_ID, BidTable.COL_BID_REQUEST_ID, BidTable.COL_BID_PRO_ID, BidTable.COL_BID_COST, BidTable.COL_BID_TIME_OF_BID},
+        Cursor c = db.query(BidTable.TABLE_BID, new String[]{BidTable.COL_BID_ID, BidTable.COL_BID_REQUEST_ID, BidTable.COL_BID_PRO_ID, BidTable.COL_BID_COST, BidTable.COL_BID_TIME_OF_BID, BidTable.COL_BID_STATUS},
                 null, null, null, null,
                 BidTable.COL_BID_ID + " DESC");
 
@@ -48,7 +49,7 @@ public class SqlBidRepository implements BidRepository {
     @Override
     public Bid getById(int id){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor c = db.query(BidTable.TABLE_BID, new String[]{BidTable.COL_BID_ID, BidTable.COL_BID_REQUEST_ID, BidTable.COL_BID_PRO_ID, BidTable.COL_BID_COST, BidTable.COL_BID_TIME_OF_BID},
+        Cursor c = db.query(BidTable.TABLE_BID, new String[]{BidTable.COL_BID_ID, BidTable.COL_BID_REQUEST_ID, BidTable.COL_BID_PRO_ID, BidTable.COL_BID_COST, BidTable.COL_BID_TIME_OF_BID, BidTable.COL_BID_STATUS},
                 BidTable.COL_BID_ID + " =?",
                 new String[]{String.valueOf(id)},
                 null, null,
@@ -65,7 +66,7 @@ public class SqlBidRepository implements BidRepository {
     @Override
     public List<Bid> getAllByRequest(Request request){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor c = db.query(BidTable.TABLE_BID, new String[]{BidTable.COL_BID_ID, BidTable.COL_BID_REQUEST_ID, BidTable.COL_BID_PRO_ID, BidTable.COL_BID_COST, BidTable.COL_BID_TIME_OF_BID},
+        Cursor c = db.query(BidTable.TABLE_BID, new String[]{BidTable.COL_BID_ID, BidTable.COL_BID_REQUEST_ID, BidTable.COL_BID_PRO_ID, BidTable.COL_BID_COST, BidTable.COL_BID_TIME_OF_BID, BidTable.COL_BID_STATUS},
                 BidTable.COL_BID_REQUEST_ID + " =?",
                 new String[]{String.valueOf(request.getId())},
                 null, null, null);
@@ -84,7 +85,7 @@ public class SqlBidRepository implements BidRepository {
     @Override
     public List<Bid> getAllByPro(Pro pro){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor c = db.query(BidTable.TABLE_BID, new String[]{BidTable.COL_BID_ID, BidTable.COL_BID_REQUEST_ID, BidTable.COL_BID_PRO_ID, BidTable.COL_BID_COST, BidTable.COL_BID_TIME_OF_BID},
+        Cursor c = db.query(BidTable.TABLE_BID, new String[]{BidTable.COL_BID_ID, BidTable.COL_BID_REQUEST_ID, BidTable.COL_BID_PRO_ID, BidTable.COL_BID_COST, BidTable.COL_BID_TIME_OF_BID, BidTable.COL_BID_STATUS},
                 BidTable.COL_BID_PRO_ID + " =?",
                 new String[]{String.valueOf(pro.getId())},
                 null, null, null);
@@ -99,6 +100,38 @@ public class SqlBidRepository implements BidRepository {
         }
         return result;
     }
+
+    @Override
+    public boolean update(Bid bid) {
+        if (bid == null) return false;
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(BidTable.COL_BID_PRO_ID, bid.getPro().getId());
+            values.put(BidTable.COL_BID_REQUEST_ID, bid.getRequest().getId());
+            values.put(BidTable.COL_BID_COST, (int)(bid.getCost()*100));
+            values.put(BidTable.COL_BID_TIME_OF_BID, bid.getTimeOfBid().toString());
+            values.put(BidTable.COL_BID_STATUS, bid.getBidStatus()?1:0);
+
+            int rows = db.update(
+                    BidTable.TABLE_BID,
+                    values,
+                    BidTable.COL_BID_ID + "=?",
+                    new String[]{String.valueOf(bid.getId())}
+            );
+
+            if (rows == 0) return false;
+
+            db.setTransactionSuccessful();
+            return true;
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+
     @Override
     public Bid add(Bid bid){
         if(bid == null) return null;
@@ -110,6 +143,7 @@ public class SqlBidRepository implements BidRepository {
             values.put(BidTable.COL_BID_REQUEST_ID, bid.getRequest().getId());
             values.put(BidTable.COL_BID_COST, (int)(bid.getCost()*100));
             values.put(BidTable.COL_BID_TIME_OF_BID, bid.getTimeOfBid().toString());
+            values.put(BidTable.COL_BID_STATUS, bid.getBidStatus()?1:0);
             long bidId = db.insert(BidTable.TABLE_BID, null, values);
             if(bidId ==-1) return null;
             db.setTransactionSuccessful();
@@ -138,7 +172,8 @@ public class SqlBidRepository implements BidRepository {
         double cost = integerCentsValue/100.0;
         String timeOfBidString = c.getString(c.getColumnIndexOrThrow(BidTable.COL_BID_TIME_OF_BID));
         LocalDateTime timeOfBid = LocalDateTime.parse(timeOfBidString);
-        return new Bid(id, pro, request, cost, timeOfBid);
+        boolean isAccepted = c.getInt(c.getColumnIndexOrThrow(BidTable.COL_BID_STATUS)) == 1;
+        return new Bid(id, pro, request, cost, timeOfBid, isAccepted);
     }
 
 }

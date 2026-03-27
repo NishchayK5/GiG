@@ -12,7 +12,7 @@ public interface BidService {
     List<Bid> getAllByRequest(Request request);
     List<Bid> getAllByPro(Pro pro);
     List<Request> getRequestsWithBidCostsByPro(Pro pro);
-
+    void acceptBid(Bid bid);
 
 
 }

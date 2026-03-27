@@ -17,4 +17,7 @@ public interface BidRepository {
     Bid getById(int id);
     List<Bid> getAllByRequest(Request request);
     List<Bid> getAllByPro(Pro pro);
+
+    boolean update(Bid bid);
+
 }

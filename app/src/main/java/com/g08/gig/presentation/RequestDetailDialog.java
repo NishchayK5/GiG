@@ -216,11 +216,13 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
                         btn.setEnabled(false);
                     }
                 }
+
                 TextView statusView = getView() == null ? null : getView().findViewById(R.id.dialogRequestStatus);
                 if (statusView != null) {
                     statusView.setText("Ongoing");
                     setStatusBackground(statusView, ContextCompat.getColor(requireContext(), R.color.main_cust_color_legacy));
                 }
+                acceptButton.setText("Accepted");
 
                 if (actionListener != null) {
                     actionListener.onAcceptBid(bidForRow);
@@ -229,7 +231,27 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
                 Button completeButton = getView() == null ? null : getView().findViewById(R.id.dialogCompleteButton);
                 if (completeButton != null) setCompleteButtonState(completeButton);
             });
+            if (bidForRow.getBidStatus()) {
+                selectedBid = bidForRow;
+                acceptButton.setText("Accepted");
+                acceptButton.setEnabled(false);
+            }
             bidsContainer.addView(bidRow);
+        }
+
+        if (selectedBid != null) {
+            for (int i = 0; i < bidsContainer.getChildCount(); i++) {
+                View row = bidsContainer.getChildAt(i);
+                Bid rowBid = bids.get(i);
+                row.setAlpha(rowBid.getId() == selectedBid.getId() ? 1.0f : 0.5f);
+                Button btn = row.findViewById(R.id.bidRowAcceptButton);
+                if (btn != null) btn.setEnabled(false);
+            }
+            TextView statusView = view.findViewById(R.id.dialogRequestStatus);
+            if (statusView != null) {
+                statusView.setText("Ongoing");
+                setStatusBackground(statusView, ContextCompat.getColor(requireContext(), R.color.main_cust_color_legacy));
+            }
         }
         boolean hasBids = !bids.isEmpty();
         bidsEmptyView.setVisibility(hasBids ? View.GONE : View.VISIBLE);

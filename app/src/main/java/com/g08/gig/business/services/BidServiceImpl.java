@@ -21,8 +21,7 @@ public class BidServiceImpl implements BidService {
     public Bid addBid(Pro pro, Request request, double cost) {
         LocalDateTime dateTimeNow = LocalDateTime.now();
 
-        Bid toCreate = new Bid(0, pro, request, cost, dateTimeNow);
-
+        Bid toCreate = new Bid(0, pro, request, cost, dateTimeNow, false);
 
         return bidRepo.add(toCreate);
     }
@@ -48,5 +47,11 @@ public class BidServiceImpl implements BidService {
             }
         }
         return result;
+    }
+
+    @Override
+    public void acceptBid(Bid bid) {
+        bid.acceptBid();
+        bidRepo.update(bid);
     }
 }
