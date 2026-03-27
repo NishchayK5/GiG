@@ -1,5 +1,6 @@
 package com.g08.gig.business.services;
 
+import com.g08.gig.models.Appointment;
 import com.g08.gig.models.Bid;
 import com.g08.gig.models.Pro;
 import com.g08.gig.models.Request;
@@ -11,4 +12,7 @@ public interface BidService {
     List<Bid> getAllByRequest(Request request);
     List<Bid> getAllByPro(Pro pro);
     List<Request> getRequestsWithBidCostsByPro(Pro pro);
+
+
+
 }

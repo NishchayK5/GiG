@@ -44,6 +44,7 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
 
     private OnRequestActionListener actionListener;
     private List<Bid> bids = new ArrayList<>();
+    private Bid selectedBid = null;
 
     public void setActionListener(OnRequestActionListener listener) {
         this.actionListener = listener;
@@ -52,6 +53,10 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
         this.bids = bids != null ? bids : new ArrayList<>();
     }
 
+    private void setCompleteButtonState(Button completeButton) {
+        completeButton.setEnabled(selectedBid != null);
+        completeButton.setAlpha(selectedBid != null ? 1.0f : 0.5f);
+    }
     public static RequestDetailDialog newInstance(int requestId, String title, String body, String time, boolean isActive) {
         RequestDetailDialog dialog = new RequestDetailDialog();
         Bundle args = new Bundle();
@@ -201,10 +206,28 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
                     && bidForRow.getRequest() != null;
             acceptButton.setVisibility(canAccept ? View.VISIBLE : View.GONE);
             acceptButton.setOnClickListener(v -> {
+                selectedBid = bidForRow;
+
+                for (int i = 0; i < bidsContainer.getChildCount(); i++) {
+                    View row = bidsContainer.getChildAt(i);
+                    row.setAlpha(i == bidsContainer.indexOfChild(bidRow) ? 1.0f : 0.5f);
+                    Button btn = row.findViewById(R.id.bidRowAcceptButton);
+                    if (btn != null) {
+                        btn.setEnabled(false);
+                    }
+                }
+                TextView statusView = getView() == null ? null : getView().findViewById(R.id.dialogRequestStatus);
+                if (statusView != null) {
+                    statusView.setText("Ongoing");
+                    setStatusBackground(statusView, ContextCompat.getColor(requireContext(), R.color.main_cust_color_legacy));
+                }
+
                 if (actionListener != null) {
                     actionListener.onAcceptBid(bidForRow);
                 }
-                dismiss();
+
+                Button completeButton = getView() == null ? null : getView().findViewById(R.id.dialogCompleteButton);
+                if (completeButton != null) setCompleteButtonState(completeButton);
             });
             bidsContainer.addView(bidRow);
         }
@@ -220,18 +243,19 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
         ImageButton closeIcon = view.findViewById(R.id.dialogCloseIcon);
         Button deleteButton = view.findViewById(R.id.dialogDeleteButton);
         Button completeButton = view.findViewById(R.id.dialogCompleteButton);
+
+        setCompleteButtonState(completeButton);
+
         closeIcon.setOnClickListener(v -> dismiss());
+
         deleteButton.setOnClickListener(v -> {
-            if (actionListener != null) {
-                actionListener.onDeleteRequest(requestId);
-            }
+            if (actionListener != null) actionListener.onDeleteRequest(requestId);
             dismiss();
         });
+
         completeButton.setOnClickListener(v -> {
             dismiss();
-            if (actionListener != null) {
-                actionListener.onCompleteRequest(requestId);
-            }
+            if (actionListener != null) actionListener.onCompleteRequest(requestId);
         });
     }
 

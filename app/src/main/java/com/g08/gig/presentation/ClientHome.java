@@ -240,6 +240,7 @@ public class ClientHome extends AppCompatActivity {
             public void onCompleteRequest(int requestId) {
                 CompleteRequestReviewDialog.newInstance(requestId)
                         .show(getSupportFragmentManager(), "complete_review");
+                requestService.completeRequest(requestId);
             }
 
             @Override
@@ -258,7 +259,6 @@ public class ClientHome extends AppCompatActivity {
                         : LocalDateTime.now();
                 LocalDateTime end = start.plusHours(1);
                 appointmentService.addAppt(start, end, bid.getPro(), client, req);
-                requestService.completeRequest(req.getId());
                 loadRequests();
                 Toast.makeText(ClientHome.this, R.string.bid_accepted_toast, Toast.LENGTH_SHORT).show();
             }
