@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface ReviewService {
     Review addReview(Client reviewer, Pro pro, String title, String body, int stars);
+
     List<Review> getAllReviewsForPro(Pro pro);
 
     boolean deleteReview(int id);

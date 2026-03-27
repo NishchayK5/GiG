@@ -10,7 +10,9 @@ class ReviewTest {
     void constructor_setsAllFields() {
         Client reviewer = new Client(1, "lisa.park@email.com", "Lisa", "Park", "2045551122",
                 "200 Main Street, Winnipeg", null);
-        Review review = new Review(10, reviewer, "Excellent brake job",
+        Pro pro = new Pro(1, "carlos.mendez@autocare.ca", "Carlos", "Mendez", "2045553232",
+                new String[]{"Oil Change", "Brake Service"}, "Winnipeg");
+        Review review = new Review(10, reviewer, pro, "Excellent brake job",
                 "Had my brakes replaced last week. Very professional and the car stops perfectly now. Highly recommend.", 5);
         assertEquals(10, review.getId());
         assertSame(reviewer, review.getReviewer());
@@ -23,7 +25,9 @@ class ReviewTest {
     void setters_updateFields() {
         Client reviewer = new Client(1, "andrew.brown@email.com", "Andrew", "Brown", "2045553344",
                 "15 Henderson Hwy, Winnipeg", null);
-        Review review = new Review(1, reviewer, "Good oil change", "Fast and friendly service.", 3);
+        Pro pro = new Pro(1, "carlos.mendez@autocare.ca", "Carlos", "Mendez", "2045553232",
+                new String[]{"Oil Change", "Brake Service"}, "Winnipeg");
+        Review review = new Review(1, reviewer, pro, "Good oil change", "Fast and friendly service.", 3);
 
         review.setId(2);
         assertEquals(2, review.getId());

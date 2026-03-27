@@ -33,6 +33,7 @@ public class ProHome extends AppCompatActivity {
     private View emptyBidsView;
     private View homeContent;
     private View biddingsViewContent;
+    private View appointmentViewContent;
     private View profileViewContent;
 
     private RequestService requestService;
@@ -70,6 +71,7 @@ public class ProHome extends AppCompatActivity {
         homeContent = findViewById(R.id.homeContent);
         biddingsViewContent = findViewById(R.id.biddingsViewContent);
         profileViewContent = findViewById(R.id.profileViewContent);
+        appointmentViewContent = findViewById(R.id.appointmentViewContent);
     }
 
     private void setupBiddingsList() {
@@ -130,6 +132,10 @@ public class ProHome extends AppCompatActivity {
                 showView(biddingsViewContent);
                 return true;
             }
+            if (id == R.id.nav_appointment) {
+                showView(appointmentViewContent);
+                return true;
+            }
             if (id == R.id.nav_profile) {
                 showView(profileViewContent);
                 updateProfileViews(SessionManager.getUserId(this));
@@ -150,6 +156,7 @@ public class ProHome extends AppCompatActivity {
     private void showView(View visibleView) {
         homeContent.setVisibility(visibleView == homeContent ? View.VISIBLE : View.GONE);
         biddingsViewContent.setVisibility(visibleView == biddingsViewContent ? View.VISIBLE : View.GONE);
+        appointmentViewContent.setVisibility(visibleView == appointmentViewContent ? View.VISIBLE : View.GONE);
         profileViewContent.setVisibility(visibleView == profileViewContent ? View.VISIBLE : View.GONE);
     }
     private void loadBids() {

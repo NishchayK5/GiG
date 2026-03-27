@@ -105,7 +105,7 @@
     <string name="logout">Logout</string>
     <string name="home_view">Home view</string>
     <string name="biddings_view">Current Bids</string>
-    <string name="appointment_view">Appointment view</string>
+    <string name="appointment_view">Appointments</string>
 
     <!-- Request detail dialog -->
     <string name="request_detail_title">Request details</string>

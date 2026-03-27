@@ -163,22 +163,53 @@
                     </LinearLayout>
                 </FrameLayout>
             </LinearLayout>
+            <FrameLayout
+                android:id="@+id/appointmentViewContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
 
-            <!-- Appointment: center label -->
-<!--            <FrameLayout-->
-<!--                android:id="@+id/appointmentViewContent"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:visibility="gone">-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center"-->
-<!--                    android:text="@string/appointment_view"-->
-<!--                    android:textColor="@color/main_netural_color"-->
-<!--                    android:textSize="18sp" />-->
-<!--            </FrameLayout>-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/appointment_view"
+                        android:textColor="@color/main_netural_color"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:padding="16dp" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/appointmentsList"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:clipToPadding="false"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="16dp" />
+
+                        <LinearLayout
+                            android:id="@+id/emptyAppointmentsView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="24dp"
+                            android:visibility="gone">
+
+
+                        </LinearLayout>
+                    </FrameLayout>
+                </LinearLayout>
+            </FrameLayout>
 
             <!-- Profile: list tiles -->
             <FrameLayout
