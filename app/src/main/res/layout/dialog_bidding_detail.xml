@@ -152,7 +152,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="Pick a time"
+        android:text="Proposed Time"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         app:strokeColor="@color/main_cust_color_legacy"
         android:textColor="@color/main_cust_color_legacy" />

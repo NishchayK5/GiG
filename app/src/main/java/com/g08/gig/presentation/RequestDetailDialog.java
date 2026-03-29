@@ -20,7 +20,9 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import com.g08.gig.R;
 import com.g08.gig.models.Bid;
+import com.g08.gig.util.DateFormats;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -200,6 +202,18 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
                 bidderName.setClickable(false);
             }
             bidCost.setText(String.format("$%.2f", bidForRow.getCost()));
+
+            TextView bidProposedTime = bidRow.findViewById(R.id.bidRowProposedTime);
+            if (bidForRow.getTimeOfBid() != null) {
+                LocalDateTime start = bidForRow.getTimeOfBid();
+                LocalDateTime end = start.plusHours(1);
+                bidProposedTime.setText(
+                        start.format(DateFormats.REQUEST_TIME) + " to " + end.format(DateFormats.REQUEST_TIME)
+                );
+                bidProposedTime.setVisibility(View.VISIBLE);
+            } else {
+                bidProposedTime.setVisibility(View.GONE);
+            }
 
             boolean canAccept = requestIsActive
                     && bidForRow.getPro() != null
