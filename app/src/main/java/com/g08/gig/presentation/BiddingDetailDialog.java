@@ -1,5 +1,7 @@
 package com.g08.gig.presentation;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,11 +16,15 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import com.g08.gig.R;
+import com.g08.gig.util.DateFormats;
+
+import java.time.LocalDateTime;
 
 public class BiddingDetailDialog extends BaseGigDialogFragment {
 
@@ -30,8 +36,10 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
     private static final int MAX_LINES_COLLAPSED = 4;
     private static final float DIALOG_MAX_HEIGHT_RATIO = 0.85f;
 
+    private LocalDateTime proposedTime = null;
+
     public interface OnBiddingActionListener {
-        void onBid(int requestId, double bidAmount);
+        void onBid(int requestId, double bidAmount, LocalDateTime proposedTime);
     }
 
     private OnBiddingActionListener actionListener;
@@ -87,7 +95,11 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
         TextView statusView = view.findViewById(R.id.dialogRequestStatus);
         ImageButton closeIcon = view.findViewById(R.id.dialogCloseIcon);
         EditText bidAmountInput = view.findViewById(R.id.dialogBidAmountInput);
+
         Button bidButton = view.findViewById(R.id.dialogBidButton);
+        bidButton.setEnabled(false);
+        bidButton.setAlpha(0.5f);
+        final Button finalBidButton = bidButton;
 
         titleView.setText(args.getString(ARG_TITLE, ""));
         String body = args.getString(ARG_BODY, "");
@@ -138,11 +150,38 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
 
         closeIcon.setOnClickListener(v -> dismiss());
 
+        Button pickTimeButton = view.findViewById(R.id.dialogPickTimeButton);
+        TextView pickedTimeView = view.findViewById(R.id.dialogPickedTimeView);
+
+        pickTimeButton.setOnClickListener(v -> {
+            LocalDateTime initial = proposedTime != null ? proposedTime : LocalDateTime.now();
+            DatePickerDialog datePicker = new DatePickerDialog(requireContext(),
+                    (dateView, year, month, day) -> {
+                        TimePickerDialog timePicker = new TimePickerDialog(requireContext(),
+                                (timeView2, hour, minute) -> {
+                                    proposedTime = LocalDateTime.of(year, month + 1, day, hour, minute);
+                                    pickedTimeView.setText(proposedTime.format(DateFormats.REQUEST_TIME));
+                                    pickedTimeView.setVisibility(View.VISIBLE);
+                                    finalBidButton.setEnabled(true);
+                                    finalBidButton.setAlpha(1.0f);
+                                },
+                                initial.getHour(), initial.getMinute(), false);
+                        timePicker.show();
+                    },
+                    initial.getYear(), initial.getMonthValue() - 1, initial.getDayOfMonth());
+            datePicker.show();
+        });
+
         bidButton.setOnClickListener(v -> {
             String amountText = bidAmountInput.getText().toString().trim();
             if (amountText.isEmpty()) {
                 bidAmountInput.setError(getString(R.string.bid_amount_required));
                 bidAmountInput.requestFocus();
+                return;
+            }
+
+            if (proposedTime == null) {
+                Toast.makeText(requireContext(), "Please select a proposed time", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -156,7 +195,7 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
             }
 
             if (actionListener != null) {
-                actionListener.onBid(requestId, amount);
+                actionListener.onBid(requestId, amount, proposedTime);
             }
             dismiss();
         });

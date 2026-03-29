@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.g08.gig.R;
 import com.g08.gig.application.GiGApp;
+import com.g08.gig.business.services.AppointmentService;
+import com.g08.gig.models.Appointment;
 import com.g08.gig.session.SessionManager;
 import com.g08.gig.business.services.BidService;
 import com.g08.gig.business.services.ClientUserService;
@@ -29,6 +31,7 @@ public class ProHome extends AppCompatActivity {
 
     private BiddingAdapter biddingAdapter;
     private BiddingAdapter bidsAdapter;
+    private AppointmentAdapter appointmentAdapter;
     private View emptyBiddingsView;
     private View emptyBidsView;
     private View homeContent;
@@ -38,6 +41,7 @@ public class ProHome extends AppCompatActivity {
 
     private RequestService requestService;
     private BidService bidService;
+    private AppointmentService appointmentService;
 
     private ProUserService proUserService;
     private List<Request> availableRequests = new ArrayList<>();
@@ -52,6 +56,7 @@ public class ProHome extends AppCompatActivity {
         requestService = GiGApp.get(this).getRequestService();
         bidService = GiGApp.get(this).getBidService();
         proUserService = GiGApp.get(this).getProUserService();
+        appointmentService = GiGApp.get(this).getApptService();
 
         int userId = getIntent().getIntExtra(SessionManager.KEY_USER_ID, -1);
         if (userId != -1) {
@@ -62,6 +67,7 @@ public class ProHome extends AppCompatActivity {
         setupBiddingsList();
         setupBidsList();
         setupBottomNav();
+        setupAppointmentsList();
         setupProfileAndLogout(userId);
     }
 
@@ -208,13 +214,43 @@ public class ProHome extends AppCompatActivity {
                 time,
                 request.getRequestStatus()
         );
-        dialog.setActionListener((requestId, bidAmount) -> {
+        dialog.setActionListener((requestId, bidAmount, proposedTime) -> {
             int cost = (int) bidAmount;
-            bidService.addBid(proUserService.getProById(userId), request, cost);
+            bidService.addBid(proUserService.getProById(userId), request, cost, proposedTime);
             Toast.makeText(ProHome.this, getString(R.string.bid) + " $" + bidAmount + ": " + request.getTitle(), Toast.LENGTH_SHORT).show();
             loadBids();
             updateEmptyState();
         });
         dialog.show(getSupportFragmentManager(), "bidding_detail");
+    }
+
+    private void setupAppointmentsList() {
+        RecyclerView appointmentsList = findViewById(R.id.appointmentsList);
+        appointmentAdapter = new AppointmentAdapter();
+        appointmentsList.setLayoutManager(new LinearLayoutManager(this));
+        appointmentsList.setAdapter(appointmentAdapter);
+        appointmentAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() { updateEmptyAppointmentsState(); }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) { updateEmptyAppointmentsState(); }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) { updateEmptyAppointmentsState(); }
+        });
+        loadAppointments();
+        updateEmptyAppointmentsState();
+    }
+    private void loadAppointments() {
+        int userId = SessionManager.getUserId(this);
+        Pro pro = proUserService.getProById(userId);
+        List<Appointment> appointments = appointmentService.getAllApptsByPro(pro);
+        appointmentAdapter.submitList(appointments != null ? new ArrayList<>(appointments) : new ArrayList<>());
+    }
+
+    private void updateEmptyAppointmentsState() {
+        View emptyView = findViewById(R.id.emptyAppointmentsView);
+        emptyView.setVisibility(appointmentAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 }

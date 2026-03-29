@@ -147,7 +147,27 @@
 
         </LinearLayout>
     </ScrollView>
+    <Button
+        android:id="@+id/dialogPickTimeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Pick a time"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        app:strokeColor="@color/main_cust_color_legacy"
+        android:textColor="@color/main_cust_color_legacy" />
 
+    <TextView
+        android:id="@+id/dialogPickedTimeView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="4dp"
+        android:gravity="center"
+        android:textColor="@color/main_cust_color_legacy"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
     <Button
         android:id="@+id/dialogBidButton"
         android:layout_width="match_parent"

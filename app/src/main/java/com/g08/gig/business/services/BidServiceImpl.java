@@ -17,10 +17,9 @@ public class BidServiceImpl implements BidService {
         this.bidRepo = bidRepo;
     }
     @Override
-    public Bid addBid(Pro pro, Request request, double cost) {
-        LocalDateTime dateTimeNow = LocalDateTime.now();
+    public Bid addBid(Pro pro, Request request, double cost, LocalDateTime proposedTime) {
 
-        Bid toCreate = new Bid(0, pro, request, cost, dateTimeNow, false);
+        Bid toCreate = new Bid(0, pro, request, cost, proposedTime, false);
 
         return bidRepo.add(toCreate);
     }

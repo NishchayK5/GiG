@@ -5,10 +5,11 @@ import com.g08.gig.models.Bid;
 import com.g08.gig.models.Pro;
 import com.g08.gig.models.Request;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface BidService {
-    Bid addBid(Pro pro, Request request, double cost);
+    Bid addBid(Pro pro, Request request, double cost, LocalDateTime proposedTime);
     List<Bid> getAllByRequest(Request request);
     List<Bid> getAllByPro(Pro pro);
     List<Request> getRequestsWithBidCostsByPro(Pro pro);

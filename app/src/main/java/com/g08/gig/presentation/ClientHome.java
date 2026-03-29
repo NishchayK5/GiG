@@ -265,9 +265,7 @@ public class ClientHome extends AppCompatActivity {
                     return;
                 }
                 Request req = bid.getRequest();
-                LocalDateTime start = req.getTimeOfRequest() != null
-                        ? req.getTimeOfRequest()
-                        : LocalDateTime.now();
+                LocalDateTime start = bid.getTimeOfBid();
                 LocalDateTime end = start.plusHours(1);
                 appointmentService.addAppt(start, end, bid.getPro(), client, req);
                 bidService.acceptBid(bid);

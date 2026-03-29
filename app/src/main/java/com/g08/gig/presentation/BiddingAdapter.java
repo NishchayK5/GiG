@@ -73,7 +73,6 @@ public class BiddingAdapter extends ListAdapter<Request, BiddingAdapter.BiddingV
         final TextView time;
         final TextView bidPrice;
 
-
         BiddingViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.requestCardTitle);
