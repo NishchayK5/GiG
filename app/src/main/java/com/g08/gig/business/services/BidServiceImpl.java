@@ -1,5 +1,6 @@
 package com.g08.gig.business.services;
 
+import com.g08.gig.application.GiGApp;
 import com.g08.gig.models.Bid;
 import com.g08.gig.models.Pro;
 import com.g08.gig.models.Request;
@@ -12,9 +13,7 @@ import java.util.List;
 public class BidServiceImpl implements BidService {
 
     private final BidRepository bidRepo;
-
-    public BidServiceImpl(BidRepository bidRepo)
-    {
+    public BidServiceImpl(BidRepository bidRepo) {
         this.bidRepo = bidRepo;
     }
     @Override
@@ -42,16 +41,29 @@ public class BidServiceImpl implements BidService {
         List<Bid> bids = bidRepo.getAllByPro(pro);
         List<Request> result = new ArrayList<>();
         for (Bid bid : bids) {
-            if (bid != null && bid.getRequest() != null) {
-                result.add(new Request(bid.getRequest(), bid.getCost()));
+            if (bid != null && bid.getRequestIfActive() != null) {
+                result.add(new Request(bid.getRequestIfActive(), bid.getCost()));
             }
         }
         return result;
     }
+
 
     @Override
     public void acceptBid(Bid bid) {
         bid.acceptBid();
         bidRepo.update(bid);
     }
+
+    @Override
+    public Bid getAcceptedBidByRequest(Request request) {
+        List<Bid> bids = bidRepo.getAllByRequest(request);
+        for (Bid bid : bids) {
+            if (bid.getBidStatus()) return bid;
+        }
+        return null;
+    }
+
 }
+
+

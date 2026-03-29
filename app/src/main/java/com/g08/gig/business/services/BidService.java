@@ -14,5 +14,7 @@ public interface BidService {
     List<Request> getRequestsWithBidCostsByPro(Pro pro);
     void acceptBid(Bid bid);
 
+    Bid getAcceptedBidByRequest(Request request);
+
 
 }

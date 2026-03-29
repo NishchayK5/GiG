@@ -2,6 +2,8 @@ package com.g08.gig.presentation;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.g08.gig.business.services.ReviewService;
 import com.g08.gig.util.Pair;
 
 import android.view.View;
@@ -50,6 +52,7 @@ public class ClientHome extends AppCompatActivity {
     private BidService bidService;
     private ClientUserService clientUserService;
     private AppointmentService appointmentService;
+    private ReviewService reviewService;
 
     private final ActivityResultLauncher<Intent> createRequestLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -69,6 +72,7 @@ public class ClientHome extends AppCompatActivity {
         bidService = GiGApp.get(this).getBidService();
         clientUserService = GiGApp.get(this).getClientUserService();
         appointmentService = GiGApp.get(this).getApptService();
+        reviewService = GiGApp.get(this).getReviewService();
 
         int userId = getIntent().getIntExtra(SessionManager.KEY_USER_ID, -1);
         if (userId != -1) {
@@ -238,9 +242,16 @@ public class ClientHome extends AppCompatActivity {
 
             @Override
             public void onCompleteRequest(int requestId) {
-                CompleteRequestReviewDialog.newInstance(requestId)
-                        .show(getSupportFragmentManager(), "complete_review");
-                requestService.completeRequest(requestId);
+                CompleteRequestReviewDialog dialog = CompleteRequestReviewDialog.newInstance(requestId);
+                dialog.setReviewListener((title, body, stars) -> {
+                    int clientUserId = SessionManager.getUserId(ClientHome.this);
+                    Client client = clientUserService.getClientById(clientUserId);
+                    Bid acceptedBid = bidService.getAcceptedBidByRequest(request);
+                    if (client != null && acceptedBid != null && acceptedBid.getPro() != null) {
+                        reviewService.addReview(client, acceptedBid.getPro(), title, body, stars);
+                    }
+                });
+                dialog.show(getSupportFragmentManager(), "complete_review");
             }
 
             @Override

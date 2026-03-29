@@ -29,6 +29,14 @@ public class Bid {
     }
 
     public Request getRequest(){return request;}
+    public Request getRequestIfActive() {
+        if(request.getRequestStatus()) {
+            return request;
+        }
+
+        return null;
+
+    }
 
     public void setRequest(Request request){this.request = request;}
 

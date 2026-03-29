@@ -76,12 +76,8 @@ public class ProPublicDetailActivity extends AppCompatActivity {
         LayoutInflater inflater = LayoutInflater.from(this);
 
         if (reviews.isEmpty()) {
-            emptyReviewsView.setVisibility(View.GONE);
-            ReviewDisplay[] placeholders = dummyReviews();
-            bindAverageRating(avgRatingView, avgRatingOutOfView, averageStars(placeholders));
-            for (ReviewDisplay row : placeholders) {
-                addReviewRow(inflater, reviewsContainer, row);
-            }
+            emptyReviewsView.setVisibility(View.VISIBLE);
+            bindAverageRating(avgRatingView, avgRatingOutOfView, 0);
         } else {
             emptyReviewsView.setVisibility(View.GONE);
             bindAverageRating(avgRatingView, avgRatingOutOfView, averageStars(reviews));
@@ -130,37 +126,6 @@ public class ProPublicDetailActivity extends AppCompatActivity {
         return n == 0 ? 0 : (double) sum / n;
     }
 
-    private static double averageStars(ReviewDisplay[] rows) {
-        if (rows == null || rows.length == 0) {
-            return 0;
-        }
-        int sum = 0;
-        for (ReviewDisplay r : rows) {
-            sum += r.stars;
-        }
-        return (double) sum / rows.length;
-    }
-
-    /** Sample reviews for UI until real data exists (remove or gate when reviews are always persisted). */
-    private ReviewDisplay[] dummyReviews() {
-        return new ReviewDisplay[]{
-                new ReviewDisplay(
-                        getString(R.string.pro_dummy_review_1_title),
-                        getString(R.string.pro_dummy_review_1_body),
-                        5,
-                        getString(R.string.pro_dummy_review_1_reviewer)),
-                new ReviewDisplay(
-                        getString(R.string.pro_dummy_review_2_title),
-                        getString(R.string.pro_dummy_review_2_body),
-                        4,
-                        getString(R.string.pro_dummy_review_2_reviewer)),
-                new ReviewDisplay(
-                        getString(R.string.pro_dummy_review_3_title),
-                        getString(R.string.pro_dummy_review_3_body),
-                        5,
-                        getString(R.string.pro_dummy_review_3_reviewer)),
-        };
-    }
 
     private void addReviewRow(LayoutInflater inflater, LinearLayout reviewsContainer, ReviewDisplay row) {
         View item = inflater.inflate(R.layout.item_review_public, reviewsContainer, false);

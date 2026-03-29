@@ -217,10 +217,12 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
                     }
                 }
 
-                TextView statusView = getView() == null ? null : getView().findViewById(R.id.dialogRequestStatus);
-                if (statusView != null) {
-                    statusView.setText("Ongoing");
-                    setStatusBackground(statusView, ContextCompat.getColor(requireContext(), R.color.main_cust_color_legacy));
+                if (requestIsActive) {
+                    TextView statusView = view.findViewById(R.id.dialogRequestStatus);
+                    if (statusView != null) {
+                        statusView.setText("Ongoing");
+                        setStatusBackground(statusView, ContextCompat.getColor(requireContext(), R.color.main_cust_color_legacy));
+                    }
                 }
                 acceptButton.setText("Accepted");
 
@@ -248,7 +250,7 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
                 if (btn != null) btn.setEnabled(false);
             }
             TextView statusView = view.findViewById(R.id.dialogRequestStatus);
-            if (statusView != null) {
+            if (statusView != null && requestIsActive) {
                 statusView.setText("Ongoing");
                 setStatusBackground(statusView, ContextCompat.getColor(requireContext(), R.color.main_cust_color_legacy));
             }
