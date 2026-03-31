@@ -100,6 +100,7 @@ To run the E2E tests in Android Studio, follow these steps:
 ## Final Retrospective
 [RETROSPECTIVE.md](Documents/RETROSPECTIVE.MD)
 
+---
 ## Working Agreement
 [Working Agreement](Documents/work-agreement.docx)
 
