@@ -8,12 +8,12 @@
 
 Group Members:
 
-| Name                | Role | GitLab |
-|---------------------|------|--------|
-| Adejare Taiwo       | UI/UX Designer | @nnnnnnnnnnn |
-| Dayaveer Gill       | Testing and QA | @nnnnnnnnnnnn |
-| Izzy Elskamp        | Android Developer | @jbeifugeorrgho |
-| Nishchay Kathuria   | Backend Developer | @kathurin |
+| Name                | Role | GitLab         |
+|---------------------|------|----------------|
+| Adejare Taiwo       | UI/UX Designer | @taiwoa5       |
+| Dayaveer Gill       | Testing and QA | @DayaveerGill  |
+| Izzy Elskamp        | Android Developer | @IzzyElskamp |
+| Nishchay Kathuria   | Backend Developer | @kathurin      |
 
 ---
 ## Overview 
