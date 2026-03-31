@@ -1,25 +1,63 @@
-# ARCHITECTURE
+# ARCHITECTURE🧱
 
-## Packages and Components
+## Overview
+GiG is built on a five-layer architecture that enforces a clean separation of responsibilities across **Application , Presentation, Business, Models amd Persistence Layer.** Each layer has a single and well-defined responsibility and communicates with its immediate neighbours only. 
+This promotes maintainability and makes it extendable and easy to test. Furthermore, the design allows the application to switch between stub storage and SQLite-based database without changing any code in upper layers.
 
-Our source code is in ``go8-project\app\src\main\java\com\g08\gig`` and is split into 5 main packages:
-- Application - Main project files that run on startup
-- Business - Validation logic and logic services
-  - Constants - Validation messages
-  - Profile - Profile loading for both pros and clients
-  - Services - Logic services
-  - Validation - Validation checks for various text fields
-- Models - Domain Objects (User, Pro, Client, Appointment, Bid, Request, Review)
-- Persistence - SQLite database/interface and fake stub database/interface
-  - Fake - Stub database
-  - Real - SQLite files
-- Presentation - UI and Android Activities
+The data flow is uni-directional. Application layer initiates the system, Presentation layer takes the user-inputs which is validated and processed by the Business layer. The data is structured using Models and finally stored or retrieved by the Persistence layers. Results follow the same path backwards to update UI.
+> In addition to the five fundamental layers, two supporting packages - **Session**, for managing local user session state, and **Util**, for shared helper methods used across the codebase providing functionality that is used by all layers without belonging to any one of them.
+---
+## Package Structure
 
-Other packages:
-- Session - Handles local session storage 
-- Util - Custom misc. methods that are used more than once (safeTrim etc)
+Our source code is in:
+```bash
+go8-project\app\src\main\java\com\g08\gig
+```
+### Core-Layers
+| Layer | Package | Responsibility |
+|-------|-------|--------------|
+| 1     | Application | Main project files that run on startup |
+| 2     | Presentation | Manages UI Screens and activities |
+| 3     | Business | Contains Validation logic and business rules and services |
+| 4     | Model | Contains domain objects |
+| 5     | Persistence | Data access layer, contains real SQLite and stub implementations |
 
-## Responsibilities Between Layers
+### Other Packages
+- Session - Handles local session storage
+- Util - Custom misc. methods that are used more than once (safeTrim etc.)
+### Structure
+```
+app/src/main/java/com/g08/gig
+├── application
+├── business
+│   ├── constants
+│   ├── profile
+│   ├── services
+│   └── validation
+├── models
+├── persistence
+│   ├── fake
+│   └── real
+│       ├── Appointment
+│       ├── Bid
+│       ├── Client
+│       ├── Pro
+│       ├── Request
+│       ├── Review
+│       ├── Skills
+│       └── user
+├── presentation
+├── session
+└── util
+```
+---
+
+## Responsibilities Between Layers and Component Overview
+
+### Application Layer
+This is located in ``application/`` package. It handles dependencies, setting-configuration and bootstrapping the environment before any UI is shown.
+- ``GiGApp``:  The main application class that initializes and orchestrates the entire application layer, serving as the foundation upon which all other layers are built.
+- ``DatabaseSeeder``: Pre-populates the stub database with sample data for development and testing purposes.
 
 ### UI Layer
 
@@ -49,7 +87,7 @@ The persistence layer has repository interfaces which are implemented by either 
 
 ## Architecture Diagram
 
-![Architecture Diagram](Architecture_Model_GiG.jpg)
+![Architecture Diagram](Architecture_Model_GiG.png)
 
 
 
