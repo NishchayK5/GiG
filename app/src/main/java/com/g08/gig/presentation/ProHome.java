@@ -169,7 +169,13 @@ public class ProHome extends AppCompatActivity {
         int userId = SessionManager.getUserId(this);
         Pro pro = proUserService.getProById(userId);
         List<Request> requestsWithCosts = bidService.getRequestsWithBidCostsByPro(pro);
-        bidsAdapter.submitList(new ArrayList<>(requestsWithCosts));
+        List<Request> filtered = new ArrayList<>();
+        for (Request request : requestsWithCosts) {
+            if (bidService.getAcceptedBidByRequest(request) == null) {
+                filtered.add(request);
+            }
+        }
+        bidsAdapter.submitList(filtered);
     }
 
     private void updateProfileViews(int userId) {
@@ -186,7 +192,13 @@ public class ProHome extends AppCompatActivity {
 
 
     private void loadRequests() {
-        availableRequests = requestService.getRequestsByStatus(true);
+        List<Request> allActive = requestService.getRequestsByStatus(true);
+        availableRequests = new ArrayList<>();
+        for (Request request : allActive) {
+            if (bidService.getAcceptedBidByRequest(request) == null) {
+                availableRequests.add(request);
+            }
+        }
         biddingAdapter.submitList(new ArrayList<>(availableRequests));
         updateEmptyState();
     }
@@ -246,7 +258,15 @@ public class ProHome extends AppCompatActivity {
         int userId = SessionManager.getUserId(this);
         Pro pro = proUserService.getProById(userId);
         List<Appointment> appointments = appointmentService.getAllApptsByPro(pro);
-        appointmentAdapter.submitList(appointments != null ? new ArrayList<>(appointments) : new ArrayList<>());
+        List<Appointment> filtered = new ArrayList<>();
+        if (appointments != null) {
+            for (Appointment appt : appointments) {
+                if (appt.getRequest() != null && appt.getRequest().getRequestStatus()) {
+                    filtered.add(appt);
+                }
+            }
+        }
+        appointmentAdapter.submitList(filtered);
     }
 
     private void updateEmptyAppointmentsState() {
