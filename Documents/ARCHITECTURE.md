@@ -93,7 +93,7 @@ The persistence layer in ``com/g08/gig/persistence`` package has repository inte
 The business layer interacts with persistence layer only via interfaces, never with the concrete implementation, that makes the database swappable without affecting any other layer. Key responsibility is to manage data storage and retrieval behind the repo interfaces.
 >This layer has two sub-packages - `real` has SQLite implementation of the repositories and `fake` has ArrayList stub implementations for testing and development.
 
-Key repository interfaces defined: `ClientRepository`, `ProRepository`,`UserRepository`, `RequestRepository`, `BidRepository`, `AppointmentRepository` and `ReviewRepository`.
+Key repository interfaces defined: `ClientRepository`, `ProRepository`,`UserRepository`, `SkillRepository`, `RequestRepository`, `BidRepository`, `AppointmentRepository` and `ReviewRepository`.
 
 ---
 
