@@ -169,6 +169,8 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
                         timePicker.show();
                     },
                     initial.getYear(), initial.getMonthValue() - 1, initial.getDayOfMonth());
+
+            datePicker.getDatePicker().setMinDate(System.currentTimeMillis());
             datePicker.show();
         });
 
