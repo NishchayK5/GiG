@@ -74,6 +74,7 @@ Screens includes:
 The logic layer acts as a middle man between the UI and data layer. The logic layer has been placed under ` com/g08/gig/business `. This layer validates inputted data from the UI to make sure the user has given expected input, then creates the required objects and writes them to the data layer. This layer is also used to read from the data layer for operations such as logging in, checking for unique email logins, handling splitting/loading past and current requests, loading/setting bids, updating user info after editing, creating and managing appointments and reviews. This layer is basically the brain of our application.
 
 > The business layer is subdivided into four key packages: `constants`, `profile`, `services` and `validation`.
+
 **Component division and role:** 
 - **Constants:** The package `` com/g08/gig/business/constants `` stores shared constant value used across the business layer, specifically `ValidationMessages`. Storing these values improves consistency and reduce redundancy throughout.
 - **Profile:** The package ``com/g08/gig/business/profile`` is responsible for profile-related business logic, specifically loading and organizing data for the profile based on their user-type. It has a `ProfileLoader` interface for retrieving user information for profile-editing. Concrete implementations, `ClientProfileLoader` and `ProProfileLoader` is implemented to ensuring that the profile retrieval remains consistent.
@@ -81,26 +82,34 @@ The logic layer acts as a middle man between the UI and data layer. The logic la
 - **Validation:** The package ``com/g08/gig/business/validation`` handles the input validation checks for the text field. The most significant one is validating the information entered during login and signup for which we have implemented `LoginValidator` and `UserValidator`.
 
 ### Model Layer
-The Models layer defines the core domain objects of the GiG platform. These are object blueprints that are constructed by the Business layer and passed between layers to carry information throughout the system.
+The Models layer defines the core domain objects of the GiG platform. 
+These are object blueprints that are constructed by the Business layer and passed between layers to carry information throughout the system.
 
 Core domain-specific objects include: `Client`, `Pro`,`User`, `Request`, `Bid`, `Appointment` and `Review`.
 
-### Data Layer 
+### Persistence Layer 
 
-The persistence layer has repository interfaces which are implemented by either our real repositories (which use SQLite), or our fake stub repositories (which use an ArrayList to mock a database). This layer is used to store data that is given to it by the logic layer. This data can then be read or written to by the logic layer.
+The persistence layer in ``com/g08/gig/persistence`` package has repository interfaces which are implemented by either our real repositories (which use SQLite), or our fake stub repositories (which use an ArrayList to mock a database). 
+The business layer interacts with persistence layer only via interfaces, never with the concrete implementation, that makes the database swappable without affecting any other layer. Key responsibility is to manage data storage and retrieval behind the repo interfaces.
+>This layer has two sub-packages - `real` has SQLite implementation of the repositories and `fake` has ArrayList stub implementations for testing and development.
+
+Key repository interfaces defined: `ClientRepository`, `ProRepository`,`UserRepository`, `RequestRepository`, `BidRepository`, `AppointmentRepository` and `ReviewRepository`.
 
 ---
+
 ## High Level Interaction Overview
 
-- The presentation component interacts directly with the business component
-    - Activities (such as Login, CreateClientUser, CreateProUser, CreateRequest, BiddingDetailDialog) collect user input and call the correct service (AuthService, ClientUserService, ProUserService, RequestService, BidService)
-- The business component interacts with repository interfaces in the persistence component
-    - Objects are created in the business component then calls the persistence layer to store or retrieve data
-    - Abstraction in the persistence layer allows the data storage system to change without affecting the other components
-- The data is returned back up the components the same way it moved down
-    - The persistence component returns data to the business layer
-    - The business component processes the result
-    - The presentation layer updates the UI with the new data
+### Presentation -> Business
+>The presentation component interacts directly with the business component. Activities (such as `Login`, `CreateClientUser`, `CreateProUser`, `CreateRequest`, `BiddingDetailDialog`) collect user input and call the correct service (`AuthService`, `ClientUserService`, `ProUserService`, `RequestService`, `BidService`)
+### Business -> Repository
+>The business component interacts with repository interfaces in the persistence component
+Objects are created in the business component then calls the persistence layer to store or retrieve data.
+Abstraction in the persistence layer allows the data storage system to change without affecting the other components
+### Return flow
+>The data is returned back up the components the same way it moved down.
+>    - The persistence component returns data to the business layer
+>    - The business component processes the result
+>    - The presentation layer updates the UI with the new data
 ---
 ## Architecture Diagram
 
