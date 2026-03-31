@@ -104,7 +104,7 @@
     <string name="edit_profile_subtitle">Update your account details below.</string>
     <string name="logout">Logout</string>
     <string name="home_view">Home view</string>
-    <string name="biddings_view">Current Bids</string>
+    <string name="biddings_view">Active Bids</string>
     <string name="appointment_view">Appointments</string>
 
     <!-- Request detail dialog -->
