@@ -89,7 +89,7 @@ To run the E2E tests in Android Studio, follow these steps:
 ---
 
 ## GiG Vision Statement
-[Vision Statement](Documents/Vision.md)
+[VISION_STATEMENT.md](Documents/Vision.md)
 
 ---
 
@@ -97,6 +97,8 @@ To run the E2E tests in Android Studio, follow these steps:
 [ARCHITECTURE.md](Documents/ARCHITECTURE.md)
 
 ---
+## Final Retrospective
+[RETROSPECTIVE.md](Documents/RETROSPECTIVE.MD)
 
 ## Working Agreement
 [Working Agreement](Documents/work-agreement.docx)
