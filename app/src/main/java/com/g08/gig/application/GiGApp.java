@@ -26,6 +26,7 @@ import com.g08.gig.persistence.ClientRepository;
 import com.g08.gig.persistence.ProRepository;
 import com.g08.gig.persistence.RequestRepository;
 import com.g08.gig.persistence.ReviewRepository;
+import com.g08.gig.persistence.SkillRepository;
 import com.g08.gig.persistence.UserRepository;
 import com.g08.gig.persistence.fake.FakeAppointmentRepository;
 import com.g08.gig.persistence.fake.FakeBidRepository;
@@ -33,6 +34,7 @@ import com.g08.gig.persistence.fake.FakeClientRepository;
 import com.g08.gig.persistence.fake.FakeProRepository;
 import com.g08.gig.persistence.fake.FakeRequestRepository;
 import com.g08.gig.persistence.fake.FakeReviewRepository;
+import com.g08.gig.persistence.fake.FakeSkillRepository;
 import com.g08.gig.persistence.fake.FakeUserRepository;
 import com.g08.gig.persistence.real.AppDbHelper;
 import com.g08.gig.persistence.real.Appointment.SqlAppointmentRepository;
@@ -41,6 +43,7 @@ import com.g08.gig.persistence.real.Client.SqlClientRepository;
 import com.g08.gig.persistence.real.Pro.SqlProRepository;
 import com.g08.gig.persistence.real.Request.SqlRequestRepository;
 import com.g08.gig.persistence.real.Review.SqlReviewRepository;
+import com.g08.gig.persistence.real.Skills.SqlSkillRepository;
 import com.g08.gig.persistence.real.user.SqlUserRepository;
 
 public class GiGApp extends Application {
@@ -55,6 +58,7 @@ public class GiGApp extends Application {
     private UserRepository userRepo;
     private ClientRepository clientRepo;
     private ProRepository proRepo;
+    private SkillRepository skillRepo;
     private RequestRepository reqRepo;
     private BidRepository bidRepo;
     private ReviewRepository reviewRepo;
@@ -77,7 +81,8 @@ public class GiGApp extends Application {
         if(!FAKE_REPO) {
             userRepo = new SqlUserRepository(dbHelper);
             clientRepo = new SqlClientRepository(dbHelper);
-            proRepo = new SqlProRepository(dbHelper);
+            skillRepo = new SqlSkillRepository(dbHelper);
+            proRepo = new SqlProRepository(dbHelper, skillRepo);
             reqRepo = new SqlRequestRepository(dbHelper, clientRepo);
             bidRepo = new SqlBidRepository(dbHelper, proRepo, reqRepo);
             appointmentRepo = new SqlAppointmentRepository(dbHelper, clientRepo, proRepo, reqRepo);
@@ -86,6 +91,7 @@ public class GiGApp extends Application {
         else {
             userRepo = new FakeUserRepository();
             clientRepo = new FakeClientRepository(userRepo);
+            skillRepo = new FakeSkillRepository();
             proRepo = new FakeProRepository(userRepo);
             bidRepo = new FakeBidRepository();
             reqRepo = new FakeRequestRepository(bidRepo);

@@ -6,17 +6,20 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.g08.gig.persistence.ProRepository;
 import com.g08.gig.models.Pro;
+import com.g08.gig.persistence.SkillRepository;
 import com.g08.gig.persistence.real.AppDbHelper;
 import com.g08.gig.persistence.real.Client.ClientTable;
+import com.g08.gig.persistence.real.Skills.SqlSkillRepository;
 import com.g08.gig.persistence.real.user.UserTable;
 
 import java.util.ArrayList;
 import java.util.List;
 public class SqlProRepository implements ProRepository{
     private final AppDbHelper dbHelper;
-
-    public SqlProRepository(AppDbHelper dbHelper) {
+    private final SkillRepository proSkillRepo;
+    public SqlProRepository(AppDbHelper dbHelper, SkillRepository proSkillRepo) {
         this.dbHelper = dbHelper;
+        this.proSkillRepo = proSkillRepo;
     }
 
     @Override
@@ -87,6 +90,7 @@ public class SqlProRepository implements ProRepository{
             proValues.put(ProTable.COL_PRO_CITY_LOCATION, pro.getCityOfOperation());
             long result = db.insert(ProTable.TABLE_PRO,null, proValues);
             if(result==-1) return null;
+            if(!proSkillRepo.addSkillsForPro(pro.getId(), pro.getSkillSet())) return null;
             db.setTransactionSuccessful();
             return getById(pro.getId());
         }
