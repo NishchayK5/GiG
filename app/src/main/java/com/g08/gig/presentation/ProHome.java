@@ -3,6 +3,7 @@ package com.g08.gig.presentation;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,11 +23,15 @@ import com.g08.gig.models.Pro;
 import com.g08.gig.models.Request;
 import com.g08.gig.util.DateFormats;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProHome extends AppCompatActivity {
+
+    private static final int TAB_APPOINTMENT_ONGOING = 0;
+    private static final int TAB_APPOINTMENT_COMPLETED = 1;
 
     private BiddingAdapter biddingAdapter;
     private BidAdapter bidsAdapter;
@@ -44,6 +49,8 @@ public class ProHome extends AppCompatActivity {
 
     private ProUserService proUserService;
     private List<Request> availableRequests = new ArrayList<>();
+    private final List<Appointment> ongoingAppointments = new ArrayList<>();
+    private final List<Appointment> completedAppointments = new ArrayList<>();
 
 
     @Override
@@ -138,6 +145,7 @@ public class ProHome extends AppCompatActivity {
             }
             if (id == R.id.nav_appointment) {
                 showView(appointmentViewContent);
+                loadAppointments();
                 return true;
             }
             if (id == R.id.nav_profile) {
@@ -214,6 +222,11 @@ public class ProHome extends AppCompatActivity {
         emptyBidsView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
     }
 
+    private void showAppointmentDetail(Appointment appt) {
+        AppointmentDetailDialog dialog = AppointmentDetailDialog.newInstance(appt.getId());
+        dialog.show(getSupportFragmentManager(), "appointment_detail");
+    }
+
     private void showBiddingDetail(Request request, int userId) {
         String time = "";
         if (request.getTimeOfRequest() != null) {
@@ -226,7 +239,7 @@ public class ProHome extends AppCompatActivity {
                 request.getBody(),
                 time,
                 request.getRequestStatus(),
-                request.getClientInfoString()
+                request.getClient()
         );
         dialog.setActionListener((requestId, bidAmount, proposedTime) -> {
             int cost = (int) bidAmount;
@@ -240,7 +253,7 @@ public class ProHome extends AppCompatActivity {
 
     private void setupAppointmentsList() {
         RecyclerView appointmentsList = findViewById(R.id.appointmentsList);
-        appointmentAdapter = new AppointmentAdapter();
+        appointmentAdapter = new AppointmentAdapter(this::showAppointmentDetail);
         appointmentsList.setLayoutManager(new LinearLayoutManager(this));
         appointmentsList.setAdapter(appointmentAdapter);
         appointmentAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -253,26 +266,84 @@ public class ProHome extends AppCompatActivity {
             @Override
             public void onItemRangeRemoved(int positionStart, int itemCount) { updateEmptyAppointmentsState(); }
         });
+        setupAppointmentTabs();
         loadAppointments();
         updateEmptyAppointmentsState();
     }
+
+    private void setupAppointmentTabs() {
+        TabLayout tabLayout = findViewById(R.id.appointmentsTabLayout);
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_ongoing_appointments)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_completed_appointments)));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                showListForCurrentAppointmentTab();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+    }
+
     private void loadAppointments() {
         int userId = SessionManager.getUserId(this);
         Pro pro = proUserService.getProById(userId);
         List<Appointment> appointments = appointmentService.getAllApptsByPro(pro);
-        List<Appointment> filtered = new ArrayList<>();
+        ongoingAppointments.clear();
+        completedAppointments.clear();
         if (appointments != null) {
             for (Appointment appt : appointments) {
-                if (appt.getRequest() != null && appt.getRequest().getRequestStatus()) {
-                    filtered.add(appt);
+                Request req = appt.getRequest();
+                if (req == null) {
+                    continue;
+                }
+                if (req.getRequestStatus()) {
+                    ongoingAppointments.add(appt);
+                } else {
+                    completedAppointments.add(appt);
                 }
             }
         }
-        appointmentAdapter.submitList(filtered);
+        showListForCurrentAppointmentTab();
+    }
+
+    private void showListForCurrentAppointmentTab() {
+        TabLayout tabLayout = findViewById(R.id.appointmentsTabLayout);
+        int position = tabLayout.getSelectedTabPosition();
+        if (position < 0) {
+            position = TAB_APPOINTMENT_ONGOING;
+        }
+        List<Appointment> list = (position == TAB_APPOINTMENT_COMPLETED)
+                ? completedAppointments
+                : ongoingAppointments;
+        appointmentAdapter.submitList(new ArrayList<>(list));
     }
 
     private void updateEmptyAppointmentsState() {
         View emptyView = findViewById(R.id.emptyAppointmentsView);
-        emptyView.setVisibility(appointmentAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+        TextView title = findViewById(R.id.emptyAppointmentsTitle);
+        TextView hint = findViewById(R.id.emptyAppointmentsHint);
+        boolean isEmpty = appointmentAdapter.getItemCount() == 0;
+        emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        TabLayout tabLayout = findViewById(R.id.appointmentsTabLayout);
+        int position = tabLayout.getSelectedTabPosition();
+        if (position < 0) {
+            position = TAB_APPOINTMENT_ONGOING;
+        }
+        boolean completedTab = position == TAB_APPOINTMENT_COMPLETED;
+        if (title != null) {
+            title.setText(completedTab
+                    ? getString(R.string.no_completed_appointments)
+                    : getString(R.string.no_ongoing_appointments));
+        }
+        if (hint != null) {
+            hint.setText(completedTab
+                    ? getString(R.string.no_completed_appointments_hint)
+                    : getString(R.string.no_ongoing_appointments_hint));
+        }
     }
 }

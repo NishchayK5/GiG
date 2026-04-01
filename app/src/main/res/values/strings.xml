@@ -108,6 +108,15 @@
     <string name="home_view">Home view</string>
     <string name="biddings_view">Active Bids</string>
     <string name="appointment_view">Appointments</string>
+    <string name="tab_ongoing_appointments">Ongoing</string>
+    <string name="tab_completed_appointments">Completed</string>
+    <string name="no_ongoing_appointments">No ongoing appointments</string>
+    <string name="no_ongoing_appointments_hint">Active requests you are scheduled for appear here.</string>
+    <string name="no_completed_appointments">No completed appointments</string>
+    <string name="no_completed_appointments_hint">Closed requests with scheduled visits appear here.</string>
+    <string name="appointment_detail_scheduled">Scheduled visit</string>
+    <string name="appointment_detail_client_heading">Client</string>
+    <string name="appointment_detail_client_name">Name</string>
 
     <!-- Request detail dialog -->
     <string name="request_detail_title">Request details</string>
@@ -145,6 +154,10 @@
     <string name="create_request_error_title_required">Please enter a title.</string>
     <string name="create_request_error_description_required">Please enter a description.</string>
     <string name="create_request_submitted">Request submitted</string>
+    <plurals name="title_field_characters_remaining">
+        <item quantity="one">1 character remaining</item>
+        <item quantity="other">%d characters remaining</item>
+    </plurals>
     <string name="request_deleted">Request deleted</string>
     <string name="request_completed">Request Completed</string>
     <string name="bid_accept">Accept</string>

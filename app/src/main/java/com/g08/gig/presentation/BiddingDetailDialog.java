@@ -2,12 +2,7 @@ package com.g08.gig.presentation;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.StaticLayout;
-import android.text.TextPaint;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +15,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import com.g08.gig.R;
+import com.g08.gig.models.Client;
 import com.g08.gig.util.DateFormats;
+import com.g08.gig.util.DialogBodyHelper;
 
 import java.time.LocalDateTime;
 
@@ -32,10 +28,11 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
     private static final String ARG_BODY = "body";
     private static final String ARG_TIME = "time";
     private static final String ARG_ACTIVE = "active";
-    private static final String ARG_CLIENT_INFO = "name, address, phone";
     private static final String ARG_REQUEST_ID = "request_id";
-    private static final int MAX_LINES_COLLAPSED = 4;
-    private static final float DIALOG_MAX_HEIGHT_RATIO = 0.85f;
+    private static final String ARG_CLIENT_FIRST = "client_first";
+    private static final String ARG_CLIENT_LAST = "client_last";
+    private static final String ARG_CLIENT_ADDRESS = "client_address";
+    private static final String ARG_HAS_CLIENT = "has_client";
 
     private LocalDateTime proposedTime = null;
 
@@ -49,7 +46,8 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
         this.actionListener = listener;
     }
 
-    public static BiddingDetailDialog newInstance(int requestId, String title, String body, String time, boolean isActive, String clientInfo) {
+    public static BiddingDetailDialog newInstance(int requestId, String title, String body, String time, boolean isActive,
+                                                  Client client) {
         BiddingDetailDialog dialog = new BiddingDetailDialog();
         Bundle args = new Bundle();
         args.putInt(ARG_REQUEST_ID, requestId);
@@ -57,7 +55,13 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
         args.putString(ARG_BODY, body);
         args.putString(ARG_TIME, time);
         args.putBoolean(ARG_ACTIVE, isActive);
-        args.putString(ARG_CLIENT_INFO, clientInfo);
+        boolean hasClient = client != null;
+        args.putBoolean(ARG_HAS_CLIENT, hasClient);
+        if (hasClient) {
+            args.putString(ARG_CLIENT_FIRST, nullToEmpty(client.getFirstName()));
+            args.putString(ARG_CLIENT_LAST, nullToEmpty(client.getLastName()));
+            args.putString(ARG_CLIENT_ADDRESS, nullToEmpty(client.getAddress()));
+        }
         dialog.setArguments(args);
         return dialog;
     }
@@ -67,7 +71,7 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
         super.onStart();
         if (getDialog() != null && getDialog().getWindow() != null) {
             int width = (int) (getResources().getDisplayMetrics().widthPixels * BaseGigDialogFragment.DIALOG_WIDTH_RATIO);
-            int maxHeight = (int) (getResources().getDisplayMetrics().heightPixels * DIALOG_MAX_HEIGHT_RATIO);
+            int maxHeight = (int) (getResources().getDisplayMetrics().heightPixels * BaseGigDialogFragment.DIALOG_MAX_HEIGHT_RATIO);
             getDialog().getWindow().setLayout(width, maxHeight);
         }
     }
@@ -94,7 +98,9 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
         TextView titleView = view.findViewById(R.id.dialogRequestTitle);
         TextView bodyView = view.findViewById(R.id.dialogRequestBody);
         TextView timeView = view.findViewById(R.id.dialogRequestTime);
-        TextView clientInfo = view.findViewById(R.id.dialogClientInfo);
+        View clientSection = view.findViewById(R.id.dialogClientSection);
+        TextView clientName = view.findViewById(R.id.dialogClientName);
+        TextView clientAddress = view.findViewById(R.id.dialogClientAddress);
         ImageButton closeIcon = view.findViewById(R.id.dialogCloseIcon);
         EditText bidAmountInput = view.findViewById(R.id.dialogBidAmountInput);
 
@@ -105,52 +111,21 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
 
         titleView.setText(args.getString(ARG_TITLE, ""));
         String body = args.getString(ARG_BODY, "");
-        bodyView.setText(body);
-        bodyView.setMaxLines(MAX_LINES_COLLAPSED);
-        bodyView.setEllipsize(TextUtils.TruncateAt.END);
-        timeView.setText(args.getString(ARG_TIME, ""));
-
-        clientInfo.setText(args.getString(ARG_CLIENT_INFO));
-
         TextView showMoreButton = view.findViewById(R.id.dialogShowMoreButton);
         ScrollView scrollView = view.findViewById(R.id.dialogScrollView);
+        DialogBodyHelper.setupExpandableDescription(bodyView, showMoreButton, scrollView, body);
+        timeView.setText(args.getString(ARG_TIME, ""));
 
-        bodyView.getViewTreeObserver().addOnGlobalLayoutListener(new android.view.ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                bodyView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                int width = bodyView.getWidth();
-                if (width > 0 && body.length() > 0) {
-                    TextPaint paint = bodyView.getPaint();
-                    StaticLayout layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                            ? StaticLayout.Builder.obtain(body, 0, body.length(), paint, width)
-                            .setMaxLines(Integer.MAX_VALUE)
-                            .build()
-                            : new StaticLayout(body, paint, width, android.text.Layout.Alignment.ALIGN_NORMAL, 1.3f, 0f, true);
-                    if (layout.getLineCount() > MAX_LINES_COLLAPSED) {
-                        showMoreButton.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-        });
-
-        showMoreButton.setOnClickListener(v -> {
-            if (bodyView.getMaxLines() == MAX_LINES_COLLAPSED) {
-                bodyView.setMaxLines(Integer.MAX_VALUE);
-                bodyView.setEllipsize(null);
-                showMoreButton.setText("Show less");
-                bodyView.post(() -> {
-                    if (scrollView != null) {
-                        int targetScrollY = bodyView.getTop() - bodyView.getPaddingTop();
-                        scrollView.smoothScrollTo(0, Math.max(0, targetScrollY));
-                    }
-                });
-            } else {
-                bodyView.setMaxLines(MAX_LINES_COLLAPSED);
-                bodyView.setEllipsize(TextUtils.TruncateAt.END);
-                showMoreButton.setText("Show more");
-            }
-        });
+        if (args.getBoolean(ARG_HAS_CLIENT, false)) {
+            clientSection.setVisibility(View.VISIBLE);
+            String first = args.getString(ARG_CLIENT_FIRST, "");
+            String last = args.getString(ARG_CLIENT_LAST, "");
+            String fullName = (nullToEmpty(first) + " " + nullToEmpty(last)).trim();
+            clientName.setText(fullName.isEmpty() ? "\u2014" : fullName);
+            clientAddress.setText(args.getString(ARG_CLIENT_ADDRESS, ""));
+        } else {
+            clientSection.setVisibility(View.GONE);
+        }
 
         closeIcon.setOnClickListener(v -> dismiss());
 
@@ -205,6 +180,10 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
             }
             dismiss();
         });
+    }
+
+    private static String nullToEmpty(String s) {
+        return s != null ? s : "";
     }
 
 }

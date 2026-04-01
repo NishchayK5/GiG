@@ -29,5 +29,6 @@ public final class ValidationMessages {
     public static final String PASSWORD_MIN_LENGTH = "Password must be at least 8 characters.";
 
     public static final String REQUEST_TITLE_REQUIRED = "Title is required.";
+    public static final String TITLE_MAX_LENGTH = "Title must be 50 characters or less.";
     public static final String REQUEST_BODY_REQUIRED = "Description is required.";
 }

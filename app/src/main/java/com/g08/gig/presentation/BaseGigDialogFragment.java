@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment;
 public abstract class BaseGigDialogFragment extends DialogFragment {
 
     protected static final float DIALOG_WIDTH_RATIO = 0.9f;
+    protected static final float DIALOG_MAX_HEIGHT_RATIO = 0.85f;
 
     @Override
     public void onStart() {

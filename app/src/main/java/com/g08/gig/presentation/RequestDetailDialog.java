@@ -2,10 +2,7 @@ package com.g08.gig.presentation;
 
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.StaticLayout;
-import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import com.g08.gig.R;
 import com.g08.gig.models.Bid;
 import com.g08.gig.util.DateFormats;
+import com.g08.gig.util.DialogBodyHelper;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,9 +31,6 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
     private static final String ARG_TIME = "time";
     private static final String ARG_ACTIVE = "active";
     private static final String ARG_REQUEST_ID = "request_id";
-
-    private static final int MAX_LINES_COLLAPSED = 4;
-    private static final float DIALOG_MAX_HEIGHT_RATIO = 0.85f;
 
     public interface OnRequestActionListener {
         void onDeleteRequest(int requestId);
@@ -76,7 +71,7 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
         super.onStart();
         if (getDialog() != null && getDialog().getWindow() != null) {
             int width = (int) (getResources().getDisplayMetrics().widthPixels * BaseGigDialogFragment.DIALOG_WIDTH_RATIO);
-            int maxHeight = (int) (getResources().getDisplayMetrics().heightPixels * DIALOG_MAX_HEIGHT_RATIO);
+            int maxHeight = (int) (getResources().getDisplayMetrics().heightPixels * BaseGigDialogFragment.DIALOG_MAX_HEIGHT_RATIO);
             getDialog().getWindow().setLayout(width, maxHeight);
         }
     }
@@ -113,49 +108,10 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
         TextView bodyView = view.findViewById(R.id.dialogRequestBody);
         TextView timeView = view.findViewById(R.id.dialogRequestTime);
         String body = args.getString(ARG_BODY, "");
-        bodyView.setText(body);
-        bodyView.setMaxLines(MAX_LINES_COLLAPSED);
-        bodyView.setEllipsize(android.text.TextUtils.TruncateAt.END);
-        timeView.setText(args.getString(ARG_TIME, ""));
-
         TextView showMoreButton = view.findViewById(R.id.dialogShowMoreButton);
         ScrollView scrollView = view.findViewById(R.id.dialogScrollView);
-        bodyView.getViewTreeObserver().addOnGlobalLayoutListener(new android.view.ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                bodyView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                int width = bodyView.getWidth();
-                if (width > 0 && body.length() > 0) {
-                    TextPaint paint = bodyView.getPaint();
-                    StaticLayout layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                            ? StaticLayout.Builder.obtain(body, 0, body.length(), paint, width)
-                            .setMaxLines(Integer.MAX_VALUE)
-                            .build()
-                            : new StaticLayout(body, paint, width, android.text.Layout.Alignment.ALIGN_NORMAL, 1.3f, 0f, true);
-                    if (layout.getLineCount() > MAX_LINES_COLLAPSED) {
-                        showMoreButton.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-        });
-
-        showMoreButton.setOnClickListener(v -> {
-            if (bodyView.getMaxLines() == MAX_LINES_COLLAPSED) {
-                bodyView.setMaxLines(Integer.MAX_VALUE);
-                bodyView.setEllipsize(null);
-                showMoreButton.setText("Show less");
-                bodyView.post(() -> {
-                    if (scrollView != null) {
-                        int targetScrollY = bodyView.getTop() - bodyView.getPaddingTop();
-                        scrollView.smoothScrollTo(0, Math.max(0, targetScrollY));
-                    }
-                });
-            } else {
-                bodyView.setMaxLines(MAX_LINES_COLLAPSED);
-                bodyView.setEllipsize(android.text.TextUtils.TruncateAt.END);
-                showMoreButton.setText("Show more");
-            }
-        });
+        DialogBodyHelper.setupExpandableDescription(bodyView, showMoreButton, scrollView, body);
+        timeView.setText(args.getString(ARG_TIME, ""));
     }
 
     private void bindStatus(View view, Bundle args) {

@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +18,14 @@ import com.g08.gig.util.DateFormats;
 
 public class AppointmentAdapter extends ListAdapter<Appointment, AppointmentAdapter.ViewHolder> {
 
-    protected AppointmentAdapter() {
+    public interface OnAppointmentClickListener {
+        void onAppointmentClick(@NonNull Appointment appointment);
+    }
+
+    @Nullable
+    private final OnAppointmentClickListener clickListener;
+
+    public AppointmentAdapter(@Nullable OnAppointmentClickListener clickListener) {
         super(new DiffUtil.ItemCallback<Appointment>() {
             @Override
             public boolean areItemsTheSame(@NonNull Appointment oldItem, @NonNull Appointment newItem) {
@@ -29,6 +37,11 @@ public class AppointmentAdapter extends ListAdapter<Appointment, AppointmentAdap
                 return oldItem.getId() == newItem.getId();
             }
         });
+        this.clickListener = clickListener;
+    }
+
+    public AppointmentAdapter() {
+        this(null);
     }
 
     @NonNull
@@ -55,6 +68,12 @@ public class AppointmentAdapter extends ListAdapter<Appointment, AppointmentAdap
         if (appt.getAppointmentEnd() != null) {
             holder.end.setText(appt.getAppointmentEnd().format(DateFormats.REQUEST_TIME));
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            if (clickListener != null) {
+                clickListener.onAppointmentClick(appt);
+            }
+        });
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

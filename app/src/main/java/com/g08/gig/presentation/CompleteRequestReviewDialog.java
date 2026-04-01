@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,7 +15,10 @@ import androidx.annotation.Nullable;
 
 import com.g08.gig.R;
 import com.g08.gig.application.GiGApp;
+import com.g08.gig.business.constants.FieldLimits;
 import com.g08.gig.business.services.RequestService;
+import com.g08.gig.business.validation.ValidationException;
+import com.g08.gig.util.TitleCharacterCounter;
 
 /**
  * Client flow: static review form (title, stars, description) for presentation only;
@@ -23,7 +27,6 @@ import com.g08.gig.business.services.RequestService;
 public class CompleteRequestReviewDialog extends BaseGigDialogFragment {
 
     private static final String ARG_REQUEST_ID = "request_id";
-    private static final float DIALOG_MAX_HEIGHT_RATIO = 0.88f;
 
     public interface OnReviewSubmitListener {
         void onReviewSubmit(String title, String body, int stars);
@@ -48,7 +51,7 @@ public class CompleteRequestReviewDialog extends BaseGigDialogFragment {
         super.onStart();
         if (getDialog() != null && getDialog().getWindow() != null) {
             int width = (int) (getResources().getDisplayMetrics().widthPixels * DIALOG_WIDTH_RATIO);
-            int maxHeight = (int) (getResources().getDisplayMetrics().heightPixels * DIALOG_MAX_HEIGHT_RATIO);
+            int maxHeight = (int) (getResources().getDisplayMetrics().heightPixels * BaseGigDialogFragment.DIALOG_MAX_HEIGHT_RATIO);
             getDialog().getWindow().setLayout(width, maxHeight);
         }
     }
@@ -78,6 +81,8 @@ public class CompleteRequestReviewDialog extends BaseGigDialogFragment {
 
         EditText titleField = view.findViewById(R.id.completeReviewTitleInput);
         EditText bodyField = view.findViewById(R.id.completeReviewBodyInput);
+        TextView titleCharCounter = view.findViewById(R.id.completeReviewTitleCharCounter);
+        TitleCharacterCounter.attach(titleField, titleCharCounter, FieldLimits.TITLE_MAX_LENGTH);
         RatingBar ratingBar = view.findViewById(R.id.completeReviewRating);
         Button cancel = view.findViewById(R.id.completeReviewCancelButton);
         Button submit = view.findViewById(R.id.completeReviewSubmitButton);
@@ -85,18 +90,27 @@ public class CompleteRequestReviewDialog extends BaseGigDialogFragment {
         cancel.setOnClickListener(v -> dismiss());
 
         submit.setOnClickListener(v -> {
+            titleField.setError(null);
             String title = titleField.getText().toString().trim();
             String body = bodyField.getText().toString().trim();
             int stars = (int) ratingBar.getRating();
 
             if (title.isEmpty()) {
-                //TODO: error message here
-               // titleField.setError(getString(R.string.error_required));
+                titleField.setError(getString(R.string.create_request_error_title_required));
+                titleField.requestFocus();
                 return;
             }
 
-            if (reviewListener != null) {
-                reviewListener.onReviewSubmit(title, body, stars);
+            try {
+                if (reviewListener != null) {
+                    reviewListener.onReviewSubmit(title, body, stars);
+                }
+            } catch (ValidationException ex) {
+                if ("title".equals(ex.getField())) {
+                    titleField.setError(ex.getMessage());
+                    titleField.requestFocus();
+                }
+                return;
             }
 
             requestService.completeRequest(requestId);
@@ -104,5 +118,5 @@ public class CompleteRequestReviewDialog extends BaseGigDialogFragment {
             Toast.makeText(requireContext(), R.string.request_completed, Toast.LENGTH_SHORT).show();
             dismiss();
         });
-    }
+   }
 }

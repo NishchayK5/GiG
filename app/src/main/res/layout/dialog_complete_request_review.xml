@@ -44,8 +44,17 @@
             android:layout_marginTop="4dp"
             android:hint="@string/complete_review_title_hint"
             android:inputType="textCapSentences"
+            android:maxLength="50"
             android:maxLines="2"
             android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/completeReviewTitleCharCounter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/grey"
+            android:textSize="12sp" />
 
         <TextView
             android:layout_width="match_parent"

@@ -2,6 +2,7 @@ package com.g08.gig.business.services;
 
 import com.g08.gig.util.Pair;
 
+import com.g08.gig.business.constants.FieldLimits;
 import com.g08.gig.business.constants.ValidationMessages;
 import com.g08.gig.business.validation.ValidationException;
 import com.g08.gig.models.Client;
@@ -27,6 +28,9 @@ public class RequestServiceImpl implements RequestService {
         String trimmedBody = Strings.safeTrim(body);
         if (trimmedTitle == null || trimmedTitle.isEmpty()) {
             throw new ValidationException(ValidationMessages.REQUEST_TITLE_REQUIRED, "title");
+        }
+        if (trimmedTitle.length() > FieldLimits.TITLE_MAX_LENGTH) {
+            throw new ValidationException(ValidationMessages.TITLE_MAX_LENGTH, "title");
         }
         if (trimmedBody == null || trimmedBody.isEmpty()) {
             throw new ValidationException(ValidationMessages.REQUEST_BODY_REQUIRED, "body");
