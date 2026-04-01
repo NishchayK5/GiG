@@ -64,7 +64,7 @@ public class ProPublicDetailActivity extends AppCompatActivity {
         nameView.setText((first + " " + last).trim());
         cityView.setText(pro.getCityOfOperation() != null ? pro.getCityOfOperation() : "");
         emailView.setText(pro.getEmail() != null ? pro.getEmail(): "");
-        skillsView.setText(formatSkillSet(pro.getSkillSet()));
+        skillsView.setText(formatSkillSet(proUserService.getSkillsByPro(pro)));
 
         LinearLayout reviewsContainer = findViewById(R.id.proDetailReviewsContainer);
         View emptyReviewsView = findViewById(R.id.proDetailReviewsEmptyView);

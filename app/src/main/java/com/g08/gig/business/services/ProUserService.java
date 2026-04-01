@@ -7,4 +7,7 @@ public interface ProUserService {
     boolean updatePro(int id, String email, String firstName, String lastName, String phone, String[] skillSet, String cityOfOperation);
     boolean deletePro(int id);
     Pro getProById(int id);
+    String[] getSkillsByPro(Pro pro);
+
+
 }

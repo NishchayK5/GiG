@@ -100,7 +100,7 @@ public class GiGApp extends Application {
         }
 
         clientUserService = new ClientUserServiceImpl(clientRepo, userRepo);
-        proUserService = new ProUserServiceImpl(proRepo, userRepo);
+        proUserService = new ProUserServiceImpl(proRepo, userRepo, skillRepo);
         authService = new AuthServiceImpl(userRepo, clientRepo, proRepo);
         reqService = new RequestServiceImpl(reqRepo);
         bidService = new BidServiceImpl(bidRepo);

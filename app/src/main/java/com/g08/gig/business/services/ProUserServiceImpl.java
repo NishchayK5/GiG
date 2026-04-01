@@ -6,6 +6,7 @@ import com.g08.gig.business.validation.ValidationException;
 import com.g08.gig.models.Pro;
 import com.g08.gig.models.User;
 import com.g08.gig.persistence.ProRepository;
+import com.g08.gig.persistence.SkillRepository;
 import com.g08.gig.persistence.UserRepository;
 import com.g08.gig.util.Strings;
 
@@ -18,15 +19,17 @@ public class ProUserServiceImpl implements ProUserService {
     private final UserRepository userRepo;
     private final ProRepository repo;
     private final UserValidator validator;
+    private final SkillRepository skillRepo;
 
-    public ProUserServiceImpl(ProRepository repo, UserRepository userRepo) {
-        this(repo, userRepo, new UserValidator());
+    public ProUserServiceImpl(ProRepository repo, UserRepository userRepo, SkillRepository skillRepo) {
+        this(repo, userRepo, new UserValidator(), skillRepo);
     }
 
-    public ProUserServiceImpl(ProRepository repo, UserRepository userRepo, UserValidator validator) {
+    public ProUserServiceImpl(ProRepository repo, UserRepository userRepo, UserValidator validator, SkillRepository skillRepo) {
         this.repo = repo;
         this.validator = validator;
         this.userRepo = userRepo;
+        this.skillRepo = skillRepo;
     }
 
     @Override
@@ -64,5 +67,10 @@ public class ProUserServiceImpl implements ProUserService {
     @Override
     public Pro getProById(int id) {
         return repo.getById(id);
+    }
+
+    @Override
+    public String[] getSkillsByPro(Pro pro) {
+        return skillRepo.getAllSkillsByPro(pro);
     }
 }
