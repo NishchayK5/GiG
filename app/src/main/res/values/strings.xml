@@ -101,6 +101,8 @@
     <!-- Client profile (center view) -->
     <string name="profile_view">Profile view</string>
     <string name="profile_edit">Edit profile</string>
+    <string name="profile_review">My Reviews</string>
+
     <string name="edit_profile_subtitle">Update your account details below.</string>
     <string name="logout">Logout</string>
     <string name="home_view">Home view</string>

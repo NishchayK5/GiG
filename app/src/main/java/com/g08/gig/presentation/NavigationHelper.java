@@ -24,4 +24,11 @@ public final class NavigationHelper {
         intent.putExtra(EditProfileActivity.EXTRA_IS_CLIENT, isClient);
         activity.startActivity(intent);
     }
+
+    public static void startViewReviews(Activity activity, int userId) {
+        Intent intent = new Intent(activity, ProPublicDetailActivity.class);
+        intent.putExtra(SessionManager.KEY_USER_ID, userId);
+        intent.putExtra(ProPublicDetailActivity.EXTRA_PRO_ID, userId);
+        activity.startActivity(intent);
+    }
 }

@@ -153,8 +153,11 @@ public class ProHome extends AppCompatActivity {
         updateProfileViews(userId);
         LinearLayout profileEditTile = findViewById(R.id.profileEditTile);
         profileEditTile.setOnClickListener(v -> NavigationHelper.startEditProfile(this, SessionManager.getUserId(this), false));
+        LinearLayout profileReviewTile = findViewById(R.id.profileReviewTile);
+        profileReviewTile.setOnClickListener(v -> NavigationHelper.startViewReviews(this, SessionManager.getUserId(this)));
         LinearLayout profileLogoutTile = findViewById(R.id.profileLogoutTile);
         profileLogoutTile.setOnClickListener(v -> NavigationHelper.logout(this));
+
     }
 
     private void showView(View visibleView) {
