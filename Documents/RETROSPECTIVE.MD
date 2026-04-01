@@ -1,4 +1,4 @@
-# FINAL RETROSPECTIVE 🛠️
+# FINAL RETROSPECTIVE 
 > A 500–700 word reflection covering the following topics 
 
 
