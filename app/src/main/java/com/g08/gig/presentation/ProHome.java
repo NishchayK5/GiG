@@ -225,7 +225,8 @@ public class ProHome extends AppCompatActivity {
                 request.getTitle(),
                 request.getBody(),
                 time,
-                request.getRequestStatus()
+                request.getRequestStatus(),
+                request.getClientInfoString()
         );
         dialog.setActionListener((requestId, bidAmount, proposedTime) -> {
             int cost = (int) bidAmount;

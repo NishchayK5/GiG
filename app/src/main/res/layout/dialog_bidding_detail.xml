@@ -49,15 +49,13 @@
 
 
     <TextView
-        android:id="@+id/dialogRequestStatus"
+        android:id="@+id/dialogClientInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:paddingHorizontal="12dp"
         android:paddingVertical="4dp"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        android:textStyle="bold" />
+        android:textColor="@color/main_netural_color"
+        android:textSize="15sp" />
 
 
     <View

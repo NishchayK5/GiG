@@ -67,4 +67,8 @@ public class Request {
         isActive = false;
     }
     public boolean getRequestStatus(){return isActive;}
+
+    public String getClientInfoString() {
+        return client.getFirstName() + ", " + client.getEmail() + ", " + client.getAddress();
+    }
 }

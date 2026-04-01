@@ -32,6 +32,7 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
     private static final String ARG_BODY = "body";
     private static final String ARG_TIME = "time";
     private static final String ARG_ACTIVE = "active";
+    private static final String ARG_CLIENT_INFO = "name, address, phone";
     private static final String ARG_REQUEST_ID = "request_id";
     private static final int MAX_LINES_COLLAPSED = 4;
     private static final float DIALOG_MAX_HEIGHT_RATIO = 0.85f;
@@ -48,7 +49,7 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
         this.actionListener = listener;
     }
 
-    public static BiddingDetailDialog newInstance(int requestId, String title, String body, String time, boolean isActive) {
+    public static BiddingDetailDialog newInstance(int requestId, String title, String body, String time, boolean isActive, String clientInfo) {
         BiddingDetailDialog dialog = new BiddingDetailDialog();
         Bundle args = new Bundle();
         args.putInt(ARG_REQUEST_ID, requestId);
@@ -56,6 +57,7 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
         args.putString(ARG_BODY, body);
         args.putString(ARG_TIME, time);
         args.putBoolean(ARG_ACTIVE, isActive);
+        args.putString(ARG_CLIENT_INFO, clientInfo);
         dialog.setArguments(args);
         return dialog;
     }
@@ -92,7 +94,7 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
         TextView titleView = view.findViewById(R.id.dialogRequestTitle);
         TextView bodyView = view.findViewById(R.id.dialogRequestBody);
         TextView timeView = view.findViewById(R.id.dialogRequestTime);
-        TextView statusView = view.findViewById(R.id.dialogRequestStatus);
+        TextView clientInfo = view.findViewById(R.id.dialogClientInfo);
         ImageButton closeIcon = view.findViewById(R.id.dialogCloseIcon);
         EditText bidAmountInput = view.findViewById(R.id.dialogBidAmountInput);
 
@@ -107,6 +109,8 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
         bodyView.setMaxLines(MAX_LINES_COLLAPSED);
         bodyView.setEllipsize(TextUtils.TruncateAt.END);
         timeView.setText(args.getString(ARG_TIME, ""));
+
+        clientInfo.setText(args.getString(ARG_CLIENT_INFO));
 
         TextView showMoreButton = view.findViewById(R.id.dialogShowMoreButton);
         ScrollView scrollView = view.findViewById(R.id.dialogScrollView);

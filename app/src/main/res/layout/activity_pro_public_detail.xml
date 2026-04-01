@@ -105,6 +105,21 @@
                                 android:textColor="@color/main_netural_color"
                                 android:textSize="14sp"
                                 tools:text="Winnipeg" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:text="@string/user_email"
+                                android:textColor="@color/grey"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/proEmailView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:textColor="@color/main_netural_color"
+                                android:textSize="14sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -144,9 +159,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="@string/pro_public_detail_skills_label"
-                        android:textColor="@color/main_netural_color"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
+                        android:textColor="@color/grey"
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/proDetailSkills"

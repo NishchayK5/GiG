@@ -56,12 +56,14 @@ public class ProPublicDetailActivity extends AppCompatActivity {
         TextView avgRatingView = findViewById(R.id.proDetailAvgRating);
         TextView avgRatingOutOfView = findViewById(R.id.proDetailAvgRatingOutOf);
         TextView cityView = findViewById(R.id.proDetailCity);
+        TextView emailView = findViewById(R.id.proEmailView);
         TextView skillsView = findViewById(R.id.proDetailSkills);
 
         String first = pro.getFirstName() != null ? pro.getFirstName() : "";
         String last = pro.getLastName() != null ? pro.getLastName() : "";
         nameView.setText((first + " " + last).trim());
         cityView.setText(pro.getCityOfOperation() != null ? pro.getCityOfOperation() : "");
+        emailView.setText(pro.getEmail() != null ? pro.getEmail(): "");
         skillsView.setText(formatSkillSet(pro.getSkillSet()));
 
         LinearLayout reviewsContainer = findViewById(R.id.proDetailReviewsContainer);
