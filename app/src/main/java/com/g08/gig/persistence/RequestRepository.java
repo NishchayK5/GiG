@@ -1,6 +1,5 @@
 package com.g08.gig.persistence;
 
-import com.g08.gig.models.Client;
 import com.g08.gig.models.Request;
 import java.util.List;
 public interface RequestRepository {
