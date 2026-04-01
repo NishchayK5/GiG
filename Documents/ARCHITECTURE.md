@@ -1,4 +1,4 @@
-# ARCHITECTURE🧱
+# ARCHITECTURE
 
 ## Overview
 GiG is built on a five-layer architecture that enforces a clean separation of responsibilities across **Application , Presentation, Business, Models amd Persistence Layer.** Each layer has a single and well-defined responsibility and communicates with its immediate neighbours only. 

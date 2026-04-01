@@ -1,4 +1,4 @@
-# App Name: GiG💡
+# App Name: GiG
 > **Fix it with GiG. We have the right pro for every job and the right job for every pro.**
 
 ---
