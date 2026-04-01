@@ -1,6 +1,5 @@
 package com.g08.gig.presentation;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,9 +13,9 @@ import com.g08.gig.R;
 import com.g08.gig.application.GiGApp;
 import com.g08.gig.business.services.AppointmentService;
 import com.g08.gig.models.Appointment;
+import com.g08.gig.models.Bid;
 import com.g08.gig.session.SessionManager;
 import com.g08.gig.business.services.BidService;
-import com.g08.gig.business.services.ClientUserService;
 import com.g08.gig.business.services.ProUserService;
 import com.g08.gig.business.services.RequestService;
 import com.g08.gig.models.Pro;
@@ -30,7 +29,7 @@ import java.util.List;
 public class ProHome extends AppCompatActivity {
 
     private BiddingAdapter biddingAdapter;
-    private BiddingAdapter bidsAdapter;
+    private BidAdapter bidsAdapter;
     private AppointmentAdapter appointmentAdapter;
     private View emptyBiddingsView;
     private View emptyBidsView;
@@ -45,7 +44,6 @@ public class ProHome extends AppCompatActivity {
 
     private ProUserService proUserService;
     private List<Request> availableRequests = new ArrayList<>();
-    private List<Request> bidRequests = new ArrayList<>();
 
 
     @Override
@@ -102,7 +100,7 @@ public class ProHome extends AppCompatActivity {
 
     private void setupBidsList() {
         RecyclerView bidsList = findViewById(R.id.bidsList);
-        bidsAdapter = new BiddingAdapter(request -> {});
+        bidsAdapter = new BidAdapter(bid -> {});
         bidsList.setLayoutManager(new LinearLayoutManager(this));
         bidsList.setAdapter(bidsAdapter);
         bidsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -168,11 +166,11 @@ public class ProHome extends AppCompatActivity {
     private void loadBids() {
         int userId = SessionManager.getUserId(this);
         Pro pro = proUserService.getProById(userId);
-        List<Request> requestsWithCosts = bidService.getRequestsWithBidCostsByPro(pro);
-        List<Request> filtered = new ArrayList<>();
-        for (Request request : requestsWithCosts) {
-            if (bidService.getAcceptedBidByRequest(request) == null) {
-                filtered.add(request);
+        List<Bid> bids = bidService.getAllByPro(pro);
+        List<Bid> filtered = new ArrayList<>();
+        for (Bid bid : bids) {
+            if (bidService.getAcceptedBidByRequest(bid.getRequest()) == null) {
+                filtered.add(bid);
             }
         }
         bidsAdapter.submitList(filtered);

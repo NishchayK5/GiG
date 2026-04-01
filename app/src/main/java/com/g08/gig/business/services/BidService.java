@@ -12,7 +12,6 @@ public interface BidService {
     Bid addBid(Pro pro, Request request, double cost, LocalDateTime proposedTime);
     List<Bid> getAllByRequest(Request request);
     List<Bid> getAllByPro(Pro pro);
-    List<Request> getRequestsWithBidCostsByPro(Pro pro);
     void acceptBid(Bid bid);
 
     Bid getAcceptedBidByRequest(Request request);

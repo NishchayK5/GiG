@@ -8,7 +8,7 @@ public class Request {
     private String body;
     private boolean isActive;
     private LocalDateTime timeOfRequest;
-    private double bidCost;
+
 
 
     public Request(int id, Client client, String title, String body, LocalDateTime timeOfRequest, boolean isActive) {
@@ -18,19 +18,8 @@ public class Request {
         this.body = body;
         this.timeOfRequest = timeOfRequest;
         this.isActive = isActive;
-        this.bidCost = 0;
     }
 
-    /** Copy of source with a specific bid cost (avoids mutating repository-owned instances). */
-    public Request(Request source, double bidCost) {
-        this.id = source.id;
-        this.client = source.client;
-        this.title = source.title;
-        this.body = source.body;
-        this.timeOfRequest = source.timeOfRequest;
-        this.isActive = source.isActive;
-        this.bidCost = bidCost;
-    }
 
     //getters and setters for the object
     public int getId() {
@@ -78,6 +67,4 @@ public class Request {
         isActive = false;
     }
     public boolean getRequestStatus(){return isActive;}
-    public double getBidCost() { return bidCost; }
-    public void setBidCost(double bidCost) { this.bidCost = bidCost; }
 }
