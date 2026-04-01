@@ -119,6 +119,7 @@
     <string name="request_detail_complete">Complete</string>
     <string name="request_detail_no_bids">No bids yet</string>
     <string name="request_detail_bids_profile_hint">Tap a bidder\'s name to view their profile.</string>
+    <string name="request_detail_completion_hint">A bid must be accepted before this request can be completed.</string>
 
     <!-- Complete request + review (client) -->
     <string name="complete_review_title">Complete request</string>

@@ -193,6 +193,18 @@
         </LinearLayout>
     </ScrollView>
 
+    <TextView
+        android:id="@+id/dialogCompletionHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/request_detail_completion_hint"
+        android:textColor="@color/grey"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:visibility="visible" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
