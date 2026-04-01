@@ -203,10 +203,4 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
         });
     }
 
-    private void setStatusBackground(TextView view, int color) {
-        GradientDrawable bg = new GradientDrawable();
-        bg.setColor(color);
-        bg.setCornerRadius(16f);
-        view.setBackground(bg);
-    }
 }
