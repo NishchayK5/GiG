@@ -117,6 +117,10 @@
     <string name="appointment_detail_scheduled">Scheduled visit</string>
     <string name="appointment_detail_client_heading">Client</string>
     <string name="appointment_detail_client_name">Name</string>
+    <string name="empty_field_placeholder">\u2014</string>
+    <string name="dialog_show_more">Show more</string>
+    <string name="dialog_show_less">Show less</string>
+    <string name="bid_proposed_time_required">Please select a proposed time</string>
 
     <!-- Request detail dialog -->
     <string name="request_detail_title">Request details</string>
@@ -131,6 +135,11 @@
     <string name="request_detail_no_bids">No bids yet</string>
     <string name="request_detail_bids_profile_hint">Tap a bidder\'s name to view their profile.</string>
     <string name="request_detail_completion_hint">A bid must be accepted before this request can be completed.</string>
+    <string name="request_confirm_delete_title">Delete this request?</string>
+    <string name="request_confirm_delete_message">This will permanently remove the request and all bids on it. You can\'t undo this.</string>
+    <string name="request_confirm_complete_title">Complete this request?</string>
+    <string name="request_confirm_complete_message">By continuing, you confirm that this professional has completed the work. You\'ll then be asked to leave a short review before this request is closed.</string>
+    <string name="request_confirm_complete_positive">Continue</string>
 
     <!-- Complete request + review (client) -->
     <string name="complete_review_title">Complete request</string>

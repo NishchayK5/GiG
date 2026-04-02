@@ -12,8 +12,12 @@ import com.g08.gig.util.Strings;
 import java.util.List;
 
 public class ReviewServiceImpl implements ReviewService {
+
     private final ReviewRepository reviewRepo;
-    public ReviewServiceImpl(ReviewRepository reviewRepo) { this.reviewRepo = reviewRepo; }
+
+    public ReviewServiceImpl(ReviewRepository reviewRepo) {
+        this.reviewRepo = reviewRepo;
+    }
     @Override
     public Review addReview(Client reviewer, Pro pro, String title, String body, int stars) {
         String trimmedTitle = Strings.safeTrim(title);

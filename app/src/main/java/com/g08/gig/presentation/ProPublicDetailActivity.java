@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.g08.gig.R;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.g08.gig.application.GiGApp;
 import com.g08.gig.business.services.ProUserService;
 import com.g08.gig.business.services.ReviewService;
@@ -57,14 +59,14 @@ public class ProPublicDetailActivity extends AppCompatActivity {
         TextView avgRatingOutOfView = findViewById(R.id.proDetailAvgRatingOutOf);
         TextView cityView = findViewById(R.id.proDetailCity);
         TextView emailView = findViewById(R.id.proEmailView);
-        TextView skillsView = findViewById(R.id.proDetailSkills);
+        ChipGroup skillsGroup = findViewById(R.id.proDetailSkills);
 
         String first = pro.getFirstName() != null ? pro.getFirstName() : "";
         String last = pro.getLastName() != null ? pro.getLastName() : "";
         nameView.setText((first + " " + last).trim());
         cityView.setText(pro.getCityOfOperation() != null ? pro.getCityOfOperation() : "");
         emailView.setText(pro.getEmail() != null ? pro.getEmail(): "");
-        skillsView.setText(formatSkillSet(proUserService.getSkillsByPro(pro)));
+        bindSkillBadges(skillsGroup, proUserService.getSkillsByPro(pro));
 
         LinearLayout reviewsContainer = findViewById(R.id.proDetailReviewsContainer);
         View emptyReviewsView = findViewById(R.id.proDetailReviewsEmptyView);
@@ -156,22 +158,23 @@ public class ProPublicDetailActivity extends AppCompatActivity {
         }
     }
 
-    private static String formatSkillSet(String[] skills) {
-        if (skills == null || skills.length == 0) {
-            return "";
+    private void bindSkillBadges(ChipGroup chipGroup, String[] skills) {
+        chipGroup.removeAllViews();
+        if (skills == null) {
+            return;
         }
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < skills.length; i++) {
-            String s = skills[i];
-            if (s == null || s.trim().isEmpty()) {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        for (String raw : skills) {
+            if (raw == null || raw.trim().isEmpty()) {
                 continue;
             }
-            if (sb.length() > 0) {
-                sb.append(", ");
-            }
-            sb.append(s.trim());
+            Chip chip = (Chip) inflater.inflate(R.layout.item_skill_badge_pro, chipGroup, false);
+            chip.setText(raw.trim());
+            chip.setClickable(false);
+            chip.setFocusable(false);
+            chip.setEnsureMinTouchTargetSize(false);
+            chipGroup.addView(chip);
         }
-        return sb.toString();
     }
 
     private static String formatReviewer(Client reviewer) {

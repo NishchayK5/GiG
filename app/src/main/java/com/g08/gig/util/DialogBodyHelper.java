@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.g08.gig.R;
+
 public final class DialogBodyHelper {
 
     public static final int MAX_LINES_COLLAPSED = 4;
@@ -49,7 +51,7 @@ public final class DialogBodyHelper {
             if (bodyView.getMaxLines() == MAX_LINES_COLLAPSED) {
                 bodyView.setMaxLines(Integer.MAX_VALUE);
                 bodyView.setEllipsize(null);
-                showMoreButton.setText("Show less");
+                showMoreButton.setText(showMoreButton.getContext().getString(R.string.dialog_show_less));
                 bodyView.post(() -> {
                     if (scrollView != null) {
                         int targetScrollY = bodyView.getTop() - bodyView.getPaddingTop();
@@ -59,7 +61,7 @@ public final class DialogBodyHelper {
             } else {
                 bodyView.setMaxLines(MAX_LINES_COLLAPSED);
                 bodyView.setEllipsize(TextUtils.TruncateAt.END);
-                showMoreButton.setText("Show more");
+                showMoreButton.setText(showMoreButton.getContext().getString(R.string.dialog_show_more));
             }
         });
     }

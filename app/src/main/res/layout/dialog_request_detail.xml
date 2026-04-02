@@ -107,7 +107,7 @@
         android:id="@+id/dialogShowMoreButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show more"
+        android:text="@string/dialog_show_more"
         android:textSize="13sp"
         android:textStyle="bold"
         android:textColor="@color/main_cust_color"

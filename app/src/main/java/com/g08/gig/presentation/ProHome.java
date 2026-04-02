@@ -107,7 +107,7 @@ public class ProHome extends AppCompatActivity {
 
     private void setupBidsList() {
         RecyclerView bidsList = findViewById(R.id.bidsList);
-        bidsAdapter = new BidAdapter(bid -> {});
+        bidsAdapter = new BidAdapter(null);
         bidsList.setLayoutManager(new LinearLayoutManager(this));
         bidsList.setAdapter(bidsAdapter);
         bidsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {

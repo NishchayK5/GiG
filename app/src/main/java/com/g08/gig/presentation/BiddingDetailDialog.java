@@ -19,6 +19,7 @@ import com.g08.gig.R;
 import com.g08.gig.models.Client;
 import com.g08.gig.util.DateFormats;
 import com.g08.gig.util.DialogBodyHelper;
+import com.g08.gig.util.Strings;
 
 import java.time.LocalDateTime;
 
@@ -58,9 +59,9 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
         boolean hasClient = client != null;
         args.putBoolean(ARG_HAS_CLIENT, hasClient);
         if (hasClient) {
-            args.putString(ARG_CLIENT_FIRST, nullToEmpty(client.getFirstName()));
-            args.putString(ARG_CLIENT_LAST, nullToEmpty(client.getLastName()));
-            args.putString(ARG_CLIENT_ADDRESS, nullToEmpty(client.getAddress()));
+            args.putString(ARG_CLIENT_FIRST, Strings.nullToEmpty(client.getFirstName()));
+            args.putString(ARG_CLIENT_LAST, Strings.nullToEmpty(client.getLastName()));
+            args.putString(ARG_CLIENT_ADDRESS, Strings.nullToEmpty(client.getAddress()));
         }
         dialog.setArguments(args);
         return dialog;
@@ -69,11 +70,7 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (getDialog() != null && getDialog().getWindow() != null) {
-            int width = (int) (getResources().getDisplayMetrics().widthPixels * BaseGigDialogFragment.DIALOG_WIDTH_RATIO);
-            int maxHeight = (int) (getResources().getDisplayMetrics().heightPixels * BaseGigDialogFragment.DIALOG_MAX_HEIGHT_RATIO);
-            getDialog().getWindow().setLayout(width, maxHeight);
-        }
+        setDialogWidthAndMaxHeight();
     }
 
     @Nullable
@@ -120,8 +117,7 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
             clientSection.setVisibility(View.VISIBLE);
             String first = args.getString(ARG_CLIENT_FIRST, "");
             String last = args.getString(ARG_CLIENT_LAST, "");
-            String fullName = (nullToEmpty(first) + " " + nullToEmpty(last)).trim();
-            clientName.setText(fullName.isEmpty() ? "\u2014" : fullName);
+            clientName.setText(ClientDisplayMapper.formatFullNameFromParts(requireContext(), first, last));
             clientAddress.setText(args.getString(ARG_CLIENT_ADDRESS, ""));
         } else {
             clientSection.setVisibility(View.GONE);
@@ -162,7 +158,7 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
             }
 
             if (proposedTime == null) {
-                Toast.makeText(requireContext(), "Please select a proposed time", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.bid_proposed_time_required, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -180,10 +176,6 @@ public class BiddingDetailDialog extends BaseGigDialogFragment {
             }
             dismiss();
         });
-    }
-
-    private static String nullToEmpty(String s) {
-        return s != null ? s : "";
     }
 
 }

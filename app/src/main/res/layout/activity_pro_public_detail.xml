@@ -162,14 +162,14 @@
                         android:textColor="@color/grey"
                         android:textSize="12sp" />
 
-                    <TextView
+                    <com.google.android.material.chip.ChipGroup
                         android:id="@+id/proDetailSkills"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:textColor="@color/main_netural_color"
-                        android:textSize="14sp"
-                        tools:text="Brakes, Oil change" />
+                        app:chipSpacingHorizontal="8dp"
+                        app:chipSpacingVertical="8dp"
+                        app:singleLine="false" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

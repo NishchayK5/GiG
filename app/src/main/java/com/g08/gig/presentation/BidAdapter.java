@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,9 +22,10 @@ public class BidAdapter extends ListAdapter<Bid, BidAdapter.BidViewHolder> {
         void onBidClick(Bid bid);
     }
 
+    @Nullable
     private final OnBidClickListener listener;
 
-    public BidAdapter(OnBidClickListener listener) {
+    public BidAdapter(@Nullable OnBidClickListener listener) {
         super(new DiffUtil.ItemCallback<Bid>() {
             @Override
             public boolean areItemsTheSame(@NonNull Bid oldItem, @NonNull Bid newItem) {

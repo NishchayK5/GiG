@@ -15,7 +15,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+
 import com.g08.gig.R;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.g08.gig.models.Bid;
 import com.g08.gig.util.DateFormats;
 import com.g08.gig.util.DialogBodyHelper;
@@ -242,15 +244,29 @@ public class RequestDetailDialog extends BaseGigDialogFragment {
 
         closeIcon.setOnClickListener(v -> dismiss());
 
-        deleteButton.setOnClickListener(v -> {
-            if (actionListener != null) actionListener.onDeleteRequest(requestId);
-            dismiss();
-        });
+        deleteButton.setOnClickListener(v -> new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.request_confirm_delete_title)
+                .setMessage(R.string.request_confirm_delete_message)
+                .setNegativeButton(R.string.complete_review_cancel, null)
+                .setPositiveButton(R.string.request_detail_delete, (d, which) -> {
+                    if (actionListener != null) {
+                        actionListener.onDeleteRequest(requestId);
+                    }
+                    dismiss();
+                })
+                .show());
 
-        completeButton.setOnClickListener(v -> {
-            dismiss();
-            if (actionListener != null) actionListener.onCompleteRequest(requestId);
-        });
+        completeButton.setOnClickListener(v -> new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.request_confirm_complete_title)
+                .setMessage(R.string.request_confirm_complete_message)
+                .setNegativeButton(R.string.complete_review_cancel, null)
+                .setPositiveButton(R.string.request_confirm_complete_positive, (d, which) -> {
+                    dismiss();
+                    if (actionListener != null) {
+                        actionListener.onCompleteRequest(requestId);
+                    }
+                })
+                .show());
     }
 
     private void setStatusBackground(TextView view, int color) {

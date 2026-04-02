@@ -5,6 +5,7 @@
     <color name="main_cust_color">#B8860B</color>
     <color name="main_cust_color_legacy">#D14B4B</color>
     <color name="main_pro_color">#3AA0A2</color>
+    <color name="main_pro_color_badge_background">#E3F4F4</color>
     <color name="main_netural_color">#424242</color>
     <color name="grey">#757575</color>
     <color name="brown">#D6B174</color>

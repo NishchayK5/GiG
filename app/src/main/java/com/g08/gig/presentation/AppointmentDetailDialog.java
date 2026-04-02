@@ -21,6 +21,7 @@ import com.g08.gig.models.Client;
 import com.g08.gig.models.Request;
 import com.g08.gig.util.DateFormats;
 import com.g08.gig.util.DialogBodyHelper;
+import com.g08.gig.util.Strings;
 
 /**
  * Read-only details for a pro's appointment (request, client, schedule).
@@ -40,11 +41,7 @@ public class AppointmentDetailDialog extends BaseGigDialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (getDialog() != null && getDialog().getWindow() != null) {
-            int width = (int) (getResources().getDisplayMetrics().widthPixels * DIALOG_WIDTH_RATIO);
-            int maxHeight = (int) (getResources().getDisplayMetrics().heightPixels * DIALOG_MAX_HEIGHT_RATIO);
-            getDialog().getWindow().setLayout(width, maxHeight);
-        }
+        setDialogWidthAndMaxHeight();
     }
 
     @Nullable
@@ -109,25 +106,22 @@ public class AppointmentDetailDialog extends BaseGigDialogFragment {
                 statusView.setText(R.string.request_detail_status_closed);
                 setStatusBackground(statusView, ContextCompat.getColor(requireContext(), R.color.grey));
             }
-            Client client = request.getClient();
-            if (client != null) {
-                clientSection.setVisibility(View.VISIBLE);
-                String first = nullToEmpty(client.getFirstName());
-                String last = nullToEmpty(client.getLastName());
-                String fullName = (first + " " + last).trim();
-                clientName.setText(fullName.isEmpty() ? "\u2014" : fullName);
-                clientEmail.setText(nullToEmpty(client.getEmail()));
-                clientPhone.setText(nullToEmpty(client.getPhoneNumber()));
-                clientAddress.setText(nullToEmpty(client.getAddress()));
-            } else {
-                clientSection.setVisibility(View.GONE);
-            }
         } else {
             titleView.setText(R.string.appointment_view);
             DialogBodyHelper.setupExpandableDescription(bodyView, showMore, scrollView, "");
             postedTime.setText("");
-            clientSection.setVisibility(View.GONE);
             statusView.setVisibility(View.GONE);
+        }
+
+        Client client = ClientDisplayMapper.clientForAppointment(appt);
+        if (client != null) {
+            clientSection.setVisibility(View.VISIBLE);
+            clientName.setText(ClientDisplayMapper.formatFullName(requireContext(), client));
+            clientEmail.setText(Strings.nullToEmpty(client.getEmail()));
+            clientPhone.setText(Strings.nullToEmpty(client.getPhoneNumber()));
+            clientAddress.setText(Strings.nullToEmpty(client.getAddress()));
+        } else {
+            clientSection.setVisibility(View.GONE);
         }
 
         if (appt.getAppointmentStart() != null) {
@@ -147,11 +141,7 @@ public class AppointmentDetailDialog extends BaseGigDialogFragment {
     private void setStatusBackground(TextView statusView, int color) {
         GradientDrawable bg = new GradientDrawable();
         bg.setColor(color);
-        bg.setCornerRadius(16f);
+        bg.setCornerRadius(getResources().getDimension(R.dimen.status_badge_corner_radius));
         statusView.setBackground(bg);
-    }
-
-    private static String nullToEmpty(String s) {
-        return s != null ? s : "";
     }
 }
