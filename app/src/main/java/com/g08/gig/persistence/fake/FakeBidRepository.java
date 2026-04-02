@@ -60,7 +60,7 @@ public class FakeBidRepository implements BidRepository {
     public List<Bid> getAllByRequest(Request request){
         List<Bid> result = new ArrayList<>();
         for(Bid bid : bids){
-            if(bid.getRequest()==request){
+            if(bid.getRequest().getId()==request.getId()){
                 result.add(bid);
             }
         }
