@@ -22,42 +22,41 @@ import com.g08.gig.persistence.real.Bid.SqlBidRepository;
 import com.g08.gig.persistence.real.Client.SqlClientRepository;
 import com.g08.gig.persistence.real.Pro.SqlProRepository;
 import com.g08.gig.persistence.real.Request.SqlRequestRepository;
+import com.g08.gig.persistence.real.Skills.SqlSkillRepository;
 import com.g08.gig.persistence.real.user.SqlUserRepository;
+import at.favre.lib.crypto.bcrypt.BCrypt;
+
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
 public class RequestFlowSQLiteIntegrationTest {
 
-    // ── Infrastructure ────────────────────────────────────────────────────────
-
-    private AppDbHelper          dbHelper;
-    private SqlUserRepository    userRepo;
-    private SqlClientRepository  clientRepo;
-    private SqlProRepository     proRepo;
+    private AppDbHelper dbHelper;
+    private SqlUserRepository userRepo;
+    private SqlClientRepository clientRepo;
+    private SqlSkillRepository skillRepo;
+    private SqlProRepository proRepo;
     private SqlRequestRepository requestRepo;
-    private SqlBidRepository     bidRepo;
+    private SqlBidRepository bidRepo;
 
     private ClientUserServiceImpl clientService;
-    private ProUserServiceImpl    proService;
-    private RequestServiceImpl    requestService;
-    private BidServiceImpl        bidService;
-    private AuthServiceImpl       authService;
+    private ProUserServiceImpl proService;
+    private RequestServiceImpl requestService;
+    private BidServiceImpl bidService;
+    private AuthServiceImpl authService;
 
-    // ==================== testData ====================
-
-    private static final String CLIENT_EMAIL   = "client@gmail.com";
-    private static final String PRO_EMAIL      = "pro@test.com";
+    private static final String CLIENT_EMAIL = "client@gmail.com";
+    private static final String PRO_EMAIL = "pro@test.com";
     private static final String VALID_PASSWORD = "SecurePass1!";
-    private static final String CLIENT_PHONE   = "2041111111";
-    private static final String PRO_PHONE      = "2042222222";
-
-    // ==================== setUp ====================
+    private static final String CLIENT_PHONE = "2041111111";
+    private static final String PRO_PHONE = "2042222222";
 
     @Before
     public void setUp() {
@@ -65,18 +64,18 @@ public class RequestFlowSQLiteIntegrationTest {
         ctx.deleteDatabase(AppDbHelper.DB_NAME);
 
         dbHelper = new AppDbHelper(ctx);
-
-        userRepo    = new SqlUserRepository(dbHelper);
-        clientRepo  = new SqlClientRepository(dbHelper);
-        proRepo     = new SqlProRepository(dbHelper);
+        userRepo = new SqlUserRepository(dbHelper);
+        clientRepo = new SqlClientRepository(dbHelper);
+        skillRepo = new SqlSkillRepository(dbHelper);
+        proRepo = new SqlProRepository(dbHelper, skillRepo);
         requestRepo = new SqlRequestRepository(dbHelper, clientRepo);
-        bidRepo     = new SqlBidRepository(dbHelper, proRepo, requestRepo);
+        bidRepo = new SqlBidRepository(dbHelper, proRepo, requestRepo);
 
-        clientService  = new ClientUserServiceImpl(clientRepo, userRepo);
-        proService     = new ProUserServiceImpl(proRepo, userRepo);
+        clientService = new ClientUserServiceImpl(clientRepo, userRepo);
+        proService = new ProUserServiceImpl(proRepo, userRepo, skillRepo);
         requestService = new RequestServiceImpl(requestRepo);
-        bidService     = new BidServiceImpl(bidRepo);
-        authService    = new AuthServiceImpl(userRepo, clientRepo, proRepo);
+        bidService = new BidServiceImpl(bidRepo);
+        authService = new AuthServiceImpl(userRepo, clientRepo, proRepo);
     }
 
     @After
@@ -88,8 +87,6 @@ public class RequestFlowSQLiteIntegrationTest {
         ctx.deleteDatabase(AppDbHelper.DB_NAME);
     }
 
-    // ==================== client user service testing ====================
-
     @Test
     public void addClient_persistsToSQLiteAndCanBeRetrieved() {
         Client added = clientService.addClient(
@@ -100,7 +97,7 @@ public class RequestFlowSQLiteIntegrationTest {
         assertTrue(added.getId() > 0);
 
         Client fromDb = clientRepo.getById(added.getId());
-        assertNotNull("Client must be persisted in SQLite", fromDb);
+        assertNotNull(fromDb);
         assertEquals(CLIENT_EMAIL, fromDb.getEmail());
         assertEquals("Dayaveer", fromDb.getFirstName());
         assertEquals("Gill", fromDb.getLastName());
@@ -116,8 +113,12 @@ public class RequestFlowSQLiteIntegrationTest {
 
         Client fromDb = clientRepo.getById(added.getId());
         assertNotNull(fromDb);
-        assertNotEquals("Plain-text password must never be stored", VALID_PASSWORD, fromDb.getPassword());
-        assertTrue("Password should be a BCrypt hash", fromDb.getPassword().startsWith("$2"));
+        assertNotEquals(VALID_PASSWORD, fromDb.getPassword());
+        assertTrue(
+                BCrypt.verifyer()
+                        .verify(VALID_PASSWORD.toCharArray(), fromDb.getPassword())
+                        .verified
+        );
     }
 
     @Test
@@ -147,10 +148,8 @@ public class RequestFlowSQLiteIntegrationTest {
         int id = added.getId();
 
         assertTrue(clientService.deleteClient(id));
-        assertNull("Client must no longer exist in the database", clientRepo.getById(id));
+        assertNull(clientRepo.getById(id));
     }
-
-    // ==================== pro user service testing ====================
 
     @Test
     public void addPro_persistsToSQLiteAndCanBeRetrieved() {
@@ -163,7 +162,7 @@ public class RequestFlowSQLiteIntegrationTest {
         assertTrue(added.getId() > 0);
 
         Pro fromDb = proRepo.getById(added.getId());
-        assertNotNull("Pro must be persisted in SQLite", fromDb);
+        assertNotNull(fromDb);
         assertEquals(PRO_EMAIL, fromDb.getEmail());
         assertEquals("Izzy", fromDb.getFirstName());
         assertEquals("Winnipeg", fromDb.getCityOfOperation());
@@ -179,7 +178,11 @@ public class RequestFlowSQLiteIntegrationTest {
         Pro fromDb = proRepo.getById(added.getId());
         assertNotNull(fromDb);
         assertNotEquals(VALID_PASSWORD, fromDb.getPassword());
-        assertTrue(fromDb.getPassword().startsWith("$2"));
+        assertTrue(
+                BCrypt.verifyer()
+                        .verify(VALID_PASSWORD.toCharArray(), fromDb.getPassword())
+                        .verified
+        );
     }
 
     @Test
@@ -188,6 +191,14 @@ public class RequestFlowSQLiteIntegrationTest {
                 "Izzy", "Elskamp", PRO_EMAIL, PRO_PHONE,
                 VALID_PASSWORD, VALID_PASSWORD,
                 new String[]{"Oil Change"}, "Winnipeg");
+
+        Pro beforeUpdate = proRepo.getById(added.getId());
+        assertNotNull(beforeUpdate);
+        assertEquals(PRO_EMAIL, beforeUpdate.getEmail());
+        assertEquals("Elskamp", beforeUpdate.getLastName());
+        assertEquals(PRO_PHONE, beforeUpdate.getPhoneNumber());
+        assertArrayEquals(new String[]{"Oil Change"}, beforeUpdate.getSkillSet());
+        assertEquals("Winnipeg", beforeUpdate.getCityOfOperation());
 
         boolean result = proService.updatePro(
                 added.getId(), "pro1@gmail.com",
@@ -199,10 +210,10 @@ public class RequestFlowSQLiteIntegrationTest {
         assertNotNull(fromDb);
         assertEquals("pro1@gmail.com", fromDb.getEmail());
         assertEquals("Elskamp-New", fromDb.getLastName());
+        assertEquals("2044444444", fromDb.getPhoneNumber());
+        assertArrayEquals(new String[]{"Brakes", "AC"}, fromDb.getSkillSet());
         assertEquals("Brandon", fromDb.getCityOfOperation());
     }
-
-    // ==================== service request testing ====================
 
     @Test
     public void addRequest_persistsToSQLiteAndCanBeRetrieved() {
@@ -213,10 +224,10 @@ public class RequestFlowSQLiteIntegrationTest {
         assertTrue(added.getId() > 0);
 
         Request fromDb = requestRepo.getById(added.getId());
-        assertNotNull("Request must be persisted in SQLite", fromDb);
+        assertNotNull(fromDb);
         assertEquals("Brake Repair", fromDb.getTitle());
         assertEquals("Need new pads", fromDb.getBody());
-        assertTrue("New request should be active", fromDb.getRequestStatus());
+        assertTrue(fromDb.getRequestStatus());
         assertNotNull(fromDb.getClient());
         assertEquals(client.getId(), fromDb.getClient().getId());
     }
@@ -224,7 +235,7 @@ public class RequestFlowSQLiteIntegrationTest {
     @Test
     public void getAllRequests_returnsAllPersistedRequests() {
         Client client = addTestClient();
-        requestService.addRequest(client, "Oil Change",    "Due for oil change");
+        requestService.addRequest(client, "Oil Change", "Due for oil change");
         requestService.addRequest(client, "Tire Rotation", "Need rotation");
 
         assertEquals(2, requestService.getAllRequests().size());
@@ -239,7 +250,7 @@ public class RequestFlowSQLiteIntegrationTest {
 
         requestService.addRequest(client1, "Client1 Request A", "Body A");
         requestService.addRequest(client1, "Client1 Request B", "Body B");
-        requestService.addRequest(client2, "Client2 Request",   "Body C");
+        requestService.addRequest(client2, "Client2 Request", "Body C");
 
         assertEquals(2, requestService.getRequestsByClient(client1.getId()).size());
 
@@ -257,14 +268,14 @@ public class RequestFlowSQLiteIntegrationTest {
 
         Request fromDb = requestRepo.getById(added.getId());
         assertNotNull(fromDb);
-        assertFalse("Request must be inactive after completeRequest", fromDb.getRequestStatus());
+        assertFalse(fromDb.getRequestStatus());
     }
 
     @Test
     public void getRequestsByStatus_returnsCorrectSubset() {
-        Client client   = addTestClient();
-        requestService.addRequest(client, "Active A",   "Body");
-        requestService.addRequest(client, "Active B",   "Body");
+        Client client = addTestClient();
+        requestService.addRequest(client, "Active A", "Body");
+        requestService.addRequest(client, "Active B", "Body");
         Request toClose = requestService.addRequest(client, "Will Close", "Body");
         requestService.completeRequest(toClose.getId());
 
@@ -280,7 +291,7 @@ public class RequestFlowSQLiteIntegrationTest {
 
         requestService.removeRequest(id);
 
-        assertNull("Deleted request must not exist in SQLite", requestRepo.getById(id));
+        assertNull(requestRepo.getById(id));
     }
 
     @Test
@@ -290,59 +301,59 @@ public class RequestFlowSQLiteIntegrationTest {
 
         List<Request> all = requestRepo.getAll();
         assertEquals(1, all.size());
-        assertEquals("Engine Diagnostic",     all.get(0).getTitle());
+        assertEquals("Engine Diagnostic", all.get(0).getTitle());
         assertEquals("Check engine light on", all.get(0).getBody());
     }
 
-    // ==================== bid testing ====================
-
     @Test
     public void addBid_persistsToSQLiteAndCanBeRetrieved() {
-        Client  client  = addTestClient();
-        Pro     pro     = addTestPro();
+        Client client = addTestClient();
+        Pro pro = addTestPro();
         Request request = requestService.addRequest(client, "Brake Repair", "Need pads");
 
-        Bid added = bidService.addBid(pro, request, 150.00);
+        LocalDateTime bidTime = LocalDateTime.of(2026, 4, 2, 10, 0);
+        Bid added = bidService.addBid(pro, request, 150.00, bidTime);
 
         assertNotNull(added);
         assertTrue(added.getId() > 0);
 
         Bid fromDb = bidRepo.getById(added.getId());
-        assertNotNull("Bid must be persisted in SQLite", fromDb);
+        assertNotNull(fromDb);
         assertEquals(150.00, fromDb.getCost(), 0.001);
         assertEquals(pro.getId(), fromDb.getPro().getId());
         assertEquals(request.getId(), fromDb.getRequest().getId());
+        assertEquals(bidTime, fromDb.getTimeOfBid());
     }
 
     @Test
     public void getAllByRequest_returnsAllBidsForThatRequest() {
-        Client  client  = addTestClient();
-        Pro     pro     = addTestPro();
+        Client client = addTestClient();
+        Pro pro = addTestPro();
         Request request = requestService.addRequest(client, "Oil Change", "Need oil");
-        Pro     pro2    = proService.addPro(
+        Pro pro2 = proService.addPro(
                 "Nishchay", "Kathuria", "pro2@gmail.com", "2046666666",
                 VALID_PASSWORD, VALID_PASSWORD, new String[]{"Oil Change"}, "Winnipeg");
 
-        bidService.addBid(pro,  request, 80.00);
-        bidService.addBid(pro2, request, 95.00);
+        bidService.addBid(pro, request, 80.00, LocalDateTime.of(2026, 4, 2, 11, 0));
+        bidService.addBid(pro2, request, 95.00, LocalDateTime.of(2026, 4, 2, 12, 0));
 
         assertEquals(2, bidService.getAllByRequest(request).size());
     }
 
     @Test
     public void getAllByPro_returnsOnlyThatProsBids() {
-        Client  client = addTestClient();
-        Pro     pro1   = addTestPro();
-        Pro     pro2   = proService.addPro(
+        Client client = addTestClient();
+        Pro pro1 = addTestPro();
+        Pro pro2 = proService.addPro(
                 "Other", "Pro", "other.pro@gmail.com", "2047777777",
                 VALID_PASSWORD, VALID_PASSWORD, new String[]{"AC Repair"}, "Winnipeg");
 
-        Request req1 = requestService.addRequest(client, "Brakes",    "Need pads");
+        Request req1 = requestService.addRequest(client, "Brakes", "Need pads");
         Request req2 = requestService.addRequest(client, "Oil Change", "Need oil");
 
-        bidService.addBid(pro1, req1, 120.00);
-        bidService.addBid(pro1, req2,  75.00);
-        bidService.addBid(pro2, req1,  99.00);
+        bidService.addBid(pro1, req1, 120.00, LocalDateTime.of(2026, 4, 2, 13, 0));
+        bidService.addBid(pro1, req2, 75.00, LocalDateTime.of(2026, 4, 2, 14, 0));
+        bidService.addBid(pro2, req1, 99.00, LocalDateTime.of(2026, 4, 2, 15, 0));
 
         assertEquals(2, bidService.getAllByPro(pro1).size());
 
@@ -352,44 +363,35 @@ public class RequestFlowSQLiteIntegrationTest {
     }
 
     @Test
-    public void getRequestsWithBidCostsByPro_returnsCorrectCosts() {
-        Client  client   = addTestClient();
-        Pro     pro      = addTestPro();
-        Request request1 = requestService.addRequest(client, "Brakes",    "Need pads");
-        Request request2 = requestService.addRequest(client, "Oil Change", "Need oil");
-
-        bidService.addBid(pro, request1, 130.00);
-        bidService.addBid(pro, request2,  65.50);
-
-        List<Request> results = bidService.getRequestsWithBidCostsByPro(pro);
-        assertEquals(2, results.size());
-
-        Request brakes = null;
-        Request oil    = null;
-        for (Request r : results) {
-            if (r.getTitle().equals("Brakes"))     brakes = r;
-            if (r.getTitle().equals("Oil Change")) oil    = r;
-        }
-
-        assertNotNull(brakes);
-        assertEquals(130.00, brakes.getBidCost(), 0.001);
-        assertNotNull(oil);
-        assertEquals(65.50, oil.getBidCost(), 0.001);
-    }
-
-    @Test
     public void bid_costStoredAsCentsRoundTripsCorrectly() {
-        Client  client  = addTestClient();
-        Pro     pro     = addTestPro();
+        Client client = addTestClient();
+        Pro pro = addTestPro();
         Request request = requestService.addRequest(client, "AC Repair", "AC broken");
 
-        bidService.addBid(pro, request, 199.99);
+        bidService.addBid(pro, request, 199.99, LocalDateTime.of(2026, 4, 2, 16, 0));
 
         List<Bid> bids = bidService.getAllByRequest(request);
         assertEquals(1, bids.size());
         assertEquals(199.99, bids.get(0).getCost(), 0.001);
     }
 
+    @Test
+    public void acceptBid_updatesAcceptedStatusInSQLite() {
+        Client client = addTestClient();
+        Pro pro = addTestPro();
+        Request request = requestService.addRequest(client, "Alternator", "Battery light is on");
+
+        Bid bid = bidService.addBid(pro, request, 175.00, LocalDateTime.of(2026, 4, 2, 17, 0));
+        bidService.acceptBid(bid);
+
+        Bid fromDb = bidRepo.getById(bid.getId());
+        assertNotNull(fromDb);
+        assertTrue(fromDb.getBidStatus());
+
+        Bid accepted = bidService.getAcceptedBidByRequest(request);
+        assertNotNull(accepted);
+        assertEquals(bid.getId(), accepted.getId());
+    }
 
     @Test
     public void login_clientWithCorrectCredentials_succeeds() {
@@ -437,8 +439,7 @@ public class RequestFlowSQLiteIntegrationTest {
                 "Dayaveer", "Gill", CLIENT_EMAIL, VALID_PASSWORD, VALID_PASSWORD,
                 CLIENT_PHONE, "123 Main St");
 
-        assertTrue("Login must succeed regardless of email case",
-                authService.login(CLIENT_EMAIL.toUpperCase(), VALID_PASSWORD).isSuccess());
+        assertTrue(authService.login(CLIENT_EMAIL.toUpperCase(), VALID_PASSWORD).isSuccess());
     }
 
     @Test
@@ -453,62 +454,53 @@ public class RequestFlowSQLiteIntegrationTest {
         assertEquals(added.getId(), result.getUserId());
     }
 
-    // ==================== cascade testing ====================
-
     @Test
     public void deleteRequest_cascadesAndRemovesAssociatedBids() {
-        Client  client  = addTestClient();
-        Pro     pro     = addTestPro();
+        Client client = addTestClient();
+        Pro pro = addTestPro();
         Request request = requestService.addRequest(client, "Oil Change", "Need oil");
-        Bid     bid     = bidService.addBid(pro, request, 75.00);
+        Bid bid = bidService.addBid(pro, request, 75.00, LocalDateTime.of(2026, 4, 2, 18, 0));
 
-        assertNotNull(bidRepo.getById(bid.getId())); // sanity
+        assertNotNull(bidRepo.getById(bid.getId()));
 
         requestService.removeRequest(request.getId());
 
-        assertNull("Bid must be removed when its parent request is deleted (ON DELETE CASCADE)",
-                bidRepo.getById(bid.getId()));
+        assertNull(bidRepo.getById(bid.getId()));
         assertNull(requestRepo.getById(request.getId()));
     }
 
     @Test
     public void deleteClient_cascadesAndRemovesRequestsAndBids() {
-        Client  client    = addTestClient();
-        Pro     pro       = addTestPro();
-        Request request   = requestService.addRequest(client, "Brake Repair", "Need pads");
-        Bid     bid       = bidService.addBid(pro, request, 120.00);
-        int     requestId = request.getId();
-        int     bidId     = bid.getId();
+        Client client = addTestClient();
+        Pro pro = addTestPro();
+        Request request = requestService.addRequest(client, "Brake Repair", "Need pads");
+        Bid bid = bidService.addBid(pro, request, 120.00, LocalDateTime.of(2026, 4, 2, 19, 0));
+        int requestId = request.getId();
+        int bidId = bid.getId();
 
         clientService.deleteClient(client.getId());
 
         assertNull(clientRepo.getById(client.getId()));
-        assertNull("Request must be removed when its client is deleted",
-                requestRepo.getById(requestId));
-        assertNull("Bid must be removed via cascade when request is deleted",
-                bidRepo.getById(bidId));
+        assertNull(requestRepo.getById(requestId));
+        assertNull(bidRepo.getById(bidId));
     }
-
-    // ==================== database testing ====================
 
     @Test
     public void freshDatabase_hasNoRecords() {
-        assertTrue("Clients table must be empty on start",  clientRepo.getAll().isEmpty());
-        assertTrue("Pros table must be empty on start",     proRepo.getAll().isEmpty());
-        assertTrue("Requests table must be empty on start", requestRepo.getAll().isEmpty());
-        assertTrue("Bids table must be empty on start",     bidRepo.getAll().isEmpty());
+        assertTrue(clientRepo.getAll().isEmpty());
+        assertTrue(proRepo.getAll().isEmpty());
+        assertTrue(requestRepo.getAll().isEmpty());
+        assertTrue(bidRepo.getAll().isEmpty());
     }
 
     @Test
     public void multipleClients_areStoredAndRetrievedCorrectly() {
         clientService.addClient("Alice", "A", "alice@test.com", VALID_PASSWORD, VALID_PASSWORD, "2041000001", "1 Alice St");
-        clientService.addClient("Bob",   "B", "bob@test.com",   VALID_PASSWORD, VALID_PASSWORD, "2041000002", "2 Bob Ave");
+        clientService.addClient("Bob", "B", "bob@test.com", VALID_PASSWORD, VALID_PASSWORD, "2041000002", "2 Bob Ave");
         clientService.addClient("Carol", "C", "carol@test.com", VALID_PASSWORD, VALID_PASSWORD, "2041000003", "3 Carol Rd");
 
         assertEquals(3, clientRepo.getAll().size());
     }
-
-    // ==================== helper ====================
 
     private Client addTestClient() {
         return clientService.addClient(

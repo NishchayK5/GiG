@@ -1,5 +1,7 @@
 package com.g08.gig.business.validation;
 
+import com.g08.gig.business.constants.ValidationMessages;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -72,6 +74,19 @@ class UserValidatorTest {
         assertDoesNotThrow(() -> validator.validate(name60, VALID_LAST, VALID_EMAIL, VALID_PHONE));
     }
 
+    @Test
+    void validate_firstNameContainsDigits_throwsLettersOnly() {
+        ValidationException e = assertThrows(ValidationException.class, () ->
+                validator.validate("Jennifer1", VALID_LAST, VALID_EMAIL, VALID_PHONE));
+        assertEquals(ValidationMessages.FIRST_NAME_LETTERS_ONLY, e.getMessage());
+    }
+
+    @Test
+    void validate_firstNameContainsInvalidSymbols_throwsLettersOnly() {
+        assertThrows(ValidationException.class, () ->
+                validator.validate("Jennifer@Lee", VALID_LAST, VALID_EMAIL, VALID_PHONE));
+    }
+
     // --- Last name ---
 
     @Test
@@ -106,6 +121,13 @@ class UserValidatorTest {
     void validate_lastNameExactly60Chars_doesNotThrow() {
         String name60 = "b".repeat(60);
         assertDoesNotThrow(() -> validator.validate(VALID_FIRST, name60, VALID_EMAIL, VALID_PHONE));
+    }
+
+    @Test
+    void validate_lastNameContainsDigits_throwsLettersOnly() {
+        ValidationException e = assertThrows(ValidationException.class, () ->
+                validator.validate(VALID_FIRST, "Lee99", VALID_EMAIL, VALID_PHONE));
+        assertEquals(ValidationMessages.LAST_NAME_LETTERS_ONLY, e.getMessage());
     }
 
     // --- Email ---
@@ -148,7 +170,6 @@ class UserValidatorTest {
     @Test
     void validate_emailExactly255Chars_doesNotThrow() {
         String email255 = "a".repeat(250) + "@x.co"; // 255 chars
-        System.out.println(email255.length());
         assertDoesNotThrow(() -> validator.validate(VALID_FIRST, VALID_LAST, email255, VALID_PHONE));
     }
 
@@ -184,6 +205,24 @@ class UserValidatorTest {
     @Test
     void validate_phoneExactlyTenDigits_doesNotThrow() {
         assertDoesNotThrow(() -> validator.validate(VALID_FIRST, VALID_LAST, VALID_EMAIL, "1234567890"));
+    }
+
+    @Test
+    void validate_phoneContainsNonDigits_throwsDigitsOnly() {
+        ValidationException e = assertThrows(ValidationException.class, () ->
+                validator.validate(VALID_FIRST, VALID_LAST, VALID_EMAIL, "204-555-1234"));
+        assertEquals(ValidationMessages.PHONE_DIGITS_ONLY, e.getMessage());
+    }
+
+    @Test
+    void validate_phoneContainsLetters_throwsDigitsOnly() {
+        assertThrows(ValidationException.class, () ->
+                validator.validate(VALID_FIRST, VALID_LAST, VALID_EMAIL, "204abc5555"));
+    }
+
+    @Test
+    void validate_phoneExactlyFifteenDigits_doesNotThrow() {
+        assertDoesNotThrow(() -> validator.validate(VALID_FIRST, VALID_LAST, VALID_EMAIL, "123456789012345"));
     }
 
     // --- Password (6-arg only) ---
@@ -227,5 +266,18 @@ class UserValidatorTest {
     void validate_sixArg_passwordsMatchWithWhitespace_doesNotThrow() {
         assertDoesNotThrow(() -> validator.validate(VALID_FIRST, VALID_LAST, VALID_EMAIL, VALID_PHONE,
                 "  password1234  ", "  password1234  "));
+    }
+
+    @Test
+    void validate_sixArg_passwordShorterThan8Chars_throwsMinLength() {
+        ValidationException e = assertThrows(ValidationException.class, () ->
+                validator.validate(VALID_FIRST, VALID_LAST, VALID_EMAIL, VALID_PHONE, "Short1!", "Short1!"));
+        assertEquals(ValidationMessages.PASSWORD_MIN_LENGTH, e.getMessage());
+    }
+
+    @Test
+    void validate_sixArg_passwordExactly8Chars_doesNotThrow() {
+        assertDoesNotThrow(() -> validator.validate(VALID_FIRST, VALID_LAST, VALID_EMAIL, VALID_PHONE,
+                "Exactly8", "Exactly8"));
     }
 }

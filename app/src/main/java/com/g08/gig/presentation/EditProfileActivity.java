@@ -41,8 +41,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
         int userId = getIntent().getIntExtra(SessionManager.KEY_USER_ID, -1);
         boolean isClient = getIntent().getBooleanExtra(EXTRA_IS_CLIENT, true);
-        clientUserService = ((GiGApp) getApplication()).getClientUserService();
-        proUserService = ((GiGApp) getApplication()).getProUserService();
+        clientUserService = GiGApp.get(this).getClientUserService();
+        proUserService = GiGApp.get(this).getProUserService();
 
         firstNameInput = findViewById(R.id.firstNameInput);
         lastNameInput = findViewById(R.id.lastNameInput);
@@ -57,7 +57,7 @@ public class EditProfileActivity extends AppCompatActivity {
             addressInput.setVisibility(View.GONE);
         }
 
-        ProfileLoader loader = ((GiGApp) getApplication()).getProfileLoader(isClient);
+        ProfileLoader loader = GiGApp.get(this).getProfileLoader(isClient);
         User user = loader.getUserForEdit(userId);
 
         if (user != null) {

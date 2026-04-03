@@ -1,7 +1,6 @@
 package com.g08.gig.persistence.fake;
 
 import com.g08.gig.models.Bid;
-import com.g08.gig.models.Pro;
 import com.g08.gig.models.Request;
 import com.g08.gig.persistence.BidRepository;
 import com.g08.gig.persistence.RequestRepository;

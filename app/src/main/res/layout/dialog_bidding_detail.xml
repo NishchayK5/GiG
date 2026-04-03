@@ -47,18 +47,86 @@
             app:tint="@color/light_red_icon" />
     </FrameLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/input_border_light_grey" />
 
-    <TextView
-        android:id="@+id/dialogRequestStatus"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/dialogClientSection"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="4dp"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        android:textStyle="bold" />
+        android:layout_marginTop="12dp"
+        android:orientation="vertical"
+        android:visibility="gone">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/appointment_detail_client_heading"
+            android:textColor="@color/main_cust_color_legacy"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/appointment_detail_client_name"
+                    android:textColor="@color/grey"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05" />
+
+                <TextView
+                    android:id="@+id/dialogClientName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/main_netural_color"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/user_address"
+                    android:textColor="@color/grey"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05" />
+
+                <TextView
+                    android:id="@+id/dialogClientAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/main_netural_color"
+                    android:textSize="15sp"
+                    android:lineSpacingMultiplier="1.2" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -89,7 +157,7 @@
         android:id="@+id/dialogShowMoreButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show more"
+        android:text="@string/dialog_show_more"
         android:textSize="13sp"
         android:textStyle="bold"
         android:textColor="@color/main_cust_color_legacy"
@@ -147,7 +215,27 @@
 
         </LinearLayout>
     </ScrollView>
+    <Button
+        android:id="@+id/dialogPickTimeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Proposed Time"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        app:strokeColor="@color/main_cust_color_legacy"
+        android:textColor="@color/main_cust_color_legacy" />
 
+    <TextView
+        android:id="@+id/dialogPickedTimeView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="4dp"
+        android:gravity="center"
+        android:textColor="@color/main_cust_color_legacy"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
     <Button
         android:id="@+id/dialogBidButton"
         android:layout_width="match_parent"

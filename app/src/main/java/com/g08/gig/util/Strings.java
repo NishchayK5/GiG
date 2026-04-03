@@ -10,4 +10,9 @@ public final class Strings {
         String trimmed = s.trim();
         return trimmed.isEmpty() ? null : trimmed;
     }
+
+
+    public static String nullToEmpty(String s) {
+        return s != null ? s : "";
+    }
 }

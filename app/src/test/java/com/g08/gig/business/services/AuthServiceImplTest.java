@@ -1,4 +1,5 @@
 package com.g08.gig.business.services;
+import com.g08.gig.business.validation.LoginValidator;
 import com.g08.gig.business.validation.ValidationException;
 
 import com.g08.gig.models.Client;
@@ -7,6 +8,7 @@ import com.g08.gig.models.User;
 import com.g08.gig.persistence.fake.FakeClientRepository;
 import com.g08.gig.persistence.fake.FakeProRepository;
 import com.g08.gig.persistence.fake.FakeUserRepository;
+import com.g08.gig.persistence.fake.FakeSkillRepository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,7 @@ class AuthServiceImplTest {
     private AuthServiceImpl authService;
     private ClientUserServiceImpl clientService;
     private ProUserServiceImpl proService;
+    private FakeSkillRepository skillRepo;
 
     @BeforeEach
     void setUp() {
@@ -34,10 +37,11 @@ class AuthServiceImplTest {
         userRepo = new FakeUserRepository();
         clientRepo = new FakeClientRepository(userRepo);
         proRepo = new FakeProRepository(userRepo);
+        skillRepo = new FakeSkillRepository();
 
         authService = new AuthServiceImpl(userRepo, clientRepo, proRepo);
         clientService = new ClientUserServiceImpl(clientRepo, userRepo);
-        proService = new ProUserServiceImpl(proRepo, userRepo);
+        proService = new ProUserServiceImpl(proRepo, userRepo,skillRepo);
     }
 
     // --- login: invalid input ---
@@ -73,6 +77,12 @@ class AuthServiceImplTest {
     @Test
     void login_emailNotInSystem_returnsFailure() {
         LoginResult result = authService.login("unknown.driver@email.com", PASSWORD);
+        assertFalse(result.isSuccess());
+    }
+
+    @Test
+    void login_invalidEmailFormat_returnsFailure() {
+        LoginResult result = authService.login("notanemail", PASSWORD);
         assertFalse(result.isSuccess());
     }
 
@@ -151,6 +161,46 @@ class AuthServiceImplTest {
         // No corresponding Client or Pro with this id
 
         LoginResult result = authService.login("old.account@email.com", PASSWORD);
+
+        assertFalse(result.isSuccess());
+    }
+
+    @Test
+    void login_userWithNullPassword_returnsFailure() {
+        User userWithNullPassword = new User(0, "nopass@test.com", "No", "Pass", "2045550000", null, "USER");
+        User added = userRepo.add(userWithNullPassword);
+        assertNotNull(added);
+        assertNull(added.getPassword());
+
+        LoginResult result = authService.login("nopass@test.com", "any");
+
+        assertFalse(result.isSuccess());
+    }
+
+    @Test
+    void login_userWithEmptyPassword_returnsFailure() {
+        User userWithEmptyPassword = new User(0, "emptypass@test.com", "Empty", "Pass", "2045550001", "", "USER");
+        User added = userRepo.add(userWithEmptyPassword);
+        assertNotNull(added);
+
+        LoginResult result = authService.login("emptypass@test.com", "any");
+
+        assertFalse(result.isSuccess());
+    }
+
+    @Test
+    void login_withCustomLoginValidator_usesValidatorAndReturnsFailureWhenValidationThrows() {
+        LoginValidator failingValidator = new LoginValidator() {
+            @Override
+            public void validate(String email, String password) {
+                throw new ValidationException("Invalid", "email");
+            }
+        };
+        AuthServiceImpl authWithValidator = new AuthServiceImpl(userRepo, clientRepo, proRepo, failingValidator);
+        clientService.addClient("Sarah", "Martinez", CLIENT_EMAIL, PASSWORD, PASSWORD,
+                "2045552233", "452 Oak Street, Winnipeg");
+
+        LoginResult result = authWithValidator.login(CLIENT_EMAIL, PASSWORD);
 
         assertFalse(result.isSuccess());
     }

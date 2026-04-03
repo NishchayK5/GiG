@@ -4,7 +4,9 @@ import com.g08.gig.business.validation.UserValidator;
 import com.g08.gig.business.validation.ValidationException;
 import com.g08.gig.models.Pro;
 import com.g08.gig.persistence.fake.FakeProRepository;
+import com.g08.gig.persistence.fake.FakeSkillRepository;
 import com.g08.gig.persistence.fake.FakeUserRepository;
+import com.g08.gig.persistence.fake.FakeSkillRepository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,17 +24,17 @@ class ProUserServiceImplTest {
     private static final String[] VALID_SKILLS = new String[]{"Oil Change", "Brake Service", "Tire Rotation"};
 
     private FakeProRepository repo;
+    private FakeUserRepository userRepo;
+    private FakeSkillRepository skillRepo;
     private ProUserServiceImpl service;
 
     @BeforeEach
     void setUp() {
-
-        FakeUserRepository userRepo = new FakeUserRepository();
+        userRepo = new FakeUserRepository();
+        skillRepo = new FakeSkillRepository();
         repo = new FakeProRepository(userRepo);
-        service = new ProUserServiceImpl(repo, userRepo);
+        service = new ProUserServiceImpl(repo, userRepo, skillRepo);
     }
-
-    // --- addPro: success ---
 
     @Test
     void addPro_withValidData_returnsProAndStoresInRepo() {
@@ -48,7 +50,7 @@ class ProUserServiceImplTest {
         assertArrayEquals(VALID_SKILLS, added.getSkillSet());
         assertEquals(VALID_CITY, added.getCityOfOperation());
         assertNotNull(added.getPassword());
-        assertNotEquals(VALID_PASSWORD, added.getPassword()); // stored hashed
+        assertNotEquals(VALID_PASSWORD, added.getPassword());
 
         Pro fromRepo = repo.getById(added.getId());
         assertNotNull(fromRepo);
@@ -81,12 +83,10 @@ class ProUserServiceImplTest {
         assertEquals(VALID_CITY, added.getCityOfOperation());
     }
 
-    // --- addPro: validation failures ---
-
     @Test
     void addPro_emptyFirstName_throwsValidationException() {
         try {
-            Pro added = service.addPro("", VALID_LAST, VALID_EMAIL, VALID_PHONE,
+            service.addPro("", VALID_LAST, VALID_EMAIL, VALID_PHONE,
                     VALID_PASSWORD, VALID_PASSWORD, VALID_SKILLS, VALID_CITY);
             fail("Expected ValidationException");
         } catch (ValidationException e) {
@@ -139,8 +139,6 @@ class ProUserServiceImplTest {
                         "DifferentPass1!", "DifferentPass1!", VALID_SKILLS, "Brandon"));
     }
 
-    // --- updatePro: success ---
-
     @Test
     void updatePro_existingPro_returnsTrueAndUpdatesRepo() {
         Pro added = service.addPro(VALID_FIRST, VALID_LAST, VALID_EMAIL, VALID_PHONE,
@@ -160,7 +158,7 @@ class ProUserServiceImplTest {
         assertEquals("2045558899", updated.getPhoneNumber());
         assertArrayEquals(newSkills, updated.getSkillSet());
         assertEquals(newCity, updated.getCityOfOperation());
-        assertEquals(added.getPassword(), updated.getPassword()); // unchanged
+        assertEquals(added.getPassword(), updated.getPassword());
     }
 
     @Test
@@ -177,8 +175,6 @@ class ProUserServiceImplTest {
         boolean result = service.updatePro(999, VALID_EMAIL, VALID_FIRST, VALID_LAST, VALID_PHONE, VALID_SKILLS, VALID_CITY);
         assertFalse(result);
     }
-
-    // --- deletePro ---
 
     @Test
     void deletePro_existingPro_returnsTrueAndRemovesFromRepo() {
@@ -203,10 +199,16 @@ class ProUserServiceImplTest {
         Pro added = service.addPro("Alex", "Nguyen", "tech@quicklube.ca", "2045551010",
                 "SecurePass1!", "SecurePass1!", new String[]{"Oil Change"}, "Winnipeg");
 
-
         Pro newPro = service.getProById(added.getId());
         assertEquals(added.getFirstName(), newPro.getFirstName());
+    }
 
+    @Test
+    void getSkillsByPro_returnsSkillsStoredInSkillRepo() {
+        Pro added = service.addPro(VALID_FIRST, VALID_LAST, VALID_EMAIL, VALID_PHONE,
+                VALID_PASSWORD, VALID_PASSWORD, VALID_SKILLS, VALID_CITY);
+        skillRepo.addSkillsForPro(added.getId(), VALID_SKILLS);
+
+        assertArrayEquals(VALID_SKILLS, service.getSkillsByPro(added));
     }
 }
-

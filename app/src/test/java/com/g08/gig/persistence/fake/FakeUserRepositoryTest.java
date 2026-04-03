@@ -59,6 +59,19 @@ class FakeUserRepositoryTest {
     }
 
     @Test
+    void getByEmail_userWithNullEmail_skipsThatUser() {
+        repo.add(new User(0, null, "A", "B", "555", "p", "USER"));
+        assertNull(repo.getByEmail("anything@x.com"));
+    }
+
+    @Test
+    void getByEmail_ignoresCase() {
+        repo.add(new User(0, "user@test.com", "U", "U", "555", "p", "USER"));
+        assertNotNull(repo.getByEmail("USER@TEST.COM"));
+        assertEquals("user@test.com", repo.getByEmail("USER@TEST.COM").getEmail());
+    }
+
+    @Test
     void update_modifiesExistingUser() {
         User added = repo.add(new User(0, "old@x.com", "Old", "Name", "555", "p", "USER"));
         User updated = new User(added.getId(), "new@x.com", "New", "Name", "999", "p2", "USER");
@@ -99,6 +112,15 @@ class FakeUserRepositoryTest {
     }
 
     @Test
+    void add_whenIdAlreadyExists_returnsNull() {
+        User first = repo.add(new User(0, "a@a.com", "A", "A", "555", "p", "USER"));
+        assertNotNull(first);
+        User duplicate = new User(first.getId(), "b@b.com", "B", "B", "555", "p", "USER");
+        assertNull(repo.add(duplicate));
+        assertEquals(1, repo.getAll().size());
+    }
+
+    @Test
     void getAll_initiallyEmpty() {
         assertTrue(repo.getAll().isEmpty());
     }
@@ -115,5 +137,52 @@ class FakeUserRepositoryTest {
         repo.add(new User(0, "a@a.com", "A", "A", "555", "p", "USER"));
         assertThrows(UnsupportedOperationException.class, () ->
                 repo.getAll().add(new User(1, "b@b.com", "B", "B", "555", "p", "USER")));
+    }
+    @Test
+    void getById_checksNonMatchingUserBeforeFindingMatch() {
+        repo.add(new User(10, "first@test.com", "First", "User", "111", "p1", "USER"));
+        repo.add(new User(20, "second@test.com", "Second", "User", "222", "p2", "USER"));
+
+        User found = repo.getById(20);
+
+        assertNotNull(found);
+        assertEquals(20, found.getId());
+        assertEquals("second@test.com", found.getEmail());
+    }
+    @Test
+    void update_checksNonMatchingUserBeforeUpdatingMatchingUser() {
+        repo.add(new User(10, "first@test.com", "First", "User", "111", "p1", "USER"));
+        repo.add(new User(20, "second@test.com", "Second", "User", "222", "p2", "USER"));
+
+        User updated = new User(20, "updated@test.com", "Updated", "User", "999", "newpass", "USER");
+
+        assertTrue(repo.update(updated));
+
+        User found = repo.getById(20);
+        assertNotNull(found);
+        assertEquals("updated@test.com", found.getEmail());
+        assertEquals("Updated", found.getFirstName());
+        assertEquals("999", found.getPhoneNumber());
+        assertEquals("newpass", found.getPassword());
+    }
+    @Test
+    void getByEmail_checksNonMatchingNonNullEmailBeforeReturningNull() {
+        repo.add(new User(10, "first@test.com", "First", "User", "111", "p1", "USER"));
+        repo.add(new User(20, "second@test.com", "Second", "User", "222", "p2", "USER"));
+
+        User found = repo.getByEmail("missing@test.com");
+
+        assertNull(found);
+    }
+    @Test
+    void delete_checksNonMatchingUserBeforeDeletingMatchingUser() {
+        repo.add(new User(10, "first@test.com", "First", "User", "111", "p1", "USER"));
+        repo.add(new User(20, "second@test.com", "Second", "User", "222", "p2", "USER"));
+
+        assertTrue(repo.delete(20));
+
+        assertNotNull(repo.getById(10));
+        assertNull(repo.getById(20));
+        assertEquals(1, repo.getAll().size());
     }
 }

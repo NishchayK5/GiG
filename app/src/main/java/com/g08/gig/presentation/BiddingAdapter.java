@@ -12,12 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.g08.gig.R;
 import com.g08.gig.models.Request;
-
-import java.time.format.DateTimeFormatter;
+import com.g08.gig.util.DateFormats;
 
 public class BiddingAdapter extends ListAdapter<Request, BiddingAdapter.BiddingViewHolder> {
-
-    private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("MMM d, yyyy · h:mm a");
 
     public interface OnBiddingClickListener {
         void onRequestClick(Request request);
@@ -55,16 +52,9 @@ public class BiddingAdapter extends ListAdapter<Request, BiddingAdapter.BiddingV
         holder.title.setText(request.getTitle());
         holder.body.setText(request.getBody());
         if (request.getTimeOfRequest() != null) {
-            holder.time.setText(request.getTimeOfRequest().format(TIME_FORMAT));
+            holder.time.setText(request.getTimeOfRequest().format(DateFormats.REQUEST_TIME));
         } else {
             holder.time.setText("");
-        }
-        if (request.getBidCost() > 0) {
-            holder.bidPrice.setVisibility(View.VISIBLE);
-            holder.bidPrice.setText(String.format("$%.2f", request.getBidCost()));
-
-        } else {
-            holder.bidPrice.setVisibility(View.GONE);
         }
 
         holder.itemView.setOnClickListener(v -> listener.onRequestClick(request));
@@ -74,16 +64,12 @@ public class BiddingAdapter extends ListAdapter<Request, BiddingAdapter.BiddingV
         final TextView title;
         final TextView body;
         final TextView time;
-        final TextView bidPrice;
-
 
         BiddingViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.requestCardTitle);
             body = itemView.findViewById(R.id.requestCardBody);
             time = itemView.findViewById(R.id.requestCardTime);
-            bidPrice = itemView.findViewById(R.id.requestCardBidPrice);
-
         }
     }
 }

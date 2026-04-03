@@ -8,7 +8,7 @@ public class Request {
     private String body;
     private boolean isActive;
     private LocalDateTime timeOfRequest;
-    private double bidCost;
+
 
 
     public Request(int id, Client client, String title, String body, LocalDateTime timeOfRequest, boolean isActive) {
@@ -19,6 +19,7 @@ public class Request {
         this.timeOfRequest = timeOfRequest;
         this.isActive = isActive;
     }
+
 
     //getters and setters for the object
     public int getId() {
@@ -66,6 +67,8 @@ public class Request {
         isActive = false;
     }
     public boolean getRequestStatus(){return isActive;}
-    public double getBidCost() { return bidCost; }
-    public void setBidCost(double bidCost) { this.bidCost = bidCost; }
+
+    public String getClientInfoString() {
+        return client.getFirstName() + ", " + client.getEmail() + ", " + client.getAddress();
+    }
 }

@@ -1,34 +1,109 @@
-# Changes from Iteration 0 Feedback
-- Edited vision statement
-- Changed features + user stories
-- Fixed one-to-one user story issue
+# App Name: GiG
+> **Fix it with GiG. We have the right pro for every job and the right job for every pro.**
 
-# GiG Vision Statement
+---
+## Team Name: The Four Stooges
 
-GiG is a platform for contractors and businesses to easily find jobs, and for clients to quickly connect with professionals who can bid to complete tasks for them.
+**Group : 08 | Section A01**
 
-People often have difficulty in finding reliable contractors who offer fair pricing, and contractors often face inconsistent job opportunities and trouble expanding their reach within a community. GiG will bridge this gap by providing a dedicated space where work opportunities for professionals and service needs for clients can simultaneously be fulfilled.
+Group Members:
 
-The audience will contain two main groups of users. These are referred to as "clients" and "professionals".
+| Name                | Role | GitLab         |
+|---------------------|------|----------------|
+| Adejare Taiwo       | UI/UX Designer | @taiwoa5       |
+| Dayaveer Gill       | Testing and QA | @DayaveerGill  |
+| Izzy Elskamp        | Android Developer | @IzzyElskamp |
+| Nishchay Kathuria   | Backend Developer | @kathurin      |
 
-The first user group is the clients, which encompasses all people who need something fixed, a task done, or general help with something they are unable to complete themselves. It will be beneficial for the client user group due to the flexibility and bid system. Since businesses have to bid against each other to give the customer the lowest price, the customer will always receive the benefit of industry competitiveness.
+---
+## Overview 
+> Finding work shouldn't be hard. Neither should finding the right person for the job.
+> 
+>GiG is a two-sided marketplace built for everyone, whether you're a contractor tired of chasing leads, or a client who doesn't know where to turn when something needs fixing. Post a request, receive competitive bids, and pick the best match. No middlemen, no guesswork, just quality work at a fair price, every time.
+---
 
-The second user group is the professionals. These are people looking for side jobs, general contractors, or those involved in businesses. GiG is valuable for the professionals user group as they will have quick access to local side jobs, see what is most needed in the customer market, and possibly make lasting customer connections for future jobs.
+## Android Studio + SDK Requirements
 
-GiG will be an improvement over current 'marketplace' applications as it is specifically for finding jobs/task doers, whereas other applications may only have that as a side feature. This means GiG will be able to contain a much deeper and more fleshed out service for that specific need. The goal is to create trust, long-term reliability and accountability between clients and professionals within communities.
+>To build and run this project, ensure the following requirements are met:
+- **Android Version:** 15 or above
+- **Minimum SDK:** 35
+- **JDK:** 26
+- **Emulator/Device:** Google Pixel 9
 
-GiG aims to achieve the following measurable goals:
+### Recommended Emulator Setup
 
-- Average user satisfaction is 7 out of 10 or higher (10 being best), measured through a survey after users have utilized GiG for 1 month.
-- 75% of clients who make job postings get bids on their offer from professionals within 2 days of the post.
-- 95% of professionals who make a successful bid on a job posting actually complete the job in real life and are awarded the agreed on amount.
+- Device: Google Pixel 9
+- API Level: 35
 
-If these goals are achieved, our project will be considered successful.
+> Note: This project was primarily developed and tested using a Pixel 9 Emulator configuration. Other devices may also work as long as they meet the minimum SDK requirement.
+---
 
-## Links
+## Build + Run Instructions
+1. Clone the repository from GitLab:
+```bash
+git clone https://code.cs.umanitoba.ca/comp3350-winter2026/go8-project
+```
+2. Open the project in Android Studio.
+3. Let the Gradle sync and install any missing SDK components if prompted.
+4. Set up an emulator or connect an android device that meets the requirements mentioned under Recommended Emulator Setup in Requirements.
+5. Click the Run button in Android Studio and choose emulator or connected device.
+6. The application should build and launch automatically.
+---
 
-[Working Agreement](Documents/work-agreement.docx)
+## Test evaluation instructions
+> This project includes unit tests, integration tests and end-to-end tests.
 
+### Unit Tests
+To run the unit tests in Android Studio, follow these steps:
+- Open the project in Android Studio, assuming you have successfully cloned the repository.
+- Navigate to the test source folder. The location of unit tests is: 
+```bash
+app/src/test 
+```
+- Right-click the desired test file or folder.
+- Select Run.
+
+### Integration Tests
+To run the integration tests in Android Studio, follow these steps:
+- Open the project in Android Studio, assuming you have successfully cloned the repository.
+- Navigate to the integration test source folder. The location of integration test is:
+```bash
+app/src/androidTest/java/integration
+```
+- Right-click the desired test file or folder.
+- Select Run.
+
+### End-to-End (E2E) Tests
+To run the E2E tests in Android Studio, follow these steps: 
+- Start a compatible Android emulator or connect a physical device.
+- Navigate to the android test folder. 
+```bash
+app/src/androidTest/java/e2e
+```
+- Right-click the desired test file or folder.
+- Select Run.
+>E2E tests require a running emulator or connected android device. See the [Android Studio + SDK Requirements](#android-studio--sdk-requirements) section above.
+
+---
+
+## GiG Vision Statement
+[VISION_STATEMENT.md](Documents/Vision.md)
+
+---
+
+## Architecture Model
 [ARCHITECTURE.md](Documents/ARCHITECTURE.md)
 
-[Release Notes - Contains link to APK](APK/ReleaseNotes.md)
+---
+## Final Retrospective
+[RETROSPECTIVE.md](Documents/RETROSPECTIVE.MD)
+
+---
+## Working Agreement
+[Working Agreement](Documents/work-agreement.docx)
+
+---
+
+
+
+

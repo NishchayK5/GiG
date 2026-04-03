@@ -21,6 +21,7 @@ class RequestTest {
         assertEquals("Brake pad replacement", request.getTitle());
         assertEquals("My 2019 Honda Civic needs new front brake pads. There's a grinding noise when I stop.", request.getBody());
         assertEquals(time, request.getTimeOfRequest());
+        assertTrue(request.getRequestStatus());
     }
 
     @Test
@@ -47,5 +48,23 @@ class RequestTest {
         LocalDateTime newTime = LocalDateTime.of(2025, 7, 1, 14, 0);
         request.setTimeOfRequest(newTime);
         assertEquals(newTime, request.getTimeOfRequest());
+    }
+
+    @Test
+    void setRequestToExpire_changesStatusToInactive() {
+        Client client = new Client(1, "a@b.com", "A", "B", "2041111111", "Addr", null);
+        Request request = new Request(1, client, "Title", "Body", LocalDateTime.now(), true);
+
+        request.setRequestToExpire();
+
+        assertFalse(request.getRequestStatus());
+    }
+
+    @Test
+    void getClientInfoString_formatsExpectedFields() {
+        Client client = new Client(1, "client@test.com", "Dayaveer", "Gill", "2041111111", "123 Main St", null);
+        Request request = new Request(1, client, "Title", "Body", LocalDateTime.now(), true);
+
+        assertEquals("Dayaveer, client@test.com, 123 Main St", request.getClientInfoString());
     }
 }

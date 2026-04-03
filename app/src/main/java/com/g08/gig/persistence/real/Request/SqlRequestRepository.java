@@ -3,16 +3,11 @@ package com.g08.gig.persistence.real.Request;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
 import com.g08.gig.models.Client;
 import com.g08.gig.models.Request;
 import com.g08.gig.persistence.ClientRepository;
 import com.g08.gig.persistence.RequestRepository;
 import com.g08.gig.persistence.real.AppDbHelper;
-import com.g08.gig.persistence.real.Client.ClientTable;
-import com.g08.gig.persistence.real.Client.SqlClientRepository;
-import com.g08.gig.persistence.real.user.UserTable;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

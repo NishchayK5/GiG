@@ -12,12 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.g08.gig.R;
 import com.g08.gig.models.Request;
-
-import java.time.format.DateTimeFormatter;
+import com.g08.gig.util.DateFormats;
 
 public class RequestAdapter extends ListAdapter<Request, RequestAdapter.RequestViewHolder> {
-
-    private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("MMM d, yyyy · h:mm a");
 
     public interface OnRequestClickListener {
         void onRequestClick(Request request);
@@ -61,7 +58,7 @@ public class RequestAdapter extends ListAdapter<Request, RequestAdapter.RequestV
         holder.title.setText(request.getTitle());
         holder.body.setText(request.getBody());
         if (request.getTimeOfRequest() != null) {
-            holder.time.setText(request.getTimeOfRequest().format(TIME_FORMAT));
+            holder.time.setText(request.getTimeOfRequest().format(DateFormats.REQUEST_TIME));
         } else {
             holder.time.setText("");
         }

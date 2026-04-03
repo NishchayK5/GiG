@@ -2,6 +2,7 @@ package com.g08.gig.business.services;
 
 import com.g08.gig.util.Pair;
 
+import com.g08.gig.business.constants.FieldLimits;
 import com.g08.gig.business.constants.ValidationMessages;
 import com.g08.gig.business.validation.ValidationException;
 import com.g08.gig.models.Client;
@@ -25,10 +26,13 @@ public class RequestServiceImpl implements RequestService {
     public Request addRequest(Client client, String title, String body) {
         String trimmedTitle = Strings.safeTrim(title);
         String trimmedBody = Strings.safeTrim(body);
-        if (trimmedTitle == null || trimmedTitle.isEmpty()) {
+        if (trimmedTitle == null) {
             throw new ValidationException(ValidationMessages.REQUEST_TITLE_REQUIRED, "title");
         }
-        if (trimmedBody == null || trimmedBody.isEmpty()) {
+        if (trimmedTitle.length() > FieldLimits.TITLE_MAX_LENGTH) {
+            throw new ValidationException(ValidationMessages.TITLE_MAX_LENGTH, "title");
+        }
+        if (trimmedBody == null ) {
             throw new ValidationException(ValidationMessages.REQUEST_BODY_REQUIRED, "body");
         }
         LocalDateTime dateTimeNow = LocalDateTime.now();
@@ -70,6 +74,7 @@ public class RequestServiceImpl implements RequestService {
     public List<Request> getRequestsByStatus(boolean status) {
         return reqRepo.getAllWithStatus(status);
     }
+
     @Override
     public void completeRequest(int id) {
         Request toUpdate = reqRepo.getById(id);

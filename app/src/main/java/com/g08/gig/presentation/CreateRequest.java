@@ -3,16 +3,19 @@ package com.g08.gig.presentation;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.g08.gig.R;
 import com.g08.gig.application.GiGApp;
+import com.g08.gig.business.constants.FieldLimits;
 import com.g08.gig.business.services.ClientUserService;
 import com.g08.gig.business.services.RequestService;
 import com.g08.gig.business.validation.ValidationException;
 import com.g08.gig.models.Client;
 import com.g08.gig.session.SessionManager;
+import com.g08.gig.util.TitleCharacterCounter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,11 +32,13 @@ public class CreateRequest extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_request);
 
-        requestService = ((GiGApp) getApplication()).getRequestService();
-        clientUserService = ((GiGApp) getApplication()).getClientUserService();
+        requestService = GiGApp.get(this).getRequestService();
+        clientUserService = GiGApp.get(this).getClientUserService();
 
         requestTitleInput = findViewById(R.id.requestTitleInput);
         requestDescriptionInput = findViewById(R.id.requestDescriptionInput);
+        TextView requestTitleCharCounter = findViewById(R.id.requestTitleCharCounter);
+        TitleCharacterCounter.attach(requestTitleInput, requestTitleCharCounter, FieldLimits.TITLE_MAX_LENGTH);
         requestFieldToView = new HashMap<>();
         requestFieldToView.put("title", requestTitleInput);
         requestFieldToView.put("body", requestDescriptionInput);

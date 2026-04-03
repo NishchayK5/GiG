@@ -40,7 +40,7 @@ public class CreateClientUser extends AppCompatActivity {
         addressInput = findViewById(R.id.addressInput);
         phoneInput = findViewById(R.id.phoneInput);
 
-        clientUserService = ((GiGApp) getApplication()).getClientUserService();
+        clientUserService = GiGApp.get(this).getClientUserService();
 
         Button addUserButton = findViewById(R.id.addCustomerUserButton);
 

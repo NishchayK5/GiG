@@ -20,6 +20,15 @@
         <item name="android:layout_marginBottom">@dimen/button_vertical_margin</item>
     </style>
 
+    <style name="Widget.G08.Chip.SkillBadge" parent="Widget.Material3.Chip.Assist">
+        <item name="chipBackgroundColor">@color/main_pro_color_badge_background</item>
+        <item name="android:textColor">@color/main_pro_color</item>
+        <item name="chipCornerRadius">@dimen/button_corner_radius</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="rippleColor">@android:color/transparent</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <!-- Bordered text input with 10dp corner radius -->
     <style name="Widget.G08.EditText" parent="Widget.AppCompat.EditText">
         <item name="android:background">@drawable/edittext_bordered</item>

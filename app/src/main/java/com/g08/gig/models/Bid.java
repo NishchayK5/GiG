@@ -8,13 +8,15 @@ public class Bid {
     private Pro pro;
     private double cost;
     private LocalDateTime timeOfBid;
+    private boolean isAccepted;
 
-    public Bid(int id, Pro pro, Request request, double cost, LocalDateTime timeOfBid) {
+    public Bid(int id, Pro pro, Request request, double cost, LocalDateTime timeOfBid, boolean isAccepted) {
         this.id = id;
         this.request = request;
         this.pro = pro;
         this.cost = cost;
         this.timeOfBid = timeOfBid;
+        this.isAccepted = isAccepted;
     }
 
     //getters and setters for the object
@@ -27,30 +29,31 @@ public class Bid {
     }
 
     public Request getRequest(){return request;}
+    public Request getRequestIfActive() {
+        if(request.getRequestStatus()) {
+            return request;
+        }
 
-    public void setRequest(Request request){this.request = request;}
+        return null;
+
+    }
 
     public Pro getPro() {
         return pro;
-    }
-
-    public void setPro(Pro pro) {
-        this.pro = pro;
     }
 
     public double getCost() {
         return cost;
     }
 
-    public void setCost(double cost) {
-        this.cost = cost;
-    }
-
+    public void setRequest(Request request){this.request = request;}
     public LocalDateTime getTimeOfBid() {
         return timeOfBid;
     }
 
-    public void setTimeOfBid(LocalDateTime timeOfBid) {
-        this.timeOfBid = timeOfBid;
+    public boolean getBidStatus() {
+        return isAccepted;
     }
+    public void acceptBid() { this.isAccepted = true; }
+
 }
