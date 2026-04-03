@@ -12,4 +12,5 @@ public interface AppointmentService {
         Appointment addAppt(LocalDateTime appointmentStart, LocalDateTime appointmentEnd, Pro pro, Client client, Request request);
         List<Appointment> getAllApptsByPro(Pro pro);
         Appointment getApptById(int id);
+        List<Appointment> getAllApptsByClient(Client client);
 }

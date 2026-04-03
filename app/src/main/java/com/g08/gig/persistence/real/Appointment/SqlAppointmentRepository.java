@@ -113,6 +113,41 @@ public class SqlAppointmentRepository implements AppointmentRepository{
                 new String[]{String.valueOf(id)});
         return rows>0;
     }
+
+    @Override
+    public List<Appointment> getAllByClient(Client client){
+        if(client == null) return null;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.query(AppointmentTable.TABLE_APPOINTMENT,
+                new String[]{AppointmentTable.COL_APPOINTMENT_ID, AppointmentTable.COL_APPOINTMENT_CLIENT_ID, AppointmentTable.COL_APPOINTMENT_PRO_ID, AppointmentTable.COL_APPOINTMENT_START_TIME, AppointmentTable.COL_APPOINTMENT_END_TIME, AppointmentTable.COL_APPOINTMENT_REQUEST_ID},
+                AppointmentTable.COL_APPOINTMENT_CLIENT_ID + "=?", new String[]{String.valueOf(client.getId())},
+                null, null, null);
+        List<Appointment> result = new ArrayList<>();
+        try{
+            while(c.moveToNext()){
+                result.add(cursorToAppointment(c));
+            }
+        } finally {
+            c.close();
+        }
+        return result;
+    }
+
+    @Override
+    public Appointment getAppointmentOfRequest(Request request){
+        if(request == null) return null;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.query(AppointmentTable.TABLE_APPOINTMENT,
+                new String[]{AppointmentTable.COL_APPOINTMENT_ID, AppointmentTable.COL_APPOINTMENT_CLIENT_ID, AppointmentTable.COL_APPOINTMENT_PRO_ID, AppointmentTable.COL_APPOINTMENT_START_TIME, AppointmentTable.COL_APPOINTMENT_END_TIME, AppointmentTable.COL_APPOINTMENT_REQUEST_ID},
+                AppointmentTable.COL_APPOINTMENT_REQUEST_ID + "=?", new String[]{String.valueOf(request.getId())},
+                null, null, null);
+        try{
+            if(!c.moveToNext()) return null;
+            return cursorToAppointment(c);
+        } finally {
+            c.close();
+        }
+    }
     private Appointment cursorToAppointment(Cursor c){
         int id = c.getInt(c.getColumnIndexOrThrow(AppointmentTable.COL_APPOINTMENT_ID));
         int clientId = c.getInt((c.getColumnIndexOrThrow(AppointmentTable.COL_APPOINTMENT_CLIENT_ID)));

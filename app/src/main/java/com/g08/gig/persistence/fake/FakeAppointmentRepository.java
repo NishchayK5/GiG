@@ -57,8 +57,25 @@ public class FakeAppointmentRepository implements AppointmentRepository {
     public List<Appointment> getAllByPro(Pro pro){
         List<Appointment> result = new ArrayList<>();
         for(Appointment appointment : appointments){
-            if(appointment.getPro()==pro) result.add(appointment);
+            if(appointment.getPro().getId()==pro.getId()) result.add(appointment);
         }
         return result;
+    }
+
+    @Override
+    public List<Appointment> getAllByClient(Client client){
+        List<Appointment> result = new ArrayList<>();
+        for(Appointment appointment : appointments){
+            if(appointment.getClient().getId()==client.getId()) result.add(appointment);
+        }
+        return result;
+    }
+
+    @Override
+    public Appointment getAppointmentOfRequest(Request request){
+        for(Appointment appointment:appointments){
+            if(appointment.getRequest()==request) return appointment;
+        }
+        return null;
     }
 }

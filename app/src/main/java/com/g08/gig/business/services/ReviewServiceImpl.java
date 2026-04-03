@@ -37,4 +37,14 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewRepo.getAllReviewsForPro(pro);
     }
 
+    @Override
+    public Review getReviewById(int id) {
+        return reviewRepo.getById(id);
+    }
+
+    @Override
+    public boolean deleteReview(int id) {
+        return reviewRepo.delete(id);
+    }
+
 }
