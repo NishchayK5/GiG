@@ -26,16 +26,14 @@ Group Members:
 
 >To build and run this project, ensure the following requirements are met:
 - **Android Version:** 15 or above
-- **Compile SDK:** 
-- **Target SDK:**
-- **Minimum SDK:** 
-- **JDK:**
-- **Emulator/Device:** 
+- **Minimum SDK:** 35
+- **JDK:** 26
+- **Emulator/Device:** Google Pixel 9
 
 ### Recommended Emulator Setup
 
 - Device: Google Pixel 9
-- API Level: 
+- API Level: 35
 
 > Note: This project was primarily developed and tested using a Pixel 9 Emulator configuration. Other devices may also work as long as they meet the minimum SDK requirement.
 ---
@@ -43,7 +41,7 @@ Group Members:
 ## Build + Run Instructions
 1. Clone the repository from GitLab:
 ```bash
-git clone <https://code.cs.umanitoba.ca/comp3350-winter2026/go8-project>
+git clone https://code.cs.umanitoba.ca/comp3350-winter2026/go8-project
 ```
 2. Open the project in Android Studio.
 3. Let the Gradle sync and install any missing SDK components if prompted.
@@ -109,8 +107,3 @@ To run the E2E tests in Android Studio, follow these steps:
 [Release Notes - Contains link to APK](APK/ReleaseNotes.md)
 
 ---
-## IMPORTANT
-
-We fixed everything from the iteration 1 feedback.
-
-Also, in order to change between real and fake repository, go to go8-project\app\src\main\java\com\g08\gig\application\GiGApp.java and change the boolean on line 61.

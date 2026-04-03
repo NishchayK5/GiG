@@ -11,8 +11,5 @@ public interface ReviewService {
 
     List<Review> getAllReviewsForPro(Pro pro);
 
-    boolean deleteReview(int id);
-
-    Review getReviewById(int id);
 
 }

@@ -113,7 +113,7 @@ Abstraction in the persistence layer allows the data storage system to change wi
 ---
 ## Architecture Diagram
 
-![Architecture Diagram](Architecture_Model_GiG.png)
+![Architecture Diagram](Architecture_Model_GiG-2.png)
 
 
 

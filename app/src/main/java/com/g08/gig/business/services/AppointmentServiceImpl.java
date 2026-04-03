@@ -26,10 +26,6 @@ public class AppointmentServiceImpl implements AppointmentService{
         return apptRepo.getAllByPro(pro);
     }
 
-    @Override
-    public List<Appointment> getAllApptsByClient(Client client) {
-        return apptRepo.getAllByClient(client);
-    }
 
     @Override
     public Appointment getApptById(int id) {

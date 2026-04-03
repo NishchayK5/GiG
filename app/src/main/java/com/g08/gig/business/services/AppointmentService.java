@@ -11,6 +11,5 @@ import java.util.List;
 public interface AppointmentService {
         Appointment addAppt(LocalDateTime appointmentStart, LocalDateTime appointmentEnd, Pro pro, Client client, Request request);
         List<Appointment> getAllApptsByPro(Pro pro);
-        List<Appointment> getAllApptsByClient(Client client);
         Appointment getApptById(int id);
 }
