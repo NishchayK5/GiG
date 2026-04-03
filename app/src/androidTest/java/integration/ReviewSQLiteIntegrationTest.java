@@ -72,8 +72,8 @@ public class ReviewSQLiteIntegrationTest {
 
     @Test
     public void addReview_persistsTrimmedTitleToSQLite() {
-        Client client = addTestClient("review.client1@test.com", "2045000001");
-        Pro pro = addTestPro("review.pro1@test.com", "2046000001");
+        Client client = addTestClient("client1@gmail.com", "2045000001");
+        Pro pro = addTestPro("pro1@gmail.com", "2046000001");
 
         Review added = reviewService.addReview(
                 client,
@@ -97,10 +97,10 @@ public class ReviewSQLiteIntegrationTest {
 
     @Test
     public void getAllReviewsForPro_returnsOnlyThatProsReviews() {
-        Client client1 = addTestClient("review.client2@test.com", "2045000002");
-        Client client2 = addTestClient("review.client3@test.com", "2045000003");
-        Pro pro1 = addTestPro("review.pro2@test.com", "2046000002");
-        Pro pro2 = addTestPro("review.pro3@test.com", "2046000003");
+        Client client1 = addTestClient("client2@gmail.com", "2045000002");
+        Client client2 = addTestClient("client3@gmail.com", "2045000003");
+        Pro pro1 = addTestPro("pro2@gmail.com", "2046000002");
+        Pro pro2 = addTestPro("pro3@gmail.com", "2046000003");
 
         reviewService.addReview(client1, pro1, "Excellent", "Very professional", 5);
         reviewService.addReview(client2, pro1, "Solid", "Arrived on time", 4);
@@ -116,8 +116,8 @@ public class ReviewSQLiteIntegrationTest {
 
     @Test
     public void getReviewById_returnsPersistedReview() {
-        Client client = addTestClient("review.client4@test.com", "2045000004");
-        Pro pro = addTestPro("review.pro4@test.com", "2046000004");
+        Client client = addTestClient("client4@gmail.com", "2045000004");
+        Pro pro = addTestPro("pro4@gmail.com", "2046000004");
 
         Review added = reviewService.addReview(client, pro, "Fast service", "Problem solved in one visit", 5);
         Review fromService = reviewService.getReviewById(added.getId());
@@ -130,8 +130,8 @@ public class ReviewSQLiteIntegrationTest {
 
     @Test
     public void deleteReview_removesRowFromSQLite() {
-        Client client = addTestClient("review.client5@test.com", "2045000005");
-        Pro pro = addTestPro("review.pro5@test.com", "2046000005");
+        Client client = addTestClient("client5@gmail.com", "2045000005");
+        Pro pro = addTestPro("pro5@gmail.com", "2046000005");
 
         Review added = reviewService.addReview(client, pro, "Helpful", "Explained everything clearly", 5);
         assertNotNull(reviewRepo.getById(added.getId()));
@@ -142,16 +142,16 @@ public class ReviewSQLiteIntegrationTest {
 
     @Test(expected = ValidationException.class)
     public void addReview_blankTitle_throwsValidationException() {
-        Client client = addTestClient("review.client6@test.com", "2045000006");
-        Pro pro = addTestPro("review.pro6@test.com", "2046000006");
+        Client client = addTestClient("client6@gmail.com", "2045000006");
+        Pro pro = addTestPro("pro6@gmail.com", "2046000006");
 
         reviewService.addReview(client, pro, "   ", "Body still present", 4);
     }
 
     @Test
     public void deletePro_cascadesToDeleteAssociatedReviews() {
-        Client client = addTestClient("review.client7@test.com", "2045000007");
-        Pro pro = addTestPro("review.pro7@test.com", "2046000007");
+        Client client = addTestClient("client7@gmail.com", "2045000007");
+        Pro pro = addTestPro("pro7@gmail.com", "2046000007");
 
         Review review = reviewService.addReview(client, pro, "Reliable", "Would hire again", 5);
         assertNotNull(reviewRepo.getById(review.getId()));

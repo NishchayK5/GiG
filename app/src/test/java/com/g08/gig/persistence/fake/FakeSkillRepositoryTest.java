@@ -20,8 +20,8 @@ class FakeSkillRepositoryTest {
         pro1 = new Pro(
                 1,
                 "pro1@test.com",
-                "Alex",
-                "Smith",
+                "Dayaveer",
+                "Gill",
                 "2041111111",
                 "pass",
                 new String[]{"Electrical"},
@@ -31,8 +31,8 @@ class FakeSkillRepositoryTest {
         pro2 = new Pro(
                 2,
                 "pro2@test.com",
-                "Sam",
-                "Brown",
+                "Izzy",
+                "Elskamp",
                 "2042222222",
                 "pass",
                 new String[]{"Plumbing"},

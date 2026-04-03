@@ -79,8 +79,8 @@ public class AppointmentSQLiteIntegrationTest {
 
     @Test
     public void addAppt_persistsToSQLiteAndCanBeRetrievedById() {
-        Client client = addTestClient("appt.client1@test.com", "2043000001");
-        Pro pro = addTestPro("appt.pro1@test.com", "2044000001");
+        Client client = addTestClient("client1@gmail.com", "2043000001");
+        Pro pro = addTestPro("pro1@gmail.com", "2044000001");
         Request request = requestService.addRequest(client, "Brake Repair", "Need new pads");
 
         LocalDateTime start = LocalDateTime.of(2026, 4, 10, 9, 0);
@@ -102,10 +102,10 @@ public class AppointmentSQLiteIntegrationTest {
 
     @Test
     public void getAllApptsByPro_returnsOnlyAppointmentsForThatPro() {
-        Client client1 = addTestClient("appt.client2@test.com", "2043000002");
-        Client client2 = addTestClient("appt.client3@test.com", "2043000003");
-        Pro pro1 = addTestPro("appt.pro2@test.com", "2044000002");
-        Pro pro2 = addTestPro("appt.pro3@test.com", "2044000003");
+        Client client1 = addTestClient("client2@gmail.com", "2043000002");
+        Client client2 = addTestClient("client3@gmail.com", "2043000003");
+        Pro pro1 = addTestPro("pro2@gmail.com", "2044000002");
+        Pro pro2 = addTestPro("pro3@gmail.com", "2044000003");
 
         Request req1 = requestService.addRequest(client1, "Oil Change", "Need oil");
         Request req2 = requestService.addRequest(client2, "Tires", "Need swap");
@@ -125,9 +125,9 @@ public class AppointmentSQLiteIntegrationTest {
 
     @Test
     public void getAllApptsByClient_returnsOnlyAppointmentsForThatClient() {
-        Client client1 = addTestClient("appt.client4@test.com", "2043000004");
-        Client client2 = addTestClient("appt.client5@test.com", "2043000005");
-        Pro pro = addTestPro("appt.pro4@test.com", "2044000004");
+        Client client1 = addTestClient("client4@gmail.com", "2043000004");
+        Client client2 = addTestClient("client5@gmail.com", "2043000005");
+        Pro pro = addTestPro("pro4@gmail.com", "2044000004");
 
         Request req1 = requestService.addRequest(client1, "Starter", "Car will not start");
         Request req2 = requestService.addRequest(client1, "AC Repair", "AC not cold");
@@ -147,8 +147,8 @@ public class AppointmentSQLiteIntegrationTest {
 
     @Test
     public void getAppointmentOfRequest_returnsMatchingAppointment() {
-        Client client = addTestClient("appt.client6@test.com", "2043000006");
-        Pro pro = addTestPro("appt.pro5@test.com", "2044000005");
+        Client client = addTestClient("client6@gmail.com", "2043000006");
+        Pro pro = addTestPro("pro5@gmail.com", "2044000005");
         Request request = requestService.addRequest(client, "Diagnostics", "Check engine light on");
 
         Appointment added = appointmentService.addAppt(
@@ -168,8 +168,8 @@ public class AppointmentSQLiteIntegrationTest {
 
     @Test
     public void deleteRequest_cascadesToDeleteAppointment() {
-        Client client = addTestClient("appt.client7@test.com", "2043000007");
-        Pro pro = addTestPro("appt.pro6@test.com", "2044000006");
+        Client client = addTestClient("client7@gmail.com", "2043000007");
+        Pro pro = addTestPro("pro6@gmail.com", "2044000006");
         Request request = requestService.addRequest(client, "Tire Rotation", "Need tires rotated");
 
         Appointment appointment = appointmentService.addAppt(

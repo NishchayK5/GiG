@@ -24,6 +24,8 @@ import com.g08.gig.persistence.real.Pro.SqlProRepository;
 import com.g08.gig.persistence.real.Request.SqlRequestRepository;
 import com.g08.gig.persistence.real.Skills.SqlSkillRepository;
 import com.g08.gig.persistence.real.user.SqlUserRepository;
+import at.favre.lib.crypto.bcrypt.BCrypt;
+
 
 import org.junit.After;
 import org.junit.Before;
@@ -112,7 +114,11 @@ public class RequestFlowSQLiteIntegrationTest {
         Client fromDb = clientRepo.getById(added.getId());
         assertNotNull(fromDb);
         assertNotEquals(VALID_PASSWORD, fromDb.getPassword());
-        assertTrue(fromDb.getPassword().startsWith("$2"));
+        assertTrue(
+                BCrypt.verifyer()
+                        .verify(VALID_PASSWORD.toCharArray(), fromDb.getPassword())
+                        .verified
+        );
     }
 
     @Test
@@ -181,6 +187,12 @@ public class RequestFlowSQLiteIntegrationTest {
                 "Izzy", "Elskamp", PRO_EMAIL, PRO_PHONE,
                 VALID_PASSWORD, VALID_PASSWORD,
                 new String[]{"Oil Change"}, "Winnipeg");
+
+        Pro beforeUpdate = proRepo.getById(added.getId());
+        assertNotNull(beforeUpdate);
+        assertEquals(PRO_EMAIL, beforeUpdate.getEmail());
+        assertEquals("Elskamp", beforeUpdate.getLastName());
+        assertEquals("Winnipeg", beforeUpdate.getCityOfOperation());
 
         boolean result = proService.updatePro(
                 added.getId(), "pro1@gmail.com",

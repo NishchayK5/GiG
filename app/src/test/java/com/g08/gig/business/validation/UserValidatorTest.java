@@ -170,7 +170,6 @@ class UserValidatorTest {
     @Test
     void validate_emailExactly255Chars_doesNotThrow() {
         String email255 = "a".repeat(250) + "@x.co"; // 255 chars
-        System.out.println(email255.length());
         assertDoesNotThrow(() -> validator.validate(VALID_FIRST, VALID_LAST, email255, VALID_PHONE));
     }
 

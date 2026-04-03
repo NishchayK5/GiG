@@ -32,11 +32,11 @@ class FakeAppointmentRepositoryTest {
         repo = new FakeAppointmentRepository();
 
         client1 = new Client(1, "client1@test.com", "Dayaveer", "Gill", "2041111111", "123 Main St", "pass");
-        client2 = new Client(2, "client2@test.com", "Aman", "Singh", "2042222222", "456 Main St", "pass");
+        client2 = new Client(2, "client2@test.com", "Izzy", "Elskamp", "2042222222", "456 Main St", "pass");
 
-        pro1 = new Pro(10, "pro1@test.com", "Alex", "Smith", "2043333333", "pass",
+        pro1 = new Pro(10, "pro1@test.com", "Nishchay", "Kathuria", "2043333333", "pass",
                 new String[]{"Electrical"}, "Winnipeg");
-        pro2 = new Pro(11, "pro2@test.com", "Sam", "Brown", "2044444444", "pass",
+        pro2 = new Pro(11, "pro2@test.com", "Adejare", "Taiwo", "2044444444", "pass",
                 new String[]{"Plumbing"}, "Winnipeg");
 
         request1 = new Request(100, client1, "Fix outlet", "Need help", LocalDateTime.now(), true);

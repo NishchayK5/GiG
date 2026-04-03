@@ -32,9 +32,9 @@ public class CreateProUserE2ETest {
         ActivityScenario.launch(StartUp.class);
 
         onView(withId(R.id.proCreationButton)).perform(click());
-        onView(withId(R.id.firstNameInput)).perform(replaceText("Marcus"), closeSoftKeyboard());
-        onView(withId(R.id.lastNameInput)).perform(replaceText("Johnson"), closeSoftKeyboard());
-        onView(withId(R.id.emailInput)).perform(replaceText("pro.e2e@test.com"), closeSoftKeyboard());
+        onView(withId(R.id.firstNameInput)).perform(replaceText("Izzy"), closeSoftKeyboard());
+        onView(withId(R.id.lastNameInput)).perform(replaceText("Elskamp"), closeSoftKeyboard());
+        onView(withId(R.id.emailInput)).perform(replaceText("pro@gmail.com"), closeSoftKeyboard());
         onView(withId(R.id.phoneInput)).perform(replaceText("2045550002"), closeSoftKeyboard());
         onView(withId(R.id.passwordInput)).perform(scrollTo(), replaceText("Password1!"), closeSoftKeyboard());
         onView(withId(R.id.confirmPassword)).perform(scrollTo(), replaceText("Password1!"), closeSoftKeyboard());

@@ -34,8 +34,8 @@ public class AcceptBidAndLeaveReviewE2ETest {
     @Before
     public void setUp() {
         E2ETestHelpers.clearDb();
-        Client client = E2ETestHelpers.seedClient("Review", "Client", "review.client@test.com");
-        seededPro = E2ETestHelpers.seedPro("Review", "Pro", "review.pro@test.com");
+        Client client = E2ETestHelpers.seedClient("Dayaveer", "Gill", "client@gmail.com");
+        seededPro = E2ETestHelpers.seedPro("Izzy", "Elskamp", "review.pro@test.com");
         Request request = E2ETestHelpers.seedRequest(client, "Battery replacement", "Need battery installed");
         E2ETestHelpers.seedBid(seededPro, request, 95.0, LocalDateTime.now().plusDays(1).withHour(11).withMinute(0));
     }
@@ -44,7 +44,7 @@ public class AcceptBidAndLeaveReviewE2ETest {
     public void acceptBid_thenLeaveReview_movesRequestToPastAndPersistsReview() {
         ActivityScenario.launch(Login.class);
 
-        onView(withId(R.id.emailInput)).perform(replaceText("review.client@test.com"), closeSoftKeyboard());
+        onView(withId(R.id.emailInput)).perform(replaceText("client@gmail.com"), closeSoftKeyboard());
         onView(withId(R.id.passwordInput)).perform(replaceText("Password1!"), closeSoftKeyboard());
         onView(withId(R.id.loginbutton)).perform(click());
 

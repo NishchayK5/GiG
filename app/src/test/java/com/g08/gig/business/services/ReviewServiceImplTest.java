@@ -49,8 +49,8 @@ class ReviewServiceImplTest {
         pro = new Pro(
                 2,
                 "pro@test.com",
-                "Alex",
-                "Smith",
+                "Izzy",
+                "Elskamp",
                 "2042222222",
                 "hashedPass",
                 new String[]{"Electrical"},

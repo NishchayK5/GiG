@@ -25,14 +25,14 @@ public class CreateRequestFromClientE2ETest {
     @Before
     public void setUp() {
         E2ETestHelpers.clearDb();
-        E2ETestHelpers.seedClient("Create", "Request", "request.client@test.com");
+        E2ETestHelpers.seedClient("Dayaveer", "Gill", "client@gmail.com");
     }
 
     @Test
     public void createRequest_fromClientHome_showsInList() {
         ActivityScenario.launch(Login.class);
 
-        onView(withId(R.id.emailInput)).perform(replaceText("request.client@test.com"), closeSoftKeyboard());
+        onView(withId(R.id.emailInput)).perform(replaceText("client@gmail.com"), closeSoftKeyboard());
         onView(withId(R.id.passwordInput)).perform(replaceText("Password1!"), closeSoftKeyboard());
         onView(withId(R.id.loginbutton)).perform(click());
 

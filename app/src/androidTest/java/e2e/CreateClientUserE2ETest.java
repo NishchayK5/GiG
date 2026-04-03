@@ -49,13 +49,13 @@ public class CreateClientUserE2ETest {
         onView(withId(R.id.clientCreationButton)).perform(click());
 
         onView(withId(R.id.firstNameInput))
-                .perform(replaceText("Daya"), closeSoftKeyboard());
+                .perform(replaceText("Dayaveer"), closeSoftKeyboard());
 
         onView(withId(R.id.lastNameInput))
                 .perform(replaceText("Gill"), closeSoftKeyboard());
 
         onView(withId(R.id.emailInput))
-                .perform(replaceText("client_create@test.com"), closeSoftKeyboard());
+                .perform(replaceText("client@gmail.com"), closeSoftKeyboard());
         onView(withId(R.id.phoneInput))
                 .perform(replaceText("2045551111"), closeSoftKeyboard());
 
@@ -68,7 +68,6 @@ public class CreateClientUserE2ETest {
         onView(withId(R.id.confirmPassword))
                 .perform(replaceText("Password1!"), closeSoftKeyboard());
 
-        //onView(withId(R.id.addCustomerUserButton)).perform(click());
         onView(withId(R.id.addCustomerUserButton)).perform(click());
         onView(withId(R.id.loginbutton)).check(matches(isDisplayed()));
     }

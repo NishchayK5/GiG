@@ -44,9 +44,7 @@ public class Appointment {
         this.appointmentEnd = appointmentEnd;
     }
 
-    public Pro getPro() {
-        return pro;
-    }
+    public Pro getPro() {return pro;}
 
     public void setPro(Pro pro) {
         this.pro = pro;

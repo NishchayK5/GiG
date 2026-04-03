@@ -24,25 +24,28 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.junit.Assert.assertEquals;
+
 
 import java.time.LocalDate;
 
 @RunWith(AndroidJUnit4.class)
 public class SubmitBidFromProE2ETest {
+    private Request seededRequest;
 
     @Before
     public void setUp() {
         E2ETestHelpers.clearDb();
-        Client client = E2ETestHelpers.seedClient("Bid", "Client", "bid.client@test.com");
-        E2ETestHelpers.seedPro("Bid", "Pro", "bid.pro@test.com");
-        Request request = E2ETestHelpers.seedRequest(client, "Oil change", "Need synthetic oil change");
+        Client client = E2ETestHelpers.seedClient("Dayaveer", "Gill", "client@gmail.com");
+        E2ETestHelpers.seedPro("Izzy", "Elskamp", "pro@gmail.com");
+         seededRequest = E2ETestHelpers.seedRequest(client, "Oil change", "Need synthetic oil change");
     }
 
     @Test
     public void submitBidFromPro_withProposedTime_showsInBidList() {
         ActivityScenario.launch(Login.class);
 
-        onView(withId(R.id.emailInput)).perform(replaceText("bid.pro@test.com"), closeSoftKeyboard());
+        onView(withId(R.id.emailInput)).perform(replaceText("pro@gmail.com"), closeSoftKeyboard());
         onView(withId(R.id.passwordInput)).perform(replaceText("Password1!"), closeSoftKeyboard());
         onView(withId(R.id.loginbutton)).perform(click());
 
@@ -65,5 +68,13 @@ public class SubmitBidFromProE2ETest {
         onView(withId(R.id.nav_home)).perform(click());
 
         onView(withText("Oil change")).check(matches(isDisplayed()));
+        assertEquals(
+                1,
+                E2ETestHelpers.app()
+                        .getBidService()
+                        .getAllByRequest(seededRequest)
+                        .size()
+        );
+
     }
 }

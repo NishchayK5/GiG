@@ -20,7 +20,6 @@ import com.g08.gig.models.Pro;
 import com.g08.gig.models.Request;
 import com.g08.gig.persistence.real.AppDbHelper;
 import com.g08.gig.session.SessionManager;
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.hamcrest.Matcher;
@@ -33,10 +32,9 @@ public final class E2ETestHelpers {
     public static void clearDb() {
         Context context = ApplicationProvider.getApplicationContext();
         GiGApp app = (GiGApp) context.getApplicationContext();
-        // Close the existing helper, delete the file, then re-init so the app gets a fresh connection
-        app.reinitialize(); // closes dbHelper
-        context.deleteDatabase(AppDbHelper.DB_NAME); // safe now — connection is closed
-        app.reinitialize(); // re-opens and recreates tables
+        app.reinitialize();
+        context.deleteDatabase(AppDbHelper.DB_NAME);
+        app.reinitialize();
         SessionManager.clearSession(context);
     }
 

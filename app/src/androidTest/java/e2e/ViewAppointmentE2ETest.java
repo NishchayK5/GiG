@@ -22,33 +22,43 @@ import com.g08.gig.presentation.Login;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.junit.Assert.assertEquals;
+
+import androidx.test.espresso.contrib.RecyclerViewActions;
 
 import java.time.LocalDateTime;
 
 @RunWith(AndroidJUnit4.class)
 public class ViewAppointmentE2ETest {
+    private Pro seededPro;
 
     @Before
     public void setUp() {
         E2ETestHelpers.clearDb();
-        Client client = E2ETestHelpers.seedClient("Appt", "Client", "appt.client@test.com");
-        Pro pro = E2ETestHelpers.seedPro("Appt", "Pro", "appt.pro@test.com");
+        Client client = E2ETestHelpers.seedClient("Dayaveer", "Gill", "client@gmail.com");
+        seededPro = E2ETestHelpers.seedPro("Izzy", "Elskamp", "pro@gmail.com");
         Request request = E2ETestHelpers.seedRequest(client, "Alternator replacement", "Need alternator checked");
         LocalDateTime start = LocalDateTime.now().plusDays(1).withHour(9).withMinute(0);
         LocalDateTime end = start.plusHours(1);
         GiGApp app = E2ETestHelpers.app();
-        app.getApptService().addAppt(start, end, pro, client, request);
+        app.getApptService().addAppt(start, end, seededPro, client, request);
     }
 
     @Test
     public void appointmentForPro_showsInAppointmentsTab() {
         ActivityScenario.launch(Login.class);
 
-        onView(withId(R.id.emailInput)).perform(replaceText("appt.pro@test.com"), closeSoftKeyboard());
+        onView(withId(R.id.emailInput)).perform(replaceText("pro@gmail.com"), closeSoftKeyboard());
         onView(withId(R.id.passwordInput)).perform(replaceText("Password1!"), closeSoftKeyboard());
         onView(withId(R.id.loginbutton)).perform(click());
 
         onView(withId(R.id.nav_appointment)).perform(click());
-        onView(withId(R.id.appointmentsList)).check(matches(isDisplayed()));
+        onView(withId(R.id.appointmentsList))
+                .perform(RecyclerViewActions.scrollToPosition(0));
+
+        onView(withId(R.id.appointmentItemTitle))
+                .check(matches(withText("Alternator replacement")));
+
+        assertEquals(1, E2ETestHelpers.app().getApptService().getAllApptsByPro(seededPro).size());
     }
 }
