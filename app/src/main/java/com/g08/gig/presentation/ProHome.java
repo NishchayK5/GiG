@@ -1,5 +1,6 @@
 package com.g08.gig.presentation;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -66,6 +67,18 @@ public class ProHome extends AppCompatActivity {
         int userId = getIntent().getIntExtra(SessionManager.KEY_USER_ID, -1);
         if (userId != -1) {
             SessionManager.setUserId(this, userId);
+        }
+
+        if (SessionManager.USER_TYPE_PRO.equals(SessionManager.getUserType(this))) {
+            int sessionUserId = SessionManager.getUserId(this);
+            if (sessionUserId != -1 && proUserService.getProById(sessionUserId) == null) {
+                SessionManager.clearSession(this);
+                Toast.makeText(this, R.string.pro_home_profile_missing, Toast.LENGTH_LONG).show();
+                startActivity(new Intent(this, StartUp.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                finish();
+                return;
+            }
         }
 
         bindViews();
@@ -177,7 +190,10 @@ public class ProHome extends AppCompatActivity {
     private void loadBids() {
         int userId = SessionManager.getUserId(this);
         Pro pro = proUserService.getProById(userId);
-        if (pro == null) return;
+        if (pro == null) {
+            bidsAdapter.submitList(new ArrayList<>());
+            return;
+        }
         List<Bid> bids = bidService.getAllByPro(pro);
         List<Bid> filtered = new ArrayList<>();
         for (Bid bid : bids) {
@@ -243,8 +259,13 @@ public class ProHome extends AppCompatActivity {
                 request.getClient()
         );
         dialog.setActionListener((requestId, bidAmount, proposedTime) -> {
+            Pro pro = proUserService.getProById(userId);
+            if (pro == null) {
+                Toast.makeText(ProHome.this, R.string.pro_home_profile_missing, Toast.LENGTH_LONG).show();
+                return;
+            }
             int cost = (int) bidAmount;
-            bidService.addBid(proUserService.getProById(userId), request, cost, proposedTime);
+            bidService.addBid(pro, request, cost, proposedTime);
             Toast.makeText(ProHome.this, getString(R.string.bid) + " $" + bidAmount + ": " + request.getTitle(), Toast.LENGTH_SHORT).show();
             loadBids();
             updateEmptyState();

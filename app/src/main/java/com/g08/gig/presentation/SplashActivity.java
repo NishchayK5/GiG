@@ -7,6 +7,7 @@ import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.g08.gig.application.GiGApp;
 import com.g08.gig.R;
 import com.g08.gig.session.SessionManager;
 
@@ -27,10 +28,16 @@ public class SplashActivity extends AppCompatActivity {
 
                 if (SessionManager.USER_TYPE_CLIENT.equals(userType)) {
                     intent = new Intent(SplashActivity.this, ClientHome.class);
+                    intent.putExtra(SessionManager.KEY_USER_ID, userId);
                 } else {
-                    intent = new Intent(SplashActivity.this, ProHome.class);
+                    if (GiGApp.get(SplashActivity.this).getProUserService().getProById(userId) == null) {
+                        SessionManager.clearSession(SplashActivity.this);
+                        intent = new Intent(SplashActivity.this, StartUp.class);
+                    } else {
+                        intent = new Intent(SplashActivity.this, ProHome.class);
+                        intent.putExtra(SessionManager.KEY_USER_ID, userId);
+                    }
                 }
-                intent.putExtra(SessionManager.KEY_USER_ID, userId);
             } else {
                 intent = new Intent(SplashActivity.this, StartUp.class);
             }

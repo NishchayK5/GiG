@@ -83,6 +83,9 @@ public class SqlBidRepository implements BidRepository {
 
     @Override
     public List<Bid> getAllByPro(Pro pro){
+        if (pro == null) {
+            return new ArrayList<>();
+        }
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.query(BidTable.TABLE_BID, new String[]{BidTable.COL_BID_ID, BidTable.COL_BID_REQUEST_ID, BidTable.COL_BID_PRO_ID, BidTable.COL_BID_COST, BidTable.COL_BID_TIME_OF_BID, BidTable.COL_BID_STATUS},
                 BidTable.COL_BID_PRO_ID + " =?",

@@ -116,6 +116,12 @@ class BidServiceImplTest {
     }
 
     @Test
+    void getAllByPro_nullPro_returnsEmptyWithoutCallingRepo() {
+        assertTrue(service.getAllByPro(null).isEmpty());
+        verify(repo, never()).getAllByPro(any());
+    }
+
+    @Test
     void acceptBid_marksBidAcceptedAndUpdatesRepository() {
         Bid bid = new Bid(5, pro, request, 180.0, time, false);
 

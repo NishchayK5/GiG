@@ -69,6 +69,9 @@ public class FakeBidRepository implements BidRepository {
 
     @Override
     public List<Bid> getAllByPro(Pro pro){
+        if (pro == null) {
+            return new ArrayList<>();
+        }
         List<Bid> result = new ArrayList<>();
         for(Bid bid : bids){
             if(bid.getPro()==pro){

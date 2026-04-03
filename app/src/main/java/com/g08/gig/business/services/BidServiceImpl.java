@@ -31,6 +31,9 @@ public class BidServiceImpl implements BidService {
 
     @Override
     public List<Bid> getAllByPro(Pro pro) {
+        if (pro == null) {
+            return new ArrayList<>();
+        }
         return bidRepo.getAllByPro(pro);
     }
 

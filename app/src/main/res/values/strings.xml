@@ -77,6 +77,7 @@
     <string name="login_error_email_invalid">Please enter a valid email address.</string>
     <string name="login_error_password_required">Password is required.</string>
     <string name="login_error_invalid_credentials">Invalid email or password.</string>
+    <string name="login_error_pro_profile_missing">Your professional profile is missing. Register as a GIG Pro or contact support.</string>
     <string name="login_forgot_password_message">Did you forget your password? That\'s not a problem.</string>
     <string name="login_forgot_password_button">Forgot password</string>
     <string name="home_login_button">Login</string>
@@ -192,6 +193,7 @@
     <string name="pro_public_detail_reviews_heading">Reviews</string>
     <string name="pro_public_detail_no_reviews">No reviews yet.</string>
     <string name="pro_public_detail_error">Could not load this professional.</string>
+    <string name="pro_home_profile_missing">Your professional profile could not be loaded. Please sign in again.</string>
 
     <!-- Placeholder reviews for pro detail (shown when none exist in the database) -->
     <string name="pro_dummy_review_1_title">Excellent work</string>

@@ -12,6 +12,7 @@ import com.g08.gig.R;
 import com.g08.gig.application.GiGApp;
 import com.g08.gig.business.services.AuthService;
 import com.g08.gig.business.services.LoginResult;
+import com.g08.gig.business.services.ProUserService;
 import com.g08.gig.business.validation.ValidationException;
 import com.g08.gig.session.SessionManager;
 
@@ -61,6 +62,13 @@ public class Login extends AppCompatActivity {
     }
 
     private void onLoginSuccess(LoginResult result) {
+        if (!result.isClient()) {
+            ProUserService proUserService = GiGApp.get(this).getProUserService();
+            if (proUserService.getProById(result.getUserId()) == null) {
+                Toast.makeText(this, R.string.login_error_pro_profile_missing, Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
         SessionManager.setLoginResult(this, result.getUserId(), result.isClient());
         Intent intent = result.isClient()
                 ? new Intent(Login.this, ClientHome.class)
