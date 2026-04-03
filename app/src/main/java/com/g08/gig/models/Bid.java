@@ -38,30 +38,17 @@ public class Bid {
 
     }
 
-    public void setRequest(Request request){this.request = request;}
-
     public Pro getPro() {
         return pro;
-    }
-
-    public void setPro(Pro pro) {
-        this.pro = pro;
     }
 
     public double getCost() {
         return cost;
     }
 
-    public void setCost(double cost) {
-        this.cost = cost;
-    }
-
+    public void setRequest(Request request){this.request = request;}
     public LocalDateTime getTimeOfBid() {
         return timeOfBid;
-    }
-
-    public void setTimeOfBid(LocalDateTime timeOfBid) {
-        this.timeOfBid = timeOfBid;
     }
 
     public boolean getBidStatus() {

@@ -40,15 +40,6 @@ class BidTest {
 
         Pro newPro = new Pro(2, "anna.kowalski@tiresplus.ca", "Anna", "Kowalski", "2045552121",
                 new String[]{"Tire Change", "Alignment"}, "Winnipeg");
-        bid.setPro(newPro);
-        assertSame(newPro, bid.getPro());
-
-        bid.setCost(149.50);
-        assertEquals(149.50, bid.getCost(), 0.001);
-
-        LocalDateTime newTime = LocalDateTime.of(2025, 8, 1, 12, 0);
-        bid.setTimeOfBid(newTime);
-        assertEquals(newTime, bid.getTimeOfBid());
     }
 
     @Test
