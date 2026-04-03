@@ -61,21 +61,4 @@ public class FakeAppointmentRepository implements AppointmentRepository {
         }
         return result;
     }
-
-    @Override
-    public List<Appointment> getAllByClient(Client client){
-        List<Appointment> result = new ArrayList<>();
-        for(Appointment appointment : appointments){
-            if(appointment.getClient()==client) result.add(appointment);
-        }
-        return result;
-    }
-
-    @Override
-    public Appointment getAppointmentOfRequest(Request request){
-        for(Appointment appointment:appointments){
-            if(appointment.getRequest()==request) return appointment;
-        }
-        return null;
-    }
 }

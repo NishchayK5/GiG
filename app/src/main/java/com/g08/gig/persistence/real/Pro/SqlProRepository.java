@@ -8,8 +8,6 @@ import com.g08.gig.persistence.ProRepository;
 import com.g08.gig.models.Pro;
 import com.g08.gig.persistence.SkillRepository;
 import com.g08.gig.persistence.real.AppDbHelper;
-import com.g08.gig.persistence.real.Client.ClientTable;
-import com.g08.gig.persistence.real.Skills.SqlSkillRepository;
 import com.g08.gig.persistence.real.user.UserTable;
 
 import java.util.ArrayList;

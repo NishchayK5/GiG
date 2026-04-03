@@ -5,12 +5,8 @@ import java.util.List;
 
 public interface ProRepository {
     List<Pro> getAll();
-
     Pro getById(int id);
-
     Pro add(Pro pro);
-
     boolean update(Pro pro);
-
     boolean delete(int id);
 }

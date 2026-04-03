@@ -11,7 +11,6 @@ import com.g08.gig.persistence.BidRepository;
 import com.g08.gig.persistence.ProRepository;
 import com.g08.gig.persistence.RequestRepository;
 import com.g08.gig.persistence.real.AppDbHelper;
-import com.g08.gig.persistence.real.Request.RequestTable;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

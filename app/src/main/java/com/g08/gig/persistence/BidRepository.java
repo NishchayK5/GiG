@@ -9,15 +9,10 @@ import java.util.List;
 public interface BidRepository {
 
     List<Bid> getAll();
-
     Bid add(Bid bid);
-
     boolean delete(int id);
-
     Bid getById(int id);
     List<Bid> getAllByRequest(Request request);
     List<Bid> getAllByPro(Pro pro);
-
     boolean update(Bid bid);
-
 }
