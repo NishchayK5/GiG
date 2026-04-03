@@ -1,3 +1,10 @@
+/**
+ * File: RequestRepository.java
+
+ * Purpose:
+ * This class is responsible for all the retrieval and storage of requests to the database.
+ *
+ */
 package com.g08.gig.persistence;
 
 import com.g08.gig.models.Request;

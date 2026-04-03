@@ -1,3 +1,10 @@
+/**
+ * File: AppointmentService.java
+
+ * Purpose:
+ * Manages the creation of appointments between clients and pro once bid is accepted by the client.
+ *
+ */
 package com.g08.gig.business.services;
 
 import com.g08.gig.models.Appointment;

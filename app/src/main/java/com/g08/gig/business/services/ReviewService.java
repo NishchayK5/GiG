@@ -1,3 +1,10 @@
+/**
+ * File: ReviewService.java
+
+ * Purpose:
+ * Manages the Review given by the clients to the user.
+ *
+ */
 package com.g08.gig.business.services;
 
 import com.g08.gig.models.Client;

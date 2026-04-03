@@ -1,3 +1,10 @@
+/**
+ * File: ProUserService.java
+ * Purpose:
+ * Manages the creation and deletion of Pro profiles.
+ *
+ */
+
 package com.g08.gig.business.services;
 
 import com.g08.gig.models.Pro;

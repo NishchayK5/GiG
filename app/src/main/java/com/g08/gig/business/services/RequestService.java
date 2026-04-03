@@ -1,3 +1,10 @@
+/**
+ * File: RequestService.java
+
+ * Purpose:
+ * Manages the creation of Service Requests by client.
+ *
+ */
 package com.g08.gig.business.services;
 
 import com.g08.gig.util.Pair;
