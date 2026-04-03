@@ -1,4 +1,6 @@
-# GiG Vision Statement
+# GiG
+> **Fix it with GiG. We have the right pro for every job and the right job for every pro.**
+## Vision Statement
 
 GiG is a platform for contractors and businesses to easily find jobs, and for clients to quickly connect with professionals who can bid to complete tasks for them.
 
@@ -12,6 +14,18 @@ The second user group is the professionals. These are people looking for side jo
 
 GiG will be an improvement over current 'marketplace' applications as it is specifically for finding jobs/task doers, whereas other applications may only have that as a side feature. This means GiG will be able to contain a much deeper and more fleshed out service for that specific need. The goal is to create trust, long-term reliability and accountability between clients and professionals within communities.
 
+**Design Decision / Business Rules**
+
+A professional is allowed to place multiple bids on the same request.
+This behavior is intentional to allow:
+- updating pricing over time
+- competing strategies (e.g., faster vs cheaper bids)
+- flexibility in negotiation-like scenarios
+
+GiG is designed as a marketplace platform that facilitates connections between clients and professionals. The primary goal of the system is to enable request posting, bidding, and selection of professionals.
+
+> Payment processing is intentionally out of scope for this stage of the application. Once a client selects a professional, any financial transactions are assumed to occur out of system.
+### Our Goals
 GiG aims to achieve the following measurable goals:
 
 - Average user satisfaction is 7 out of 10 or higher (10 being best), measured through a survey after users have utilized GiG for 1 month.
