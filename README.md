@@ -78,7 +78,7 @@ To run the E2E tests in Android Studio, follow these steps:
 - Start a compatible Android emulator or connect a physical device.
 - Navigate to the android test folder. 
 ```bash
-!!! Need to add the location of the E2E Test files !!!
+app/src/androidTest/java/e2e
 ```
 - Right-click the desired test file or folder.
 - Select Run.
