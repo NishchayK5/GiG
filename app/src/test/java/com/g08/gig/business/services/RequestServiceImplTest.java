@@ -1,5 +1,7 @@
 package com.g08.gig.business.services;
 
+import com.g08.gig.business.constants.FieldLimits;
+import com.g08.gig.business.constants.ValidationMessages;
 import com.g08.gig.util.Pair;
 import com.g08.gig.business.validation.ValidationException;
 import com.g08.gig.models.Client;
@@ -88,6 +90,16 @@ class RequestServiceImplTest {
         assertThrows(ValidationException.class, () ->
                 service.addRequest(client, "   ", "Valid body"));
 
+        verify(repo, never()).add(any());
+    }
+
+    @Test
+    void addRequest_titleTooLong_throwsValidationException() {
+        String longTitle = "x".repeat(FieldLimits.TITLE_MAX_LENGTH + 1);
+        ValidationException ex = assertThrows(ValidationException.class, () ->
+                service.addRequest(client, longTitle, "Valid body"));
+        assertEquals(ValidationMessages.TITLE_MAX_LENGTH, ex.getMessage());
+        assertEquals("title", ex.getField());
         verify(repo, never()).add(any());
     }
 

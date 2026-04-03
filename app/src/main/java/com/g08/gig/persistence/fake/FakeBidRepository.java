@@ -32,7 +32,7 @@ public class FakeBidRepository implements BidRepository {
             id = nextId++;
         } else if (getById(id) != null) return null;
 
-        Bid stored = new Bid(id, bid.getPro(), bid.getRequest(), bid.getCost(), bid.getTimeOfBid());
+        Bid stored = new Bid(id, bid.getPro(), bid.getRequest(), bid.getCost(), bid.getTimeOfBid(), bid.getBidStatus());
         bids.add(stored);
         return stored;
     }
@@ -60,7 +60,7 @@ public class FakeBidRepository implements BidRepository {
     public List<Bid> getAllByRequest(Request request){
         List<Bid> result = new ArrayList<>();
         for(Bid bid : bids){
-            if(bid.getRequest()==request){
+            if(bid.getRequest().getId()==request.getId()){
                 result.add(bid);
             }
         }
@@ -76,5 +76,19 @@ public class FakeBidRepository implements BidRepository {
             }
         }
         return result;
+    }
+
+    @Override
+    public boolean update(Bid bid) {
+        if(bid==null){ return false;}
+
+        for(int i = 0; i<bids.size(); i++){
+            if (bids.get(i).getId() == bid.getId()) {
+                Bid updated = new Bid(bid.getId(), bid.getPro(), bid.getRequest(), bid.getCost(), bid.getTimeOfBid(), bid.getBidStatus());
+                bids.set(i, updated);
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -16,8 +16,10 @@ class AppointmentTest {
                 new String[]{"Oil Change", "Brake Service"}, "Winnipeg");
         Client client = new Client(2, "olivia.hall@email.com", "Olivia", "Hall", "2045554343",
                 "75 Sargent Avenue, Winnipeg", null);
+        Request req = new Request(1, client, "New req", "hello test", start, true);
 
-        Appointment appointment = new Appointment(3, start, end, pro, client);
+
+        Appointment appointment = new Appointment(3, start, end, pro, client, req);
 
         assertEquals(3, appointment.getId());
         assertEquals(start, appointment.getAppointmentStart());
@@ -34,8 +36,9 @@ class AppointmentTest {
                 new String[]{"AC Repair"}, "Winnipeg");
         Client client = new Client(2, "sophia.nguyen@gmail.com", "Sophia", "Nguyen", "2045556565",
                 "120 Osborne Street, Winnipeg", null);
+        Request req = new Request(1, client, "New req", "hello test", start, true);
 
-        Appointment appointment = new Appointment(1, start, end, pro, client);
+        Appointment appointment = new Appointment(1, start, end, pro, client, req);
 
         appointment.setId(2);
         assertEquals(2, appointment.getId());

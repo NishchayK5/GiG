@@ -4,6 +4,7 @@ public class Pro extends User{
 
     private final String[] skillSet;
     private final String cityOfOperation;
+
     public Pro(int id, String email, String firstName, String lastName, String phoneNumber, String[] skillSet, String cityOfOperation){
         super(id, email, firstName, lastName, phoneNumber, "PRO");
         this.skillSet = skillSet;
@@ -17,7 +18,8 @@ public class Pro extends User{
     }
 
     public String[] getSkillSet(){
-        return skillSet;
+        if(skillSet==null) return null;
+        return skillSet.clone();
     }
 
     public String getCityOfOperation(){

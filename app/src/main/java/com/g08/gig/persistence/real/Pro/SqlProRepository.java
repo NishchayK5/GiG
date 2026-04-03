@@ -6,17 +6,19 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.g08.gig.persistence.ProRepository;
 import com.g08.gig.models.Pro;
+import com.g08.gig.persistence.SkillRepository;
 import com.g08.gig.persistence.real.AppDbHelper;
-import com.g08.gig.persistence.real.Client.ClientTable;
+import com.g08.gig.persistence.real.Skills.SkillTable;
 import com.g08.gig.persistence.real.user.UserTable;
 
 import java.util.ArrayList;
 import java.util.List;
 public class SqlProRepository implements ProRepository{
     private final AppDbHelper dbHelper;
-
-    public SqlProRepository(AppDbHelper dbHelper) {
+    private final SkillRepository proSkillRepo;
+    public SqlProRepository(AppDbHelper dbHelper, SkillRepository proSkillRepo) {
         this.dbHelper = dbHelper;
+        this.proSkillRepo = proSkillRepo;
     }
 
     @Override
@@ -42,16 +44,18 @@ public class SqlProRepository implements ProRepository{
         }
         return result;
     }
-     private Pro cursorToPro(Cursor c) {
-         int id = c.getInt(c.getColumnIndexOrThrow(UserTable.COL_USER_ID));
-         String email = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_EMAIL));
-         String firstName = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_FIRST_NAME));
-         String lastName = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_LAST_NAME));
-         String phoneNumber = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_PHONE));
-         String password = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_PASSWORD));
-         String cityOfOperation = c.getString(c.getColumnIndexOrThrow(ProTable.COL_PRO_CITY_LOCATION));
-         return new Pro(id, email, firstName, lastName, phoneNumber, password, null, cityOfOperation);
-     }
+    private Pro cursorToPro(Cursor c) {
+        int id = c.getInt(c.getColumnIndexOrThrow(UserTable.COL_USER_ID));
+        String email = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_EMAIL));
+        String firstName = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_FIRST_NAME));
+        String lastName = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_LAST_NAME));
+        String phoneNumber = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_PHONE));
+        String password = c.getString(c.getColumnIndexOrThrow(UserTable.COL_USER_PASSWORD));
+        String cityOfOperation = c.getString(c.getColumnIndexOrThrow(ProTable.COL_PRO_CITY_LOCATION));
+        Pro base = new Pro(id, email, firstName, lastName, phoneNumber, password, null, cityOfOperation);
+        String[] skills = proSkillRepo.getAllSkillsByPro(base);
+        return new Pro(id, email, firstName, lastName, phoneNumber, password, skills, cityOfOperation);
+    }
     @Override
     public Pro getById(int id){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -87,6 +91,7 @@ public class SqlProRepository implements ProRepository{
             proValues.put(ProTable.COL_PRO_CITY_LOCATION, pro.getCityOfOperation());
             long result = db.insert(ProTable.TABLE_PRO,null, proValues);
             if(result==-1) return null;
+            if (!insertSkillsForPro(db, pro.getId(), pro.getSkillSet())) return null;
             db.setTransactionSuccessful();
             return getById(pro.getId());
         }
@@ -116,6 +121,10 @@ public class SqlProRepository implements ProRepository{
             proValues.put(ProTable.COL_PRO_CITY_LOCATION, pro.getCityOfOperation());
             int pRows = db.update(ProTable.TABLE_PRO, proValues, ProTable.COL_PRO_ID + "=?", new String[]{String.valueOf(pro.getId())} );
             if(pRows==0) return false;
+
+            proSkillRepo.deleteAllSkillsByProId(pro.getId());
+            if (!insertSkillsForPro(db, pro.getId(), pro.getSkillSet())) return false;
+
             db.setTransactionSuccessful();
             return true;
         } finally{
@@ -131,5 +140,16 @@ public class SqlProRepository implements ProRepository{
                 new String[]{String.valueOf(id)}
         );
         return rows>0;
+    }
+
+    private static boolean insertSkillsForPro(SQLiteDatabase db, int proId, String[] skills) {
+        if (skills == null || skills.length == 0) return true;
+        for (String s : skills) {
+            ContentValues values = new ContentValues();
+            values.put(SkillTable.COL_PRO_ID, String.valueOf(proId));
+            values.put(SkillTable.COL_SKILL, s);
+            if (db.insert(SkillTable.TABLE_SKILLS, null, values) == -1) return false;
+        }
+        return true;
     }
 }

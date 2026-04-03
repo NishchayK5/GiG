@@ -101,11 +101,26 @@
     <!-- Client profile (center view) -->
     <string name="profile_view">Profile view</string>
     <string name="profile_edit">Edit profile</string>
+    <string name="profile_review">My Reviews</string>
+
     <string name="edit_profile_subtitle">Update your account details below.</string>
     <string name="logout">Logout</string>
     <string name="home_view">Home view</string>
-    <string name="biddings_view">Current Bids</string>
-    <string name="appointment_view">Appointment view</string>
+    <string name="biddings_view">Active Bids</string>
+    <string name="appointment_view">Appointments</string>
+    <string name="tab_ongoing_appointments">Ongoing</string>
+    <string name="tab_completed_appointments">Completed</string>
+    <string name="no_ongoing_appointments">No ongoing appointments</string>
+    <string name="no_ongoing_appointments_hint">Active requests you are scheduled for appear here.</string>
+    <string name="no_completed_appointments">No completed appointments</string>
+    <string name="no_completed_appointments_hint">Closed requests with scheduled visits appear here.</string>
+    <string name="appointment_detail_scheduled">Scheduled visit</string>
+    <string name="appointment_detail_client_heading">Client</string>
+    <string name="appointment_detail_client_name">Name</string>
+    <string name="empty_field_placeholder">\u2014</string>
+    <string name="dialog_show_more">Show more</string>
+    <string name="dialog_show_less">Show less</string>
+    <string name="bid_proposed_time_required">Please select a proposed time</string>
 
     <!-- Request detail dialog -->
     <string name="request_detail_title">Request details</string>
@@ -118,6 +133,24 @@
     <string name="request_detail_delete">Delete</string>
     <string name="request_detail_complete">Complete</string>
     <string name="request_detail_no_bids">No bids yet</string>
+    <string name="request_detail_bids_profile_hint">Tap a bidder\'s name to view their profile.</string>
+    <string name="request_detail_completion_hint">A bid must be accepted before this request can be completed.</string>
+    <string name="request_confirm_delete_title">Delete this request?</string>
+    <string name="request_confirm_delete_message">This will permanently remove the request and all bids on it. You can\'t undo this.</string>
+    <string name="request_confirm_complete_title">Complete this request?</string>
+    <string name="request_confirm_complete_message">By continuing, you confirm that this professional has completed the work. You\'ll then be asked to leave a short review before this request is closed.</string>
+    <string name="request_confirm_complete_positive">Continue</string>
+
+    <!-- Complete request + review (client) -->
+    <string name="complete_review_title">Complete request</string>
+    <string name="complete_review_subtitle">Fill out the review below, then tap Complete to close this request.</string>
+    <string name="complete_review_field_title">Review title</string>
+    <string name="complete_review_title_hint">e.g. Great work on the brakes</string>
+    <string name="complete_review_field_stars">Rating</string>
+    <string name="complete_review_field_description">Description</string>
+    <string name="complete_review_body_hint">Share details about your experience…</string>
+    <string name="complete_review_cancel">Cancel</string>
+    <string name="complete_review_submit">Complete</string>
 
     <!-- Create request form -->
     <string name="create_request_title">New request</string>
@@ -130,8 +163,14 @@
     <string name="create_request_error_title_required">Please enter a title.</string>
     <string name="create_request_error_description_required">Please enter a description.</string>
     <string name="create_request_submitted">Request submitted</string>
+    <plurals name="title_field_characters_remaining">
+        <item quantity="one">1 character remaining</item>
+        <item quantity="other">%d characters remaining</item>
+    </plurals>
     <string name="request_deleted">Request deleted</string>
     <string name="request_completed">Request Completed</string>
+    <string name="bid_accept">Accept</string>
+    <string name="bid_accepted_toast">Bid accepted — appointment scheduled</string>
 
     <!-- Strings used for pro_client -->
     <string name="home_pro_text">PRO Home</string>
@@ -145,5 +184,24 @@
     <string name="no_biddings">No requests to bid on.</string>
     <string name="no_biddings_hint">New client requests will appear here.</string>
     <string name="no_bidding">No bidding</string>
+
+    <string name="pro_public_detail_title">Professional Details</string>
+    <string name="pro_public_detail_avatar_desc">Professional profile picture</string>
+    <string name="pro_public_detail_rating_out_of">★ out of 5</string>
+    <string name="pro_public_detail_skills_label">Skill set</string>
+    <string name="pro_public_detail_reviews_heading">Reviews</string>
+    <string name="pro_public_detail_no_reviews">No reviews yet.</string>
+    <string name="pro_public_detail_error">Could not load this professional.</string>
+
+    <!-- Placeholder reviews for pro detail (shown when none exist in the database) -->
+    <string name="pro_dummy_review_1_title">Excellent work</string>
+    <string name="pro_dummy_review_1_body">Showed up on time and fixed the issue the first time. Clear communication throughout.</string>
+    <string name="pro_dummy_review_1_reviewer">Jordan M.</string>
+    <string name="pro_dummy_review_2_title">Would book again</string>
+    <string name="pro_dummy_review_2_body">Fair pricing and professional service. My car runs smoothly now.</string>
+    <string name="pro_dummy_review_2_reviewer">Riley P.</string>
+    <string name="pro_dummy_review_3_title">Highly recommend</string>
+    <string name="pro_dummy_review_3_body">Great attention to detail. Explained what was wrong before starting the repair.</string>
+    <string name="pro_dummy_review_3_reviewer">Casey L.</string>
 
 </resources>

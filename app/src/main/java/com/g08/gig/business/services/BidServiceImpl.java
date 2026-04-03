@@ -1,5 +1,6 @@
 package com.g08.gig.business.services;
 
+import com.g08.gig.application.GiGApp;
 import com.g08.gig.models.Bid;
 import com.g08.gig.models.Pro;
 import com.g08.gig.models.Request;
@@ -12,17 +13,13 @@ import java.util.List;
 public class BidServiceImpl implements BidService {
 
     private final BidRepository bidRepo;
-
-    public BidServiceImpl(BidRepository bidRepo)
-    {
+    public BidServiceImpl(BidRepository bidRepo) {
         this.bidRepo = bidRepo;
     }
     @Override
-    public Bid addBid(Pro pro, Request request, double cost) {
-        LocalDateTime dateTimeNow = LocalDateTime.now();
+    public Bid addBid(Pro pro, Request request, double cost, LocalDateTime proposedTime) {
 
-        Bid toCreate = new Bid(0, pro, request, cost, dateTimeNow);
-
+        Bid toCreate = new Bid(0, pro, request, cost, proposedTime, false);
 
         return bidRepo.add(toCreate);
     }
@@ -37,16 +34,23 @@ public class BidServiceImpl implements BidService {
         return bidRepo.getAllByPro(pro);
     }
 
-    // returns all the requests on which bid has been placed by the Pro
+
+
     @Override
-    public List<Request> getRequestsWithBidCostsByPro(Pro pro) {
-        List<Bid> bids = bidRepo.getAllByPro(pro);
-        List<Request> result = new ArrayList<>();
-        for (Bid bid : bids) {
-            if (bid != null && bid.getRequest() != null) {
-                result.add(new Request(bid.getRequest(), bid.getCost()));
-            }
-        }
-        return result;
+    public void acceptBid(Bid bid) {
+        bid.acceptBid();
+        bidRepo.update(bid);
     }
+
+    @Override
+    public Bid getAcceptedBidByRequest(Request request) {
+        List<Bid> bids = bidRepo.getAllByRequest(request);
+        for (Bid bid : bids) {
+            if (bid.getBidStatus()) return bid;
+        }
+        return null;
+    }
+
 }
+
+

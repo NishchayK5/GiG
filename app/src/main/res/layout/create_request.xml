@@ -73,11 +73,20 @@
             android:hint="@string/create_request_field_title_hint"
             android:importantForAutofill="no"
             android:inputType="textCapSentences"
+            android:maxLength="50"
             android:maxWidth="320dp"
             android:minHeight="48dp"
             android:padding="12dp"
             android:textColorHint="#666666"
             android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/requestTitleCharCounter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/grey"
+            android:textSize="12sp" />
 
         <TextView
             android:layout_width="match_parent"

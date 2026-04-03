@@ -14,6 +14,17 @@ import androidx.fragment.app.DialogFragment;
 public abstract class BaseGigDialogFragment extends DialogFragment {
 
     protected static final float DIALOG_WIDTH_RATIO = 0.9f;
+    protected static final float DIALOG_MAX_HEIGHT_RATIO = 0.85f;
+
+    protected void setDialogWidthAndMaxHeight() {
+        Dialog dialog = getDialog();
+        if (dialog == null || dialog.getWindow() == null) {
+            return;
+        }
+        int width = (int) (getResources().getDisplayMetrics().widthPixels * DIALOG_WIDTH_RATIO);
+        int maxHeight = (int) (getResources().getDisplayMetrics().heightPixels * DIALOG_MAX_HEIGHT_RATIO);
+        dialog.getWindow().setLayout(width, maxHeight);
+    }
 
     @Override
     public void onStart() {

@@ -1,9 +1,9 @@
 package com.g08.gig.presentation;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,35 +12,45 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.g08.gig.R;
 import com.g08.gig.application.GiGApp;
+import com.g08.gig.business.services.AppointmentService;
+import com.g08.gig.models.Appointment;
+import com.g08.gig.models.Bid;
 import com.g08.gig.session.SessionManager;
 import com.g08.gig.business.services.BidService;
-import com.g08.gig.business.services.ClientUserService;
 import com.g08.gig.business.services.ProUserService;
 import com.g08.gig.business.services.RequestService;
 import com.g08.gig.models.Pro;
 import com.g08.gig.models.Request;
 import com.g08.gig.util.DateFormats;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProHome extends AppCompatActivity {
 
+    private static final int TAB_APPOINTMENT_ONGOING = 0;
+    private static final int TAB_APPOINTMENT_COMPLETED = 1;
+
     private BiddingAdapter biddingAdapter;
-    private BiddingAdapter bidsAdapter;
+    private BidAdapter bidsAdapter;
+    private AppointmentAdapter appointmentAdapter;
     private View emptyBiddingsView;
     private View emptyBidsView;
     private View homeContent;
     private View biddingsViewContent;
+    private View appointmentViewContent;
     private View profileViewContent;
 
     private RequestService requestService;
     private BidService bidService;
+    private AppointmentService appointmentService;
 
     private ProUserService proUserService;
     private List<Request> availableRequests = new ArrayList<>();
-    private List<Request> bidRequests = new ArrayList<>();
+    private final List<Appointment> ongoingAppointments = new ArrayList<>();
+    private final List<Appointment> completedAppointments = new ArrayList<>();
 
 
     @Override
@@ -51,6 +61,7 @@ public class ProHome extends AppCompatActivity {
         requestService = GiGApp.get(this).getRequestService();
         bidService = GiGApp.get(this).getBidService();
         proUserService = GiGApp.get(this).getProUserService();
+        appointmentService = GiGApp.get(this).getApptService();
 
         int userId = getIntent().getIntExtra(SessionManager.KEY_USER_ID, -1);
         if (userId != -1) {
@@ -61,6 +72,7 @@ public class ProHome extends AppCompatActivity {
         setupBiddingsList();
         setupBidsList();
         setupBottomNav();
+        setupAppointmentsList();
         setupProfileAndLogout(userId);
     }
 
@@ -70,6 +82,7 @@ public class ProHome extends AppCompatActivity {
         homeContent = findViewById(R.id.homeContent);
         biddingsViewContent = findViewById(R.id.biddingsViewContent);
         profileViewContent = findViewById(R.id.profileViewContent);
+        appointmentViewContent = findViewById(R.id.appointmentViewContent);
     }
 
     private void setupBiddingsList() {
@@ -94,7 +107,7 @@ public class ProHome extends AppCompatActivity {
 
     private void setupBidsList() {
         RecyclerView bidsList = findViewById(R.id.bidsList);
-        bidsAdapter = new BiddingAdapter(request -> {});
+        bidsAdapter = new BidAdapter(null);
         bidsList.setLayoutManager(new LinearLayoutManager(this));
         bidsList.setAdapter(bidsAdapter);
         bidsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -130,6 +143,11 @@ public class ProHome extends AppCompatActivity {
                 showView(biddingsViewContent);
                 return true;
             }
+            if (id == R.id.nav_appointment) {
+                showView(appointmentViewContent);
+                loadAppointments();
+                return true;
+            }
             if (id == R.id.nav_profile) {
                 showView(profileViewContent);
                 updateProfileViews(SessionManager.getUserId(this));
@@ -143,20 +161,30 @@ public class ProHome extends AppCompatActivity {
         updateProfileViews(userId);
         LinearLayout profileEditTile = findViewById(R.id.profileEditTile);
         profileEditTile.setOnClickListener(v -> NavigationHelper.startEditProfile(this, SessionManager.getUserId(this), false));
+        LinearLayout profileReviewTile = findViewById(R.id.profileReviewTile);
+        profileReviewTile.setOnClickListener(v -> NavigationHelper.startViewReviews(this, SessionManager.getUserId(this)));
         LinearLayout profileLogoutTile = findViewById(R.id.profileLogoutTile);
         profileLogoutTile.setOnClickListener(v -> NavigationHelper.logout(this));
+
     }
 
     private void showView(View visibleView) {
         homeContent.setVisibility(visibleView == homeContent ? View.VISIBLE : View.GONE);
         biddingsViewContent.setVisibility(visibleView == biddingsViewContent ? View.VISIBLE : View.GONE);
+        appointmentViewContent.setVisibility(visibleView == appointmentViewContent ? View.VISIBLE : View.GONE);
         profileViewContent.setVisibility(visibleView == profileViewContent ? View.VISIBLE : View.GONE);
     }
     private void loadBids() {
         int userId = SessionManager.getUserId(this);
         Pro pro = proUserService.getProById(userId);
-        List<Request> requestsWithCosts = bidService.getRequestsWithBidCostsByPro(pro);
-        bidsAdapter.submitList(new ArrayList<>(requestsWithCosts));
+        List<Bid> bids = bidService.getAllByPro(pro);
+        List<Bid> filtered = new ArrayList<>();
+        for (Bid bid : bids) {
+            if (bidService.getAcceptedBidByRequest(bid.getRequest()) == null) {
+                filtered.add(bid);
+            }
+        }
+        bidsAdapter.submitList(filtered);
     }
 
     private void updateProfileViews(int userId) {
@@ -173,7 +201,13 @@ public class ProHome extends AppCompatActivity {
 
 
     private void loadRequests() {
-        availableRequests = requestService.getRequestsByStatus(true);
+        List<Request> allActive = requestService.getRequestsByStatus(true);
+        availableRequests = new ArrayList<>();
+        for (Request request : allActive) {
+            if (bidService.getAcceptedBidByRequest(request) == null) {
+                availableRequests.add(request);
+            }
+        }
         biddingAdapter.submitList(new ArrayList<>(availableRequests));
         updateEmptyState();
     }
@@ -188,6 +222,11 @@ public class ProHome extends AppCompatActivity {
         emptyBidsView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
     }
 
+    private void showAppointmentDetail(Appointment appt) {
+        AppointmentDetailDialog dialog = AppointmentDetailDialog.newInstance(appt.getId());
+        dialog.show(getSupportFragmentManager(), "appointment_detail");
+    }
+
     private void showBiddingDetail(Request request, int userId) {
         String time = "";
         if (request.getTimeOfRequest() != null) {
@@ -199,15 +238,112 @@ public class ProHome extends AppCompatActivity {
                 request.getTitle(),
                 request.getBody(),
                 time,
-                request.getRequestStatus()
+                request.getRequestStatus(),
+                request.getClient()
         );
-        dialog.setActionListener((requestId, bidAmount) -> {
+        dialog.setActionListener((requestId, bidAmount, proposedTime) -> {
             int cost = (int) bidAmount;
-            bidService.addBid(proUserService.getProById(userId), request, cost);
+            bidService.addBid(proUserService.getProById(userId), request, cost, proposedTime);
             Toast.makeText(ProHome.this, getString(R.string.bid) + " $" + bidAmount + ": " + request.getTitle(), Toast.LENGTH_SHORT).show();
             loadBids();
             updateEmptyState();
         });
         dialog.show(getSupportFragmentManager(), "bidding_detail");
+    }
+
+    private void setupAppointmentsList() {
+        RecyclerView appointmentsList = findViewById(R.id.appointmentsList);
+        appointmentAdapter = new AppointmentAdapter(this::showAppointmentDetail);
+        appointmentsList.setLayoutManager(new LinearLayoutManager(this));
+        appointmentsList.setAdapter(appointmentAdapter);
+        appointmentAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() { updateEmptyAppointmentsState(); }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) { updateEmptyAppointmentsState(); }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) { updateEmptyAppointmentsState(); }
+        });
+        setupAppointmentTabs();
+        loadAppointments();
+        updateEmptyAppointmentsState();
+    }
+
+    private void setupAppointmentTabs() {
+        TabLayout tabLayout = findViewById(R.id.appointmentsTabLayout);
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_ongoing_appointments)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_completed_appointments)));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                showListForCurrentAppointmentTab();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+    }
+
+    private void loadAppointments() {
+        int userId = SessionManager.getUserId(this);
+        Pro pro = proUserService.getProById(userId);
+        List<Appointment> appointments = appointmentService.getAllApptsByPro(pro);
+        ongoingAppointments.clear();
+        completedAppointments.clear();
+        if (appointments != null) {
+            for (Appointment appt : appointments) {
+                Request req = appt.getRequest();
+                if (req == null) {
+                    continue;
+                }
+                if (req.getRequestStatus()) {
+                    ongoingAppointments.add(appt);
+                } else {
+                    completedAppointments.add(appt);
+                }
+            }
+        }
+        showListForCurrentAppointmentTab();
+    }
+
+    private void showListForCurrentAppointmentTab() {
+        TabLayout tabLayout = findViewById(R.id.appointmentsTabLayout);
+        int position = tabLayout.getSelectedTabPosition();
+        if (position < 0) {
+            position = TAB_APPOINTMENT_ONGOING;
+        }
+        List<Appointment> list = (position == TAB_APPOINTMENT_COMPLETED)
+                ? completedAppointments
+                : ongoingAppointments;
+        appointmentAdapter.submitList(new ArrayList<>(list));
+    }
+
+    private void updateEmptyAppointmentsState() {
+        View emptyView = findViewById(R.id.emptyAppointmentsView);
+        TextView title = findViewById(R.id.emptyAppointmentsTitle);
+        TextView hint = findViewById(R.id.emptyAppointmentsHint);
+        boolean isEmpty = appointmentAdapter.getItemCount() == 0;
+        emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        TabLayout tabLayout = findViewById(R.id.appointmentsTabLayout);
+        int position = tabLayout.getSelectedTabPosition();
+        if (position < 0) {
+            position = TAB_APPOINTMENT_ONGOING;
+        }
+        boolean completedTab = position == TAB_APPOINTMENT_COMPLETED;
+        if (title != null) {
+            title.setText(completedTab
+                    ? getString(R.string.no_completed_appointments)
+                    : getString(R.string.no_ongoing_appointments));
+        }
+        if (hint != null) {
+            hint.setText(completedTab
+                    ? getString(R.string.no_completed_appointments_hint)
+                    : getString(R.string.no_ongoing_appointments_hint));
+        }
     }
 }

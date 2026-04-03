@@ -1,3 +1,10 @@
+/**
+ * File: ClientUserService.java
+
+ * Purpose:
+ * Manages the creation and deletion of client's profile.
+ *
+ */
 package com.g08.gig.business.services;
 
 import com.g08.gig.models.Client;

@@ -8,6 +8,7 @@ import com.g08.gig.models.User;
 import com.g08.gig.persistence.fake.FakeClientRepository;
 import com.g08.gig.persistence.fake.FakeProRepository;
 import com.g08.gig.persistence.fake.FakeUserRepository;
+import com.g08.gig.persistence.fake.FakeSkillRepository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,7 @@ class AuthServiceImplTest {
     private AuthServiceImpl authService;
     private ClientUserServiceImpl clientService;
     private ProUserServiceImpl proService;
+    private FakeSkillRepository skillRepo;
 
     @BeforeEach
     void setUp() {
@@ -35,10 +37,11 @@ class AuthServiceImplTest {
         userRepo = new FakeUserRepository();
         clientRepo = new FakeClientRepository(userRepo);
         proRepo = new FakeProRepository(userRepo);
+        skillRepo = new FakeSkillRepository();
 
         authService = new AuthServiceImpl(userRepo, clientRepo, proRepo);
         clientService = new ClientUserServiceImpl(clientRepo, userRepo);
-        proService = new ProUserServiceImpl(proRepo, userRepo);
+        proService = new ProUserServiceImpl(proRepo, userRepo,skillRepo);
     }
 
     // --- login: invalid input ---

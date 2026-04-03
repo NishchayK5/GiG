@@ -56,13 +56,6 @@ public class BiddingAdapter extends ListAdapter<Request, BiddingAdapter.BiddingV
         } else {
             holder.time.setText("");
         }
-        if (request.getBidCost() > 0) {
-            holder.bidPrice.setVisibility(View.VISIBLE);
-            holder.bidPrice.setText(String.format("$%.2f", request.getBidCost()));
-
-        } else {
-            holder.bidPrice.setVisibility(View.GONE);
-        }
 
         holder.itemView.setOnClickListener(v -> listener.onRequestClick(request));
     }
@@ -71,16 +64,12 @@ public class BiddingAdapter extends ListAdapter<Request, BiddingAdapter.BiddingV
         final TextView title;
         final TextView body;
         final TextView time;
-        final TextView bidPrice;
-
 
         BiddingViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.requestCardTitle);
             body = itemView.findViewById(R.id.requestCardBody);
             time = itemView.findViewById(R.id.requestCardTime);
-            bidPrice = itemView.findViewById(R.id.requestCardBidPrice);
-
         }
     }
 }
