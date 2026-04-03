@@ -354,4 +354,52 @@ class FakeRequestRepositoryTest {
         assertEquals(123, added.getId());
         assertEquals(1, requestRepo.getAll().size());
     }
+
+    @Test
+    void getAll_returnsUnmodifiableList() {
+        service.addRequest(CLIENT, "Oil Change", "Body");
+
+        assertThrows(UnsupportedOperationException.class, () ->
+                requestRepo.getAll().add(new Request(99, CLIENT, "X", "Y", LocalDateTime.now(), true)));
+    }
+
+    @Test
+    void getById_returnsSecondWhenTwoRequestsExist() {
+        Request r1 = service.addRequest(CLIENT, "First", "Body");
+        Request r2 = service.addRequest(CLIENT, "Second", "Body");
+
+        assertEquals(r2.getId(), requestRepo.getById(r2.getId()).getId());
+        assertEquals("Second", requestRepo.getById(r2.getId()).getTitle());
+        assertNotNull(requestRepo.getById(r1.getId()));
+    }
+
+    @Test
+    void update_secondRequestInList_whenIdsMatch() {
+        Request r1 = service.addRequest(CLIENT, "A", "Body");
+        Request r2 = service.addRequest(CLIENT, "B", "Body");
+
+        Request replacement = new Request(
+                r2.getId(),
+                r2.getClient(),
+                "Updated B",
+                "Updated body",
+                r2.getTimeOfRequest(),
+                false);
+
+        assertTrue(requestRepo.update(replacement));
+        assertEquals("Updated B", requestRepo.getById(r2.getId()).getTitle());
+        assertEquals("A", requestRepo.getById(r1.getId()).getTitle());
+    }
+
+    @Test
+    void delete_firstMatchingId_removesRequestAndLeavesOthers() {
+        Request r1 = service.addRequest(CLIENT, "First", "Body");
+        Request r2 = service.addRequest(CLIENT, "Second", "Body");
+
+        assertTrue(requestRepo.delete(r1.getId()));
+
+        assertNull(requestRepo.getById(r1.getId()));
+        assertNotNull(requestRepo.getById(r2.getId()));
+        assertEquals(1, requestRepo.getAll().size());
+    }
 }

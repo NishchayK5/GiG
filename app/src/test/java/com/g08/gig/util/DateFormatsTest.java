@@ -33,6 +33,51 @@ class DateFormatsTest {
     }
 
     @Test
+    void requestTime_singleDigitDayAndMorning_roundTrips() {
+        LocalDateTime dateTime = LocalDateTime.of(2024, Month.JANUARY, 5, 9, 5);
+        String formatted = dateTime.format(DateFormats.REQUEST_TIME);
+        LocalDateTime parsed = LocalDateTime.parse(formatted, DateFormats.REQUEST_TIME);
+        assertEquals(dateTime, parsed);
+    }
+
+    @Test
+    void requestTime_noon_roundTrips() {
+        LocalDateTime dateTime = LocalDateTime.of(2024, Month.JUNE, 30, 12, 0);
+        String formatted = dateTime.format(DateFormats.REQUEST_TIME);
+        LocalDateTime parsed = LocalDateTime.parse(formatted, DateFormats.REQUEST_TIME);
+        assertEquals(dateTime, parsed);
+    }
+
+    @Test
+    void requestTime_midnight_roundTrips() {
+        LocalDateTime dateTime = LocalDateTime.of(2023, Month.DECEMBER, 31, 0, 0);
+        String formatted = dateTime.format(DateFormats.REQUEST_TIME);
+        LocalDateTime parsed = LocalDateTime.parse(formatted, DateFormats.REQUEST_TIME);
+        assertEquals(dateTime, parsed);
+    }
+
+    @Test
+    void requestTime_endOfDay_roundTrips() {
+        LocalDateTime dateTime = LocalDateTime.of(2023, Month.DECEMBER, 31, 23, 59);
+        String formatted = dateTime.format(DateFormats.REQUEST_TIME);
+        LocalDateTime parsed = LocalDateTime.parse(formatted, DateFormats.REQUEST_TIME);
+        assertEquals(dateTime, parsed);
+    }
+
+    @Test
+    void requestTime_leapDayFeb29_roundTrips() {
+        LocalDateTime dateTime = LocalDateTime.of(2024, Month.FEBRUARY, 29, 15, 45);
+        String formatted = dateTime.format(DateFormats.REQUEST_TIME);
+        LocalDateTime parsed = LocalDateTime.parse(formatted, DateFormats.REQUEST_TIME);
+        assertEquals(dateTime, parsed);
+    }
+
+    @Test
+    void requestTime_formatterConstantIsStable() {
+        assertSame(DateFormats.REQUEST_TIME, DateFormats.REQUEST_TIME);
+    }
+
+    @Test
     void constructor_isPrivateAndUncallable() throws Exception {
         Constructor<DateFormats> c = DateFormats.class.getDeclaredConstructor();
         assertTrue(Modifier.isPrivate(c.getModifiers()));

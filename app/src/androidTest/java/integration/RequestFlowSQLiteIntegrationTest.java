@@ -178,7 +178,11 @@ public class RequestFlowSQLiteIntegrationTest {
         Pro fromDb = proRepo.getById(added.getId());
         assertNotNull(fromDb);
         assertNotEquals(VALID_PASSWORD, fromDb.getPassword());
-        assertTrue(fromDb.getPassword().startsWith("$2"));
+        assertTrue(
+                BCrypt.verifyer()
+                        .verify(VALID_PASSWORD.toCharArray(), fromDb.getPassword())
+                        .verified
+        );
     }
 
     @Test
@@ -192,6 +196,8 @@ public class RequestFlowSQLiteIntegrationTest {
         assertNotNull(beforeUpdate);
         assertEquals(PRO_EMAIL, beforeUpdate.getEmail());
         assertEquals("Elskamp", beforeUpdate.getLastName());
+        assertEquals(PRO_PHONE, beforeUpdate.getPhoneNumber());
+        assertArrayEquals(new String[]{"Oil Change"}, beforeUpdate.getSkillSet());
         assertEquals("Winnipeg", beforeUpdate.getCityOfOperation());
 
         boolean result = proService.updatePro(
@@ -204,6 +210,8 @@ public class RequestFlowSQLiteIntegrationTest {
         assertNotNull(fromDb);
         assertEquals("pro1@gmail.com", fromDb.getEmail());
         assertEquals("Elskamp-New", fromDb.getLastName());
+        assertEquals("2044444444", fromDb.getPhoneNumber());
+        assertArrayEquals(new String[]{"Brakes", "AC"}, fromDb.getSkillSet());
         assertEquals("Brandon", fromDb.getCityOfOperation());
     }
 
