@@ -103,10 +103,7 @@ app/src/androidTest/java/e2e
 [Working Agreement](Documents/work-agreement.docx)
 
 ---
-## Final Release Notes
-[Release Notes - Contains link to APK](APK/ReleaseNotes.md)
 
----
 
 
 
