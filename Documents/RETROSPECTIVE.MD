@@ -18,7 +18,10 @@ ___
 ![branch-history](branch-history.png)
 
 ---
-## Velocity chart across all three iterations
+## Velocity Overview
+
+>Our team's velocity has shown consistent growth across iterations. In Iteration 1, we missed our goal by small margin (15 of 18 planned points), but Iteration 2 saw us exceed expectations (36 of 30). Iteration 3 we maintained the momentum from iteration 2 and secured 32 of 34 points. To measure velocity, we assigned story points based on the importance of each User Story, High priority stories were awarded 3 points, Medium priority 2 points, and Low priority 1 point. 
+>These weighted values were then tallied each iteration to produce the planned and accomplished scores reflected in the chart above.
 
 ![velocity-chart](velocity-chart.png)
 
