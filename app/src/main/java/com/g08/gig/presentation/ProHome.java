@@ -177,6 +177,7 @@ public class ProHome extends AppCompatActivity {
     private void loadBids() {
         int userId = SessionManager.getUserId(this);
         Pro pro = proUserService.getProById(userId);
+        if (pro == null) return;
         List<Bid> bids = bidService.getAllByPro(pro);
         List<Bid> filtered = new ArrayList<>();
         for (Bid bid : bids) {
