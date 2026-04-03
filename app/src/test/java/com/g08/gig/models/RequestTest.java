@@ -21,6 +21,7 @@ class RequestTest {
         assertEquals("Brake pad replacement", request.getTitle());
         assertEquals("My 2019 Honda Civic needs new front brake pads. There's a grinding noise when I stop.", request.getBody());
         assertEquals(time, request.getTimeOfRequest());
+        assertTrue(request.getRequestStatus());
     }
 
     @Test
@@ -50,37 +51,20 @@ class RequestTest {
     }
 
     @Test
-    void constructor_initializesBidCostToZero() {
+    void setRequestToExpire_changesStatusToInactive() {
         Client client = new Client(1, "a@b.com", "A", "B", "2041111111", "Addr", null);
         Request request = new Request(1, client, "Title", "Body", LocalDateTime.now(), true);
-        assertEquals(0, request.getBidCost());
+
+        request.setRequestToExpire();
+
+        assertFalse(request.getRequestStatus());
     }
 
     @Test
-    void copyConstructor_copiesAllFieldsAndSetsBidCost() {
-        Client client = new Client(1, "kevin.moore@email.com", "Kevin", "Moore", "2045556677",
-                "320 Broadway, Winnipeg", null);
-        LocalDateTime time = LocalDateTime.of(2025, 6, 15, 10, 30);
-        Request original = new Request(5, client, "Brake pad replacement", "Need pads.", time, true);
-        original.setBidCost(50.0); // ensure copy overwrites this
+    void getClientInfoString_formatsExpectedFields() {
+        Client client = new Client(1, "client@test.com", "Dayaveer", "Gill", "2041111111", "123 Main St", null);
+        Request request = new Request(1, client, "Title", "Body", LocalDateTime.now(), true);
 
-        Request copy = new Request(original, 99.50);
-
-        assertEquals(5, copy.getId());
-        assertSame(client, copy.getClient());
-        assertEquals("Brake pad replacement", copy.getTitle());
-        assertEquals("Need pads.", copy.getBody());
-        assertEquals(time, copy.getTimeOfRequest());
-        assertTrue(copy.getRequestStatus());
-        assertEquals(99.50, copy.getBidCost());
-    }
-
-    @Test
-    void getBidCost_setBidCost_roundTrip() {
-        Client client = new Client(1, "a@b.com", "A", "B", "2041111111", "Addr", null);
-        Request request = new Request(1, client, "T", "B", LocalDateTime.now(), true);
-        assertEquals(0, request.getBidCost());
-        request.setBidCost(125.75);
-        assertEquals(125.75, request.getBidCost());
+        assertEquals("Dayaveer, client@test.com, 123 Main St", request.getClientInfoString());
     }
 }

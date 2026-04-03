@@ -31,147 +31,101 @@ class BidServiceImplTest {
     @InjectMocks
     private BidServiceImpl service;
 
+    private Client client;
     private Pro pro;
     private Request request;
+    private LocalDateTime time;
 
     @BeforeEach
     void setUp() {
-        Client client = new Client(
+        client = new Client(
                 1,
-                "client@email.com",
+                "client@test.com",
                 "Dayaveer",
                 "Gill",
                 "2041111111",
-                "123 Main",
-                "hashed"
+                "123 Main St",
+                "pass"
         );
 
         pro = new Pro(
                 2,
-                "pro@email.com",
-                "Izzy",
-                "Elskamp",
+                "pro@test.com",
+                "Alex",
+                "Smith",
                 "2042222222",
                 "pass",
-                new String[]{"Brakes", "Oil Change"},
+                new String[]{"Electrical"},
                 "Winnipeg"
         );
 
         request = new Request(
-                10,
+                3,
                 client,
-                "Brake Repair",
-                "Need repair",
+                "Fix outlet",
+                "Need help",
                 LocalDateTime.now(),
                 true
         );
+
+        time = LocalDateTime.now();
     }
 
     @Test
-    void addBid_validInput_createsBidAndCallsRepository() {
-        Bid stored = new Bid(20, pro, request, 150.0, LocalDateTime.now());
+    void addBid_callsRepositoryAndReturnsResult() {
+        Bid stored = new Bid(10, pro, request, 150.0, time, false);
         when(repo.add(any(Bid.class))).thenReturn(stored);
 
-        Bid result = service.addBid(pro, request, 150.0);
+        Bid result = service.addBid(pro, request, 150.0, time);
 
         assertNotNull(result);
-        assertEquals(pro, result.getPro());
-        assertEquals(request, result.getRequest());
-        assertEquals(150.0, result.getCost());
-        assertNotNull(result.getTimeOfBid());
+        assertSame(stored, result);
+
+        verify(repo).add(any(Bid.class));
+    }
+
+    @Test
+    void addBid_passesCorrectDataToRepository() {
+        when(repo.add(any(Bid.class))).thenReturn(null);
+
+        service.addBid(pro, request, 200.0, time);
 
         ArgumentCaptor<Bid> captor = ArgumentCaptor.forClass(Bid.class);
         verify(repo).add(captor.capture());
 
         Bid passed = captor.getValue();
+
         assertEquals(pro, passed.getPro());
         assertEquals(request, passed.getRequest());
-        assertEquals(150.0, passed.getCost());
-        assertNotNull(passed.getTimeOfBid());
+        assertEquals(200.0, passed.getCost());
     }
 
     @Test
-    void getAllByRequest_returnsRepoResults() {
-        List<Bid> bids = List.of(
-                new Bid(1, pro, request, 100.0, LocalDateTime.now()),
-                new Bid(2, pro, request, 120.0, LocalDateTime.now())
-        );
+    void getAllByRequest_returnsRepositoryResults() {
+        Bid b1 = new Bid(1, pro, request, 100.0, time, false);
+        Bid b2 = new Bid(2, pro, request, 120.0, time, false);
 
-        when(repo.getAllByRequest(request)).thenReturn(bids);
+        when(repo.getAllByRequest(request)).thenReturn(List.of(b1, b2));
 
         List<Bid> result = service.getAllByRequest(request);
 
         assertEquals(2, result.size());
-        assertEquals(100.0, result.get(0).getCost());
-        assertEquals(120.0, result.get(1).getCost());
+        assertSame(b1, result.get(0));
+        assertSame(b2, result.get(1));
+
         verify(repo).getAllByRequest(request);
     }
 
     @Test
-    void getAllByPro_returnsRepoResults() {
-        List<Bid> bids = List.of(
-                new Bid(1, pro, request, 100.0, LocalDateTime.now())
-        );
+    void getAllByPro_returnsRepositoryResults() {
+        Bid b1 = new Bid(1, pro, request, 90.0, time, false);
 
-        when(repo.getAllByPro(pro)).thenReturn(bids);
+        when(repo.getAllByPro(pro)).thenReturn(List.of(b1));
 
         List<Bid> result = service.getAllByPro(pro);
 
         assertEquals(1, result.size());
-        assertEquals(pro, result.get(0).getPro());
-        verify(repo).getAllByPro(pro);
-    }
-
-    @Test
-    void getRequestsWithBidCostsByPro_returnsRequestsWithBidCostSet() {
-        Request request1 = new Request(
-                11,
-                request.getClient(),
-                "Oil Change",
-                "Need oil",
-                LocalDateTime.now(),
-                true
-        );
-
-        Request request2 = new Request(
-                12,
-                request.getClient(),
-                "Battery Check",
-                "Need battery checked",
-                LocalDateTime.now(),
-                true
-        );
-
-        Bid bid1 = new Bid(1, pro, request1, 95.0, LocalDateTime.now());
-        Bid bid2 = new Bid(2, pro, request2, 140.0, LocalDateTime.now());
-
-        when(repo.getAllByPro(pro)).thenReturn(List.of(bid1, bid2));
-
-        List<Request> result = service.getRequestsWithBidCostsByPro(pro);
-
-        assertEquals(2, result.size());
-
-        assertEquals("Oil Change", result.get(0).getTitle());
-        assertEquals(95.0, result.get(0).getBidCost());
-
-        assertEquals("Battery Check", result.get(1).getTitle());
-        assertEquals(140.0, result.get(1).getBidCost());
-
-        verify(repo).getAllByPro(pro);
-    }
-
-    @Test
-    void getRequestsWithBidCostsByPro_ignoresNullBidAndNullRequest() {
-        Bid validBid = new Bid(1, pro, request, 175.0, LocalDateTime.now());
-        Bid nullRequestBid = new Bid(2, pro, null, 120.0, LocalDateTime.now());
-
-        when(repo.getAllByPro(pro)).thenReturn(Arrays.asList(null, nullRequestBid, validBid));
-
-        List<Request> result = service.getRequestsWithBidCostsByPro(pro);
-
-        assertEquals(1, result.size());
-        assertEquals(request.getTitle(), result.get(0).getTitle());
-        assertEquals(175.0, result.get(0).getBidCost());
+        assertSame(b1, result.get(0));
 
         verify(repo).getAllByPro(pro);
     }

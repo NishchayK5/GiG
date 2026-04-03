@@ -306,7 +306,7 @@ class FakeRequestRepositoryTest {
     @Test
     void removeRequest_cascadesAndDeletesAssociatedBids() {
         Request request = service.addRequest(CLIENT, "Oil Change", "Body");
-        Bid bid = bidRepo.add(new Bid(0, PRO, requestRepo.getById(request.getId()), 75.00, LocalDateTime.now()));
+        Bid bid = bidRepo.add(new Bid(0, PRO, requestRepo.getById(request.getId()), 75.00, LocalDateTime.now(), false));
 
         service.removeRequest(request.getId());
 
@@ -318,8 +318,8 @@ class FakeRequestRepositoryTest {
     void removeRequest_cascadeDoesNotAffectBidsOnOtherRequests() {
         Request r1 = service.addRequest(CLIENT, "Oil Change",   "Body");
         Request r2 = service.addRequest(CLIENT, "Brake Repair", "Body");
-        Bid bidOnR1 = bidRepo.add(new Bid(0, PRO, requestRepo.getById(r1.getId()), 75.00,  LocalDateTime.now()));
-        Bid bidOnR2 = bidRepo.add(new Bid(0, PRO, requestRepo.getById(r2.getId()), 100.00, LocalDateTime.now()));
+        Bid bidOnR1 = bidRepo.add(new Bid(0, PRO, requestRepo.getById(r1.getId()), 75.00,  LocalDateTime.now(), false));
+        Bid bidOnR2 = bidRepo.add(new Bid(0, PRO, requestRepo.getById(r2.getId()), 100.00, LocalDateTime.now(), false));
 
         service.removeRequest(r1.getId());
 

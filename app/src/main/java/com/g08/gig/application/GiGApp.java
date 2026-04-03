@@ -111,6 +111,10 @@ public class GiGApp extends Application {
             DatabaseSeeder.seed(clientUserService, proUserService, reqService, clientRepo);
         }
     }
+    public void reinitialize() {
+        dbHelper.close();
+        onCreate(); // re-runs all the initialization logic
+    }
 
     public ClientUserService getClientUserService() {
         return clientUserService;
