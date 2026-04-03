@@ -197,4 +197,27 @@ class FakeAppointmentRepositoryTest {
         assertThrows(UnsupportedOperationException.class, () ->
                 repo.getAll().add(new Appointment(99, start, end, pro1, client1, request1)));
     }
+    @Test
+    void delete_checksNonMatchingAppointmentBeforeDeletingMatchingOne() {
+        Appointment first = repo.add(new Appointment(10, start, end, pro1, client1, request1));
+        Appointment second = repo.add(new Appointment(20, start.plusDays(1), end.plusDays(1), pro2, client2, request2));
+
+        boolean deleted = repo.delete(20);
+
+        assertTrue(deleted);
+        assertNotNull(repo.getById(10));
+        assertNull(repo.getById(20));
+        assertEquals(1, repo.getAll().size());
+        assertEquals(10, repo.getAll().get(0).getId());
+    }
+
+    @Test
+    void getById_returnsNullAfterCheckingExistingNonMatchingAppointments() {
+        repo.add(new Appointment(10, start, end, pro1, client1, request1));
+        repo.add(new Appointment(20, start.plusDays(1), end.plusDays(1), pro2, client2, request2));
+
+        Appointment found = repo.getById(999);
+
+        assertNull(found);
+    }
 }

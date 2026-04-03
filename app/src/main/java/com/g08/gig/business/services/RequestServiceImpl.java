@@ -26,13 +26,13 @@ public class RequestServiceImpl implements RequestService {
     public Request addRequest(Client client, String title, String body) {
         String trimmedTitle = Strings.safeTrim(title);
         String trimmedBody = Strings.safeTrim(body);
-        if (trimmedTitle == null || trimmedTitle.isEmpty()) {
+        if (trimmedTitle == null) {
             throw new ValidationException(ValidationMessages.REQUEST_TITLE_REQUIRED, "title");
         }
         if (trimmedTitle.length() > FieldLimits.TITLE_MAX_LENGTH) {
             throw new ValidationException(ValidationMessages.TITLE_MAX_LENGTH, "title");
         }
-        if (trimmedBody == null || trimmedBody.isEmpty()) {
+        if (trimmedBody == null ) {
             throw new ValidationException(ValidationMessages.REQUEST_BODY_REQUIRED, "body");
         }
         LocalDateTime dateTimeNow = LocalDateTime.now();

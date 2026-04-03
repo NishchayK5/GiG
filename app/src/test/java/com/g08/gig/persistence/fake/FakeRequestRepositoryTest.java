@@ -327,4 +327,31 @@ class FakeRequestRepositoryTest {
         assertNotNull(bidRepo.getById(bidOnR2.getId()),
                 "Bid on other request must not be affected");
     }
+    
+    @Test
+    void delete_returnsFalseWhenRequestsExistButNoneMatch() {
+        service.addRequest(CLIENT, "Oil Change", "Body");
+        service.addRequest(CLIENT2, "Brake Repair", "Body");
+
+        assertFalse(requestRepo.delete(999));
+        assertEquals(2, requestRepo.getAll().size());
+    }
+
+    @Test
+    void add_requestWithUniqueExplicitId_addsSuccessfully() {
+        Request request = new Request(
+                123,
+                CLIENT,
+                "Explicit Id Request",
+                "Body",
+                LocalDateTime.now(),
+                true
+        );
+
+        Request added = requestRepo.add(request);
+
+        assertNotNull(added);
+        assertEquals(123, added.getId());
+        assertEquals(1, requestRepo.getAll().size());
+    }
 }

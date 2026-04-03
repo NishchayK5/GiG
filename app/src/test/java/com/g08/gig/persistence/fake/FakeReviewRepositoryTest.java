@@ -139,4 +139,29 @@ class FakeReviewRepositoryTest {
         assertThrows(UnsupportedOperationException.class, () ->
                 repo.getAll().add(new Review(99, reviewer2, pro2, "Bad", "Body", 1)));
     }
+    @Test
+    void getById_returnsNullWhenOnlyNonMatchingReviewsExist() {
+
+
+
+        repo.add(new Review(10, reviewer1, pro1, "Title 1", "Body 1", 5));
+        repo.add(new Review(20, reviewer1, pro1, "Title 2", "Body 2", 4));
+
+        Review result = repo.getById(999);
+
+        assertNull(result);
+    }
+    @Test
+    void delete_checksNonMatchingReviewBeforeDeletingMatchingReview() {
+
+
+        repo.add(new Review(10, reviewer1, pro1, "Title 1", "Body 1", 5));
+        repo.add(new Review(20, reviewer1, pro1, "Title 2", "Body 2", 4));
+
+        boolean deleted = repo.delete(20);
+
+        assertTrue(deleted);
+        assertNotNull(repo.getById(10));
+        assertNull(repo.getById(20));
+    }
 }

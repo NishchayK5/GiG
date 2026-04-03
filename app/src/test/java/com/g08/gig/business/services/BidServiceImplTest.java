@@ -10,12 +10,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,7 +27,6 @@ class BidServiceImplTest {
     @Mock
     private BidRepository repo;
 
-    @InjectMocks
     private BidServiceImpl service;
 
     private Client client;
@@ -38,6 +36,8 @@ class BidServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        service = new BidServiceImpl(repo);
+
         client = new Client(
                 1,
                 "client@test.com",
@@ -64,69 +64,101 @@ class BidServiceImplTest {
                 client,
                 "Fix outlet",
                 "Need help",
-                LocalDateTime.now(),
+                LocalDateTime.of(2026, 4, 1, 10, 0),
                 true
         );
 
-        time = LocalDateTime.now();
+        time = LocalDateTime.of(2026, 4, 2, 14, 30);
     }
 
     @Test
-    void addBid_callsRepositoryAndReturnsResult() {
+    void addBid_createsBidWithCorrectDataAndReturnsRepositoryResult() {
         Bid stored = new Bid(10, pro, request, 150.0, time, false);
         when(repo.add(any(Bid.class))).thenReturn(stored);
 
         Bid result = service.addBid(pro, request, 150.0, time);
 
-        assertNotNull(result);
         assertSame(stored, result);
-
-        verify(repo).add(any(Bid.class));
-    }
-
-    @Test
-    void addBid_passesCorrectDataToRepository() {
-        when(repo.add(any(Bid.class))).thenReturn(null);
-
-        service.addBid(pro, request, 200.0, time);
 
         ArgumentCaptor<Bid> captor = ArgumentCaptor.forClass(Bid.class);
         verify(repo).add(captor.capture());
 
         Bid passed = captor.getValue();
-
-        assertEquals(pro, passed.getPro());
-        assertEquals(request, passed.getRequest());
-        assertEquals(200.0, passed.getCost());
+        assertEquals(0, passed.getId());
+        assertSame(pro, passed.getPro());
+        assertSame(request, passed.getRequest());
+        assertEquals(150.0, passed.getCost());
+        assertEquals(time, passed.getTimeOfBid());
+        assertFalse(passed.getBidStatus());
     }
 
     @Test
     void getAllByRequest_returnsRepositoryResults() {
         Bid b1 = new Bid(1, pro, request, 100.0, time, false);
         Bid b2 = new Bid(2, pro, request, 120.0, time, false);
-
         when(repo.getAllByRequest(request)).thenReturn(List.of(b1, b2));
 
         List<Bid> result = service.getAllByRequest(request);
 
-        assertEquals(2, result.size());
-        assertSame(b1, result.get(0));
-        assertSame(b2, result.get(1));
-
+        assertEquals(List.of(b1, b2), result);
         verify(repo).getAllByRequest(request);
     }
 
     @Test
     void getAllByPro_returnsRepositoryResults() {
         Bid b1 = new Bid(1, pro, request, 90.0, time, false);
-
         when(repo.getAllByPro(pro)).thenReturn(List.of(b1));
 
         List<Bid> result = service.getAllByPro(pro);
 
-        assertEquals(1, result.size());
-        assertSame(b1, result.get(0));
-
+        assertEquals(List.of(b1), result);
         verify(repo).getAllByPro(pro);
+    }
+
+    @Test
+    void acceptBid_marksBidAcceptedAndUpdatesRepository() {
+        Bid bid = new Bid(5, pro, request, 180.0, time, false);
+
+        service.acceptBid(bid);
+
+        assertTrue(bid.getBidStatus());
+        verify(repo).update(bid);
+    }
+
+    @Test
+    void getAcceptedBidByRequest_returnsAcceptedBidWhenPresent() {
+        Bid notAccepted = new Bid(1, pro, request, 100.0, time, false);
+        Bid accepted = new Bid(2, pro, request, 120.0, time, true);
+        Bid anotherAccepted = new Bid(3, pro, request, 140.0, time, true);
+
+        when(repo.getAllByRequest(request)).thenReturn(List.of(notAccepted, accepted, anotherAccepted));
+
+        Bid result = service.getAcceptedBidByRequest(request);
+
+        assertSame(accepted, result);
+        verify(repo).getAllByRequest(request);
+    }
+
+    @Test
+    void getAcceptedBidByRequest_returnsNullWhenNoAcceptedBidExists() {
+        Bid b1 = new Bid(1, pro, request, 100.0, time, false);
+        Bid b2 = new Bid(2, pro, request, 120.0, time, false);
+
+        when(repo.getAllByRequest(request)).thenReturn(List.of(b1, b2));
+
+        Bid result = service.getAcceptedBidByRequest(request);
+
+        assertNull(result);
+        verify(repo).getAllByRequest(request);
+    }
+
+    @Test
+    void getAcceptedBidByRequest_returnsNullWhenRepositoryReturnsEmptyList() {
+        when(repo.getAllByRequest(request)).thenReturn(Collections.emptyList());
+
+        Bid result = service.getAcceptedBidByRequest(request);
+
+        assertNull(result);
+        verify(repo).getAllByRequest(request);
     }
 }

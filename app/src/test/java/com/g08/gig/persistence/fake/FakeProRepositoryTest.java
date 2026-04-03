@@ -141,4 +141,55 @@ class FakeProRepositoryTest {
         assertThrows(UnsupportedOperationException.class, () ->
                 repo.getAll().add(new Pro(1, "b@b.com", "B", "B", "555", "p", null, "City")));
     }
+    @Test
+    void getById_checksNonMatchingProBeforeFindingMatch() {
+        repo.add(new Pro(10, "first@test.com", "First", "Pro", "1111111111", "pass1",
+                new String[]{"Plumbing"}, "Winnipeg"));
+        repo.add(new Pro(20, "second@test.com", "Second", "Pro", "2222222222", "pass2",
+                new String[]{"Electrical"}, "Brandon"));
+
+        Pro found = repo.getById(20);
+
+        assertNotNull(found);
+        assertEquals(20, found.getId());
+        assertEquals("second@test.com", found.getEmail());
+    }
+
+    @Test
+    void delete_checksNonMatchingProBeforeDeletingMatchingPro() {
+        repo.add(new Pro(10, "first@test.com", "First", "Pro", "1111111111", "pass1",
+                new String[]{"Plumbing"}, "Winnipeg"));
+        repo.add(new Pro(20, "second@test.com", "Second", "Pro", "2222222222", "pass2",
+                new String[]{"Electrical"}, "Brandon"));
+
+        boolean deleted = repo.delete(20);
+
+        assertTrue(deleted);
+        assertNotNull(repo.getById(10));
+        assertNull(repo.getById(20));
+        assertEquals(1, repo.getAll().size());
+    }
+    @Test
+    void update_returnsFalseWhenUnderlyingUserRepositoryUpdateSucceedsButProDoesNotExist() {
+        FakeUserRepository usersRepo = new FakeUserRepository();
+        FakeProRepository localRepo = new FakeProRepository(usersRepo);
+
+        Pro existingUserOnly = new Pro(
+                50,
+                "useronly@test.com",
+                "UserOnly",
+                "Person",
+                "2041234567",
+                "pass",
+                new String[]{"Electrical"},
+                "Winnipeg"
+        );
+
+        usersRepo.add(existingUserOnly);
+
+        boolean result = localRepo.update(existingUserOnly);
+
+        assertFalse(result);
+    }
+
 }

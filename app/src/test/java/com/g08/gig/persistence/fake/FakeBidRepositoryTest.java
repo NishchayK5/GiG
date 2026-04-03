@@ -190,4 +190,62 @@ class FakeBidRepositoryTest {
         assertThrows(UnsupportedOperationException.class, () ->
                 bidRepo.getAll().add(new Bid(99, PRO1, request, 10.0, LocalDateTime.now(), false)));
     }
+    @Test
+    void getById_returnsNullWhenRepoHasOnlyNonMatchingBids() {
+        Request request1 = new Request(
+                10,
+                CLIENT,
+                "Job A",
+                "Body A",
+                LocalDateTime.now(),
+                true
+        );
+        Request request2 = new Request(
+                11,
+                CLIENT,
+                "Job B",
+                "Body B",
+                LocalDateTime.now(),
+                true
+        );
+
+        LocalDateTime time = LocalDateTime.now();
+        bidRepo.add(new Bid(10, PRO1, request1, 100.0, time, false));
+        bidRepo.add(new Bid(20, PRO2, request2, 200.0, time.plusHours(1), false));
+
+        Bid result = bidRepo.getById(999);
+
+        assertNull(result);
+    }
+    @Test
+    void delete_checksNonMatchingBidBeforeDeletingMatchingBid() {
+        Request request1 = new Request(
+                10,
+                CLIENT,
+                "Job A",
+                "Body A",
+                LocalDateTime.now(),
+                true
+        );
+        Request request2 = new Request(
+                11,
+                CLIENT,
+                "Job B",
+                "Body B",
+                LocalDateTime.now(),
+                true
+        );
+
+        LocalDateTime time = LocalDateTime.now();
+        bidRepo.add(new Bid(10, PRO1, request1, 100.0, time, false));
+        bidRepo.add(new Bid(20, PRO2, request2, 200.0, time.plusHours(1), false));
+
+        boolean deleted = bidRepo.delete(20);
+
+        assertTrue(deleted);
+        assertNotNull(bidRepo.getById(10));
+        assertNull(bidRepo.getById(20));
+        assertEquals(1, bidRepo.getAll().size());
+    }
+
 }

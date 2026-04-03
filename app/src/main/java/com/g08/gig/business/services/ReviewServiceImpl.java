@@ -21,7 +21,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public Review addReview(Client reviewer, Pro pro, String title, String body, int stars) {
         String trimmedTitle = Strings.safeTrim(title);
-        if (trimmedTitle == null || trimmedTitle.isEmpty()) {
+        if (trimmedTitle == null) {
             throw new ValidationException(ValidationMessages.REQUEST_TITLE_REQUIRED, "title");
         }
         if (trimmedTitle.length() > FieldLimits.TITLE_MAX_LENGTH) {
