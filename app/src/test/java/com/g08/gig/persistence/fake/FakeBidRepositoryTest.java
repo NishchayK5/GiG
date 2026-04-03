@@ -58,6 +58,57 @@ class FakeBidRepositoryTest {
     }
 
     @Test
+    void add_bidWithExplicitUnusedNonZeroId_usesThatId() {
+        Request request = requestService.addRequest(CLIENT, "Oil Change", "Need oil");
+        LocalDateTime time = LocalDateTime.of(2026, 4, 3, 10, 0);
+        Bid withId = new Bid(42, PRO1, request, 55.0, time, false);
+
+        Bid stored = bidRepo.add(withId);
+
+        assertNotNull(stored);
+        assertEquals(42, stored.getId());
+        assertSame(stored, bidRepo.getById(42));
+    }
+
+    @Test
+    void update_unknownId_returnsFalse() {
+        Request request = requestService.addRequest(CLIENT, "Oil Change", "Need oil");
+        Bid ghost = new Bid(999, PRO1, request, 1.0, LocalDateTime.now(), false);
+
+        assertFalse(bidRepo.update(ghost));
+    }
+
+    @Test
+    void getAllByRequest_emptyWhenNoBidsForThatRequest() {
+        Request withBids = requestService.addRequest(CLIENT, "Oil Change", "Need oil");
+        Request withoutBids = requestService.addRequest(CLIENT, "Brake Repair", "Pads");
+        bidService.addBid(PRO1, withBids, 75.00, LocalDateTime.now());
+
+        assertTrue(bidRepo.getAllByRequest(withoutBids).isEmpty());
+    }
+
+    @Test
+    void getAllByPro_emptyWhenNoBidsForThatPro() {
+        Request request = requestService.addRequest(CLIENT, "Oil Change", "Need oil");
+        bidService.addBid(PRO1, request, 75.00, LocalDateTime.now());
+
+        assertTrue(bidRepo.getAllByPro(PRO2).isEmpty());
+    }
+
+    @Test
+    void getAllByPro_matchesByReferenceEquality_notEqualProInstances() {
+        Request request = requestService.addRequest(CLIENT, "Oil Change", "Need oil");
+        bidService.addBid(PRO1, request, 75.00, LocalDateTime.now());
+
+        Pro sameDataDifferentRef = new Pro(
+                PRO1.getId(), PRO1.getEmail(), PRO1.getFirstName(), PRO1.getLastName(),
+                PRO1.getPhoneNumber(), "hashed", PRO1.getSkillSet(), PRO1.getCityOfOperation());
+
+        assertTrue(bidRepo.getAllByPro(sameDataDifferentRef).isEmpty());
+        assertEquals(1, bidRepo.getAllByPro(PRO1).size());
+    }
+
+    @Test
     void delete_unknownId_returnsFalse() {
         assertFalse(bidRepo.delete(999));
     }
@@ -217,6 +268,31 @@ class FakeBidRepositoryTest {
 
         assertNull(result);
     }
+    @Test
+    void delete_firstMatchingId_removesImmediately() {
+        Request request = requestService.addRequest(CLIENT, "Oil Change", "Need oil");
+        Bid first = bidService.addBid(PRO1, request, 75.00, LocalDateTime.now());
+        bidService.addBid(PRO2, request, 90.00, LocalDateTime.now().plusHours(1));
+
+        assertTrue(bidRepo.delete(first.getId()));
+        assertNull(bidRepo.getById(first.getId()));
+        assertEquals(1, bidRepo.getAll().size());
+    }
+
+    @Test
+    void update_whenMultipleBids_updatesCorrectEntry() {
+        Request request = requestService.addRequest(CLIENT, "Oil Change", "Need oil");
+        bidService.addBid(PRO1, request, 75.00, LocalDateTime.now());
+        Bid target = bidService.addBid(PRO2, request, 90.00, LocalDateTime.now().plusHours(1));
+
+        Bid replacement = new Bid(
+                target.getId(), PRO2, request, 120.0, target.getTimeOfBid(), true);
+
+        assertTrue(bidRepo.update(replacement));
+        assertEquals(120.0, bidRepo.getById(target.getId()).getCost(), 0.001);
+        assertTrue(bidRepo.getById(target.getId()).getBidStatus());
+    }
+
     @Test
     void delete_checksNonMatchingBidBeforeDeletingMatchingBid() {
         Request request1 = new Request(

@@ -104,6 +104,43 @@ class FakeClientRepositoryTest {
     }
 
     @Test
+    void add_clientWithExplicitUnusedNonZeroId_usesThatId() {
+        Client withId = new Client(42, "explicit@x.com", "E", "X", "555", "Addr", "p");
+
+        Client stored = repo.add(withId);
+
+        assertNotNull(stored);
+        assertEquals(42, stored.getId());
+        assertSame(stored, repo.getById(42));
+    }
+
+    @Test
+    void delete_firstMatchingId_removesImmediately() {
+        Client first = repo.add(new Client(0, "a@a.com", "A", "A", "555", "A1", "p"));
+        repo.add(new Client(0, "b@b.com", "B", "B", "555", "A2", "p"));
+
+        assertTrue(repo.delete(first.getId()));
+        assertNull(repo.getById(first.getId()));
+        assertEquals(1, repo.getAll().size());
+    }
+
+    @Test
+    void update_secondClientInList_whenIdsMatch() {
+        Client c1 = repo.add(new Client(0, "a@a.com", "A", "A", "555", "Addr1", "p"));
+        Client c2 = repo.add(new Client(0, "b@b.com", "B", "B", "555", "Addr2", "p"));
+
+        userRepo.add(new Client(c1.getId(), c1.getEmail(), c1.getFirstName(), c1.getLastName(),
+                c1.getPhoneNumber(), c1.getAddress(), c1.getPassword()));
+        userRepo.add(new Client(c2.getId(), c2.getEmail(), c2.getFirstName(), c2.getLastName(),
+                c2.getPhoneNumber(), c2.getAddress(), c2.getPassword()));
+
+        Client replacement = new Client(c2.getId(), "new@b.com", "B2", "B2", "999", "NewAddr", "p2");
+        assertTrue(repo.update(replacement));
+        assertEquals("new@b.com", repo.getById(c2.getId()).getEmail());
+        assertEquals("a@a.com", repo.getById(c1.getId()).getEmail());
+    }
+
+    @Test
     void update_returnsFalseWhenUserNotInUserRepo() {
         Client added = repo.add(new Client(0, "x@x.com", "X", "Y", "555", "Addr", "p"));
         Client updated = new Client(added.getId(), "new@x.com", "New", "Y", "999", "New Addr", "p");

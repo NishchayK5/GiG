@@ -21,10 +21,11 @@ public class SqlSkillRepository implements SkillRepository {
         if(pro == null) return null;
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
+        // rowid reflects insert order so skills match the order passed to add/update.
         Cursor c = db.query(SkillTable.TABLE_SKILLS,
                 new String[]{SkillTable.COL_PRO_ID, SkillTable.COL_SKILL},
                 SkillTable.COL_PRO_ID + "=?",
-                new String[]{String.valueOf(pro.getId())}, null, null, null);
+                new String[]{String.valueOf(pro.getId())}, null, null, "rowid ASC");
 
         return cursorToSkillSet(c);
     }
