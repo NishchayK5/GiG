@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GiG — Project Website</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --surface: #13161e;
+      --border: #1f2330;
+      --accent: #c8f04a;
+      --accent2: #4af0c8;
+      --text: #e8eaf0;
+      --muted: #7a7f94;
+      --heading-font: 'DM Serif Display', Georgia, serif;
+      --body-font: 'DM Sans', sans-serif;
+      --mono-font: 'DM Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--body-font); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 3rem; background: rgba(13,15,20,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    .nav-logo { font-family: var(--mono-font); font-size: 0.85rem; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.85rem; letter-spacing: 0.05em; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+
+    /* HERO */
+    .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 3rem 5rem; position: relative; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; z-index: 0; background: radial-gradient(ellipse 60% 50% at 70% 30%, rgba(200,240,74,0.07) 0%, transparent 60%), radial-gradient(ellipse 40% 40% at 20% 70%, rgba(74,240,200,0.05) 0%, transparent 60%); }
+    .hero-grid { position: absolute; inset: 0; z-index: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%); }
+    .hero-tag { font-family: var(--mono-font); font-size: 0.78rem; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1.5rem; position: relative; z-index: 1; opacity: 0; animation: fadeUp 0.6s 0.1s forwards; }
+    .hero h1 { font-family: var(--heading-font); font-size: clamp(3.5rem, 8vw, 7.5rem); line-height: 1.0; letter-spacing: -0.02em; position: relative; z-index: 1; opacity: 0; animation: fadeUp 0.7s 0.25s forwards; }
+    .hero-sub { margin-top: 1.5rem; max-width: 520px; color: var(--muted); font-size: 1.05rem; font-weight: 300; position: relative; z-index: 1; opacity: 0; animation: fadeUp 0.7s 0.4s forwards; }
+    .hero-meta { margin-top: 2.5rem; display: flex; gap: 2.5rem; flex-wrap: wrap; position: relative; z-index: 1; opacity: 0; animation: fadeUp 0.7s 0.55s forwards; }
+    .hero-meta-item { display: flex; flex-direction: column; gap: 0.2rem; }
+    .hero-meta-label { font-family: var(--mono-font); font-size: 0.7rem; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; }
+    .hero-meta-value { font-size: 0.95rem; font-weight: 500; }
+
+    /* SHARED */
+    section { padding: 6rem 3rem; }
+    .section-label { font-family: var(--mono-font); font-size: 0.72rem; color: var(--accent2); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.8rem; }
+    h2 { font-family: var(--heading-font); font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.15; margin-bottom: 2.5rem; max-width: 700px; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+    /* VISION SECTION */
+    #vision { background: var(--surface); }
+
+    .vision-hero-quote {
+      font-family: var(--heading-font);
+      font-style: italic;
+      font-size: clamp(1.3rem, 2.5vw, 1.85rem);
+      color: var(--accent);
+      line-height: 1.5;
+      border-left: 3px solid var(--accent);
+      padding-left: 2rem;
+      margin-bottom: 3rem;
+      max-width: 860px;
+    }
+
+    .vision-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+    .vision-body p { font-size: 0.95rem; color: var(--muted); font-weight: 300; line-height: 1.85; }
+    .vision-body p + p { margin-top: 1rem; }
+
+    .sub-label { font-family: var(--mono-font); font-size: 0.72rem; color: var(--accent2); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1.2rem; }
+
+    .vision-users { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 3rem; }
+    .user-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.8rem 2rem; transition: border-color 0.2s; }
+    .user-card:hover { border-color: var(--accent2); }
+    .user-card-tag { font-family: var(--mono-font); font-size: 0.68rem; color: var(--accent2); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.6rem; }
+    .user-card h4 { font-size: 1.05rem; font-weight: 500; margin-bottom: 0.8rem; }
+    .user-card p { font-size: 0.88rem; color: var(--muted); font-weight: 300; line-height: 1.7; }
+
+    .design-rule-block { background: var(--bg); border: 1px solid var(--border); border-top: 3px solid var(--accent2); border-radius: 0 0 10px 10px; padding: 2rem 2.5rem; margin-bottom: 3rem; }
+    .design-rule-block h3 { font-family: var(--mono-font); font-size: 0.75rem; color: var(--accent2); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem; }
+    .design-rule-block p { font-size: 0.9rem; color: var(--muted); font-weight: 300; line-height: 1.8; margin-bottom: 0.6rem; }
+    .design-rule-block ul { list-style: none; padding: 0; margin: 0.5rem 0 1rem; }
+    .design-rule-block ul li { font-size: 0.88rem; color: var(--muted); padding: 0.25rem 0; font-weight: 300; }
+    .design-rule-block ul li::before { content: "→ "; color: var(--accent2); font-family: var(--mono-font); }
+    .out-of-scope { display: inline-block; background: rgba(240,74,74,0.07); border: 1px solid rgba(240,74,74,0.2); color: #f08a8a; font-family: var(--mono-font); font-size: 0.78rem; padding: 0.6rem 1rem; border-radius: 6px; margin-top: 0.5rem; }
+
+    .goals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .goal-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.8rem; transition: border-color 0.2s, transform 0.2s; }
+    .goal-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+    .goal-num { font-family: var(--heading-font); font-size: 2.5rem; color: var(--accent); line-height: 1; margin-bottom: 0.6rem; }
+    .goal-card p { font-size: 0.85rem; color: var(--muted); font-weight: 300; line-height: 1.65; }
+
+    /* OVERVIEW / FEATURES */
+    #overview { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+    #overview .right { padding-top: 5rem; }
+    .info-block { margin-bottom: 2.5rem; }
+    .info-block h3 { font-family: var(--mono-font); font-size: 0.75rem; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.8rem; }
+    .info-block p { font-size: 0.95rem; color: var(--text); font-weight: 300; }
+    .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .feature-card { background: var(--surface); padding: 1.6rem 1.8rem; transition: background 0.2s; }
+    .feature-card:hover { background: #191d28; }
+    .feature-num { font-family: var(--mono-font); font-size: 0.65rem; color: var(--accent); letter-spacing: 0.12em; margin-bottom: 0.5rem; }
+    .feature-card h4 { font-size: 0.95rem; font-weight: 500; margin-bottom: 0.4rem; }
+    .feature-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.5; font-weight: 300; }
+
+    /* TEAM */
+    #team { background: var(--surface); }
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
+    .team-card { border: 1px solid var(--border); border-radius: 10px; padding: 2rem; background: var(--bg); transition: border-color 0.2s, transform 0.2s; }
+    .team-card:hover { border-color: var(--accent2); transform: translateY(-3px); }
+    .team-avatar { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%); display: flex; align-items: center; justify-content: center; font-family: var(--heading-font); font-size: 1.3rem; color: var(--bg); margin-bottom: 1rem; }
+    .team-card h3 { font-size: 1.05rem; font-weight: 500; margin-bottom: 0.2rem; }
+    .team-role { font-family: var(--mono-font); font-size: 0.72rem; color: var(--accent2); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .team-card p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem; font-weight: 300; }
+    .skills-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .skill-tag { font-family: var(--mono-font); font-size: 0.68rem; padding: 0.25rem 0.6rem; background: rgba(200,240,74,0.08); border: 1px solid rgba(200,240,74,0.2); color: var(--accent); border-radius: 100px; letter-spacing: 0.05em; }
+    .team-email { display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--mono-font); font-size: 0.75rem; color: var(--muted); text-decoration: none; margin-top: 0.8rem; transition: color 0.2s; }
+    .team-email:hover { color: var(--accent2); }
+    .team-email::before { content: "✉  "; font-size: 0.7rem; }
+
+    /* DEMO */
+    .demo-container { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--surface); }
+    .demo-bar { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 1rem; }
+    .demo-dots { display: flex; gap: 6px; }
+    .demo-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .demo-dot:nth-child(1) { background: #ff5f57; }
+    .demo-dot:nth-child(2) { background: #ffbd2e; }
+    .demo-dot:nth-child(3) { background: #28c841; }
+    .demo-title-bar { font-family: var(--mono-font); font-size: 0.75rem; color: var(--muted); letter-spacing: 0.08em; }
+    .demo-placeholder { min-height: 380px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; padding: 3rem; }
+    .demo-icon { width: 64px; height: 64px; border: 2px dashed var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 1.5rem; }
+    .demo-placeholder p { font-family: var(--mono-font); font-size: 0.8rem; color: var(--muted); letter-spacing: 0.08em; text-align: center; }
+    .demo-caption { padding: 1.5rem 2rem; border-top: 1px solid var(--border); }
+    .demo-caption h4 { font-size: 0.95rem; font-weight: 500; margin-bottom: 0.3rem; }
+    .demo-caption p { font-size: 0.85rem; color: var(--muted); font-weight: 300; }
+
+    /* POSTMORTEM */
+    #postmortem { background: var(--surface); }
+    .postmortem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2.5rem; }
+    .pm-card { padding: 2rem; border-radius: 10px; border: 1px solid var(--border); }
+    .pm-card.positive { border-top: 3px solid var(--accent); background: rgba(200,240,74,0.03); }
+    .pm-card.negative { border-top: 3px solid #f04a4a; background: rgba(240,74,74,0.03); }
+    .pm-card.neutral { border-top: 3px solid var(--accent2); background: rgba(74,240,200,0.03); }
+    .pm-card h3 { font-size: 1rem; font-weight: 500; margin-bottom: 1rem; }
+    .pm-card ul { list-style: none; padding: 0; }
+    .pm-card ul li { font-size: 0.88rem; color: var(--muted); padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-weight: 300; }
+    .pm-card ul li:last-child { border-bottom: none; }
+    .pm-card ul li::before { content: "→ "; color: var(--accent2); font-family: var(--mono-font); }
+    .retrospective { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 2.5rem; margin-bottom: 2rem; }
+    .retrospective h3 { font-family: var(--heading-font); font-size: 1.35rem; margin-bottom: 1rem; }
+    .retrospective p { font-size: 0.92rem; color: var(--muted); font-weight: 300; line-height: 1.8; }
+    .retro-evidence { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
+    .retro-stat { flex: 1; min-width: 140px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem 1.5rem; }
+    .retro-stat-val { font-family: var(--heading-font); font-size: 2rem; color: var(--accent); line-height: 1; margin-bottom: 0.3rem; }
+    .retro-stat-label { font-size: 0.78rem; color: var(--muted); font-weight: 300; }
+
+    /* FOOTER */
+    footer { padding: 3rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    footer p { font-size: 0.82rem; color: var(--muted); font-family: var(--mono-font); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero, section, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+      #overview { grid-template-columns: 1fr; gap: 2rem; }
+      #overview .right { padding-top: 0; }
+      .postmortem-grid, .vision-body, .vision-users, .goals-grid, .features-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <span class="nav-logo">// GiG</span>
+    <ul class="nav-links">
+      <li><a href="#vision">Vision</a></li>
+      <li><a href="#users">Users</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#team">Team</a></li>
+      <li><a href="#demo">Demo</a></li>
+      <li><a href="#postmortem">Postmortem</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-tag">COMP 3350 — Final Project</div>
+    <h1>GiG</h1>
+    <p class="hero-sub">
+      <em style="font-family:var(--heading-font);font-style:italic;font-size:1.35rem;color:var(--accent);">Fix it with GiG.</em><br>
+      We have the right pro for every job and the right job for every pro.
+    </p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Platform</span>
+        <span class="hero-meta-value">Android</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Team Size</span>
+        <span class="hero-meta-value">4 Members</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Semester</span>
+        <span class="hero-meta-value">Winter 2025</span>
+      </div>
+    </div>
+  </header>
+
+  <hr class="divider">
+
+  <!-- VISION -->
+  <section id="vision">
+    <div class="section-label reveal">01 — Vision Statement</div>
+    <h2 class="reveal">Why GiG Exists</h2>
+
+    <p class="vision-hero-quote reveal">
+      "GiG is a platform for contractors and businesses to easily find jobs, and for clients to quickly connect with professionals who can bid to complete tasks for them."
+    </p>
+
+    <div class="vision-body reveal">
+      <div>
+        <p>People often have difficulty finding reliable contractors who offer fair pricing, and contractors often face inconsistent job opportunities and trouble expanding their reach within a community. GiG bridges this gap by providing a dedicated space where work opportunities for professionals and service needs for clients can simultaneously be fulfilled.</p>
+        <p>GiG will be an improvement over current marketplace applications as it is specifically for finding jobs and task-doers, whereas other applications may only have that as a side feature. This means GiG contains a much deeper and more fleshed-out service for that specific need.</p>
+      </div>
+      <div>
+        <p>The goal is to create trust, long-term reliability, and accountability between clients and professionals within communities. Since businesses bid against each other, customers always receive the benefit of industry competitiveness.</p>
+        <p>Professionals will have quick access to local side jobs, visibility into what is most needed in the market, and the ability to make lasting client connections for future jobs.</p>
+      </div>
+    </div>
+
+    <div class="design-rule-block reveal">
+      <h3>Design Decision / Business Rules</h3>
+      <p>A professional is allowed to place <strong style="color:var(--text)">multiple bids</strong> on the same request. This behaviour is intentional to allow:</p>
+      <ul>
+        <li>Updating pricing over time</li>
+        <li>Competing strategies (e.g., faster vs. cheaper bids)</li>
+        <li>Flexibility in negotiation-like scenarios</li>
+      </ul>
+      <p>GiG facilitates connections between clients and professionals. The primary goal is to enable request posting, bidding, and selection of professionals.</p>
+      <div class="out-of-scope">⚠ Payment processing is intentionally out of scope. Once a client selects a professional, financial transactions are assumed to occur outside the system.</div>
+    </div>
+
+    <div class="sub-label reveal">Measurable Goals</div>
+    <div class="goals-grid reveal">
+      <div class="goal-card">
+        <div class="goal-num">7/10</div>
+        <p>Average user satisfaction or higher, measured via survey after users have utilized GiG for 1 month.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-num">75%</div>
+        <p>Of clients who post a job receive at least one professional bid within 2 days of posting.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-num">95%</div>
+        <p>Of professionals who win a bid complete the job and are awarded the agreed-upon amount.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- USERS -->
+  <section id="users">
+    <div class="section-label reveal">02 — Users</div>
+    <h2 class="reveal">Intended Users</h2>
+    <div class="sub-label reveal">User Groups</div>
+    <div class="vision-users reveal">
+      <div class="user-card">
+        <div class="user-card-tag">Group 01</div>
+        <h4>Clients</h4>
+        <p>Anyone who needs something fixed, a task done, or general help with something they cannot complete themselves. Clients benefit from the flexibility of the bid system — competing professionals drive prices down and quality up.</p>
+      </div>
+      <div class="user-card">
+        <div class="user-card-tag">Group 02</div>
+        <h4>Professionals</h4>
+        <p>People looking for side jobs, general contractors, or those involved in businesses. GiG gives professionals quick access to local jobs, visibility into market demand, and the ability to build lasting client relationships.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+  
+
+  <!-- FEATURES -->
+  <section id="features">
+      <div class="section-label reveal">03 — Features</div>
+      <h2 class="reveal">Major Features</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-num">01</div>
+          <h4>Feature One</h4>
+          <p>Short description of what this feature does and why it matters to the user.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-num">02</div>
+          <h4>Feature Two</h4>
+          <p>Short description of what this feature does and why it matters to the user.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-num">03</div>
+          <h4>Feature Three</h4>
+          <p>Short description of what this feature does and why it matters to the user.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-num">04</div>
+          <h4>Feature Four</h4>
+          <p>Short description of what this feature does and why it matters to the user.</p>
+        </div>
+      </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- TEAM -->
+  <section id="team">
+    <div class="section-label reveal">04 — Team</div>
+    <h2 class="reveal">G08 - The Four Stooges</h2>
+    <div class="team-grid">
+
+      <div class="team-card reveal">
+        <div class="team-avatar">N</div>
+        <h3>Nishchay Kathuria</h3>
+        <div class="team-role">Backend Developer</div>
+        <p style="margin-top:0.8rem">Developed both the SQL and fake databases (persistence) and kept the architecture diagram up to date.</p>
+      </div>
+
+      <div class="team-card reveal">
+        <div class="team-avatar">A</div>
+        <h3>Adejare Taiwo</h3>
+        <div class="team-role">UI/UX Designer</div>
+        <p style="margin-top:0.8rem">Developed the presentation layer, fixed bugs, and wrote unit tests.</p>
+      </div>
+
+      <div class="team-card reveal">
+        <div class="team-avatar">I</div>
+        <h3>Izzy Elskamp</h3>
+        <div class="team-role">Android Developer</div>
+        <p style="margin-top:0.8rem">Developed the logic layer and connected persistence and presentation together.</p>
+      </div>
+
+      <div class="team-card reveal">
+        <div class="team-avatar">D</div>
+        <h3>Dayaveer Gill</h3>
+        <div class="team-role">Testing &amp; QA</div>
+        <p style="margin-top:0.8rem">Wrote unit/integration/e2e tests and kept documentation up to date.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- DEMO -->
+  <section id="demo">
+    <div class="section-label reveal">05 — Demonstration</div>
+    <h2 class="reveal">See It in Action</h2>
+    <div class="demo-container reveal">
+      <div class="demo-bar">
+        <div class="demo-dots">
+          <div class="demo-dot"></div>
+          <div class="demo-dot"></div>
+          <div class="demo-dot"></div>
+        </div>
+        <span class="demo-title-bar">app_demo_walkthrough.mp4</span>
+      </div>
+      <div class="demo-placeholder">
+        <div class="demo-icon">▶</div>
+        <p>Paste your screen recording here.<br>Use a &lt;video&gt; tag or embed a YouTube/Drive link.</p>
+      </div>
+      <div class="demo-caption">
+        <h4>Primary User Flow Walkthrough</h4>
+        <p>Briefly describe what the demo shows — which features are demonstrated, in what order, and what a user would experience.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- POSTMORTEM -->
+  <section id="postmortem">
+    <div class="section-label reveal">06 — Development Postmortem</div>
+    <h2 class="reveal">Reflecting on the Process</h2>
+
+    <div class="retrospective reveal">
+      <h3>Iteration 2 Retrospective: Improvement Area</h3>
+      <p>After our Iteration 2 retrospective, we identified <strong style="color:var(--text)">[improvement area, e.g., communication gaps during integration]</strong> as our primary focus. Describe what the problem was and why it was impacting the team.</p>
+      <p style="margin-top:1rem;"><strong style="color:var(--text)">What changed:</strong> Explain the concrete steps or process changes you adopted going into Iteration 3.</p>
+      <p style="margin-top:1rem;"><strong style="color:var(--text)">Outcome:</strong> Was the improvement successful? Provide your honest assessment and back it up with the evidence below.</p>
+      <div class="retro-evidence">
+        <div class="retro-stat">
+          <div class="retro-stat-val">↓42%</div>
+          <div class="retro-stat-label">Merge conflicts vs Iter 2</div>
+        </div>
+        <div class="retro-stat">
+          <div class="retro-stat-val">3×</div>
+          <div class="retro-stat-label">Standup attendance</div>
+        </div>
+        <div class="retro-stat">
+          <div class="retro-stat-val">100%</div>
+          <div class="retro-stat-label">Features delivered on time</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="postmortem-grid reveal">
+      <div class="pm-card positive">
+        <h3>✦ What Went Well</h3>
+        <ul>
+          <li>Item one — brief description of a strength</li>
+          <li>Item two — brief description of a strength</li>
+          <li>Item three — brief description of a strength</li>
+          <li>Item four — brief description of a strength</li>
+        </ul>
+      </div>
+      <div class="pm-card negative">
+        <h3>✦ What We'd Change</h3>
+        <ul>
+          <li>Item one — honest reflection on a difficulty</li>
+          <li>Item two — honest reflection on a difficulty</li>
+          <li>Item three — honest reflection on a difficulty</li>
+          <li>Item four — honest reflection on a difficulty</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="postmortem-grid reveal">
+      <div class="pm-card neutral">
+        <h3>✦ Architecture &amp; Design Decisions</h3>
+        <ul>
+          <li>Architectural pattern used and why</li>
+          <li>A strong design decision and its payoff</li>
+          <li>A design smell discovered late</li>
+          <li>Outstanding technical debt</li>
+        </ul>
+      </div>
+      <div class="pm-card neutral">
+        <h3>✦ Lessons Learned</h3>
+        <ul>
+          <li>Key takeaway about teamwork or process</li>
+          <li>How the project evolved from Iteration 0</li>
+          <li>Unexpected technical challenge</li>
+          <li>Advice to your past selves</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>// GiG — COMP 3350 Winter 2025</p>
+    <p>Built by the Four Stooges · University of Manitoba</p>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
