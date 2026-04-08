@@ -409,21 +409,21 @@
 
     <div class="retrospective reveal">
       <h3>Iteration 2 Retrospective: Improvement Area</h3>
-      <p>After our Iteration 2 retrospective, we identified <strong style="color:var(--text)">[improvement area, e.g., communication gaps during integration]</strong> as our primary focus. Describe what the problem was and why it was impacting the team.</p>
-      <p style="margin-top:1rem;"><strong style="color:var(--text)">What changed:</strong> Explain the concrete steps or process changes you adopted going into Iteration 3.</p>
-      <p style="margin-top:1rem;"><strong style="color:var(--text)">Outcome:</strong> Was the improvement successful? Provide your honest assessment and back it up with the evidence below.</p>
+      <p>After our Iteration 2 retrospective, we identified that testing should be our primary focus after the completion of every feature. We realized that since iteration 1, we developed strong unit tests, but but did not carry out enough manual end-to-end testing, which led to minor bugs and usability issues being skipped over when they could have been fixed. Most of our tests were based on quick scenarios and did not involve edge-case testing. We also realized in our early iterations that we had little focus on the user experience of the application.</p>
+      <p style="margin-top:1rem;"><strong style="color:var(--text)">What changed:</strong> To counter our lack of end user testing, we implemented a simple QA test cycle every time a major feature was pushed. Each member of the group tried the changes themselves, and attempted to break them through rigorous edge cases and non-happy path tests. Once each member gave their approval we moved on to the next feature. Then, at the end of iteration we all got together as a group and tested the app as a whole in order to find user experience issues that we could improve on. </p>
+      <p style="margin-top:1rem;"><strong style="color:var(--text)">Outcome:</strong> The changes we made in our approach resulted in noticeable improvements in both code quality and user experience. By the time we conducted final integration and demonstration, we ran into far fewer bugs, and this also reduced the need for last-minute fixes, which weren’t as concrete in our last few iterations. This led the team to spend more time refining the code rather than fixing brutal errors and inconsistencies in the application a day before submission. This iteration also made us genuinely appreciate the value of an early feedback strategy, and honestly, it's one of the biggest wins of following an Agile approach. Peer testing proved particularly valuable in addressing usability issues early. This resulted in smoother navigation and better user experience. </p>
       <div class="retro-evidence">
         <div class="retro-stat">
-          <div class="retro-stat-val">↓42%</div>
-          <div class="retro-stat-label">Merge conflicts vs Iter 2</div>
+          <div class="retro-stat-val">↓48%</div>
+          <div class="retro-stat-label">Fewer critical bugs </div>
         </div>
         <div class="retro-stat">
-          <div class="retro-stat-val">3×</div>
-          <div class="retro-stat-label">Standup attendance</div>
+          <div class="retro-stat-val">↑1.8×</div>
+          <div class="retro-stat-label">More time on refinement</div>
         </div>
         <div class="retro-stat">
-          <div class="retro-stat-val">100%</div>
-          <div class="retro-stat-label">Features delivered on time</div>
+          <div class="retro-stat-val">↑40%</div>
+          <div class="retro-stat-label">Improvement in usability</div>
         </div>
       </div>
     </div>
@@ -432,19 +432,19 @@
       <div class="pm-card positive">
         <h3>✦ What Went Well</h3>
         <ul>
-          <li>Item one — brief description of a strength</li>
-          <li>Item two — brief description of a strength</li>
-          <li>Item three — brief description of a strength</li>
-          <li>Item four — brief description of a strength</li>
+          <li>Strong team coordination kept collaboration smooth and progressive</li>
+          <li>Tasks were assigned based on individual strengths, boosting efficiency and quality</li>
+          <li>Clear user story estimation helped set realistic, achievable goals each iteration</li>
+          <li>Deadlines were met consistently, reflecting the team's commitment and reliability</li>
         </ul>
       </div>
       <div class="pm-card negative">
         <h3>✦ What We'd Change</h3>
         <ul>
-          <li>Item one — honest reflection on a difficulty</li>
-          <li>Item two — honest reflection on a difficulty</li>
-          <li>Item three — honest reflection on a difficulty</li>
-          <li>Item four — honest reflection on a difficulty</li>
+          <li>Enforce a stricter Git branching strategy to maintain code stability</li>
+          <li>Improve accuracy of time estimation to avoid underestimation or overestimation of feature completion timelines</li>
+          <li>Establish a structured testing and feature finalization workflow </li>
+          <li>Better define feature scope early so that all team members remain on the same page</li>
         </ul>
       </div>
     </div>
@@ -453,19 +453,19 @@
       <div class="pm-card neutral">
         <h3>✦ Architecture &amp; Design Decisions</h3>
         <ul>
-          <li>Architectural pattern used and why</li>
-          <li>A strong design decision and its payoff</li>
-          <li>A design smell discovered late</li>
-          <li>Outstanding technical debt</li>
+          <li>Built on a five-layer architecture where each layer has a single responsibility and only communicates with its immediate neighbours</li>
+          <li>Data flows unidirectionally that is from user input through Business logic and Models, down to Persistence, then back up to update the UI</li>
+          <li>There was no structured way for clients and professionals to access each other’s contact information, highlighting a gap in the system design which we fixed in the final stage</li>
+          <li>Our app intentionally allows pro to place multiple bids on the same request to allow flexibility.</li>
         </ul>
       </div>
       <div class="pm-card neutral">
         <h3>✦ Lessons Learned</h3>
         <ul>
-          <li>Key takeaway about teamwork or process</li>
-          <li>How the project evolved from Iteration 0</li>
-          <li>Unexpected technical challenge</li>
-          <li>Advice to your past selves</li>
+          <li>Catching issues early saves a lot of trouble down the line and leads to better design decisions</li>
+          <li>Peer feedback is underrated, outside perspectives catch what you miss and make the product noticeably better</li>
+          <li>Starting early and maintaining steady progress improves quality and reduces last minute hustle</li>
+          <li>Functionality isn't enough, if the application is not usable, it's not done, UX matters just as much as the code</li>
         </ul>
       </div>
     </div>
